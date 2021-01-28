@@ -1,11 +1,11 @@
 # Basic
 title: Luna_Blog
-subtitle: 一名大二菜鸡的博客
-welcome_message: <a href="https://github.com/onevcat/vno-jekyll" target="_blank">下载这个主题</a>
-description: 我会不定期更新文章，欢迎来看
-creator: <a href="http://onev.cat">@LunaAsuka</a>
+subtitle: 网安小白的博客
+welcome_message: 欢迎访问
+description: 我会不定期更新“网络安全”相关文章
+creator: <a href="https://github.com/LunaAsuka">@LunaAsuka</a>
 
-url: "http://vno.onevcat.com"
+url: "https://lunaasuka.github.io/"
 
 permalink: /:year/:month/:title/
 
@@ -22,7 +22,7 @@ blog_button:
 
 # Navigation buttons in the front page.
 nav:
-    - {title: Projects, description: My Projects, url: 'http://project.onevcat.com'}
+    - {title: Projects, description: My Projects, url: 'https://github.com/LunaAsuka?tab=projects'}
     # - {title: Another Button, description: A button, url: 'http://example.com'}
 
 # Pagination
@@ -37,11 +37,11 @@ comment:
     
 # Social
 social:
-    weibo: onevcat
-    github: onevcat
-    twitter: onevcat
-    gplus: 107108267983477358170
-    mail: onev@onevcat.com
+    weibo: 
+    github: https://github.com/LunaAsuka?tab=projects
+    twitter: https://twitter.com/DDauska
+    gplus: 
+    mail: 2838419909@qq.com
 
 # Google Analytics
 ga:
