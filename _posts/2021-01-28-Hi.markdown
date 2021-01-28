@@ -1,6 +1,0 @@
----
-layout: post
-title: Sample Post
-date: 2021-01-28 13:45:55.000000000 +09:00
----
-Hello,world!
