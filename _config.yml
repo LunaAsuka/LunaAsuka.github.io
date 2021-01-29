@@ -42,7 +42,7 @@ exclude:
 
 collections:
   staff_members: 1
-    _hide_content: Ture
+    _hide_content: 
     _icon: account_circle
 
 paginate: 10
