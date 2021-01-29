@@ -41,8 +41,8 @@ exclude:
   - LICENCE
 
 collections:
-  staff_members: 1
-    _hide_content: 
+  staff_members:
+    _hide_content: ture 
     _icon: account_circle
 
 paginate: 10
