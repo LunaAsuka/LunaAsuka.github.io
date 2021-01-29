@@ -41,7 +41,7 @@ exclude:
   - LICENCE
 
 collections:
-  staff_members: 1
+  staff_members: 
     _hide_content: true
     _icon: account_circle
 
