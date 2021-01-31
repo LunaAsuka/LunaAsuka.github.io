@@ -7,6 +7,8 @@ image:
 author_staff_member: LunaAsuka
 ---
 
+## 最简单的入门题目
+
 ### web1-7
 
 ```php+HTML
