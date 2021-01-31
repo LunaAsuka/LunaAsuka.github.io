@@ -1,7 +1,7 @@
 ---
-title: 写在开头的话
+title: CTFShow萌新计划web1-8
 date: 2021-01-31
-description: Begining of my blogs.
+description: 萌新计划wp
 categories:
 image:
 author_staff_member: LunaAsuka
