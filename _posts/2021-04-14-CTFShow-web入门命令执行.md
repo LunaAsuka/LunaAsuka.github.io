@@ -82,7 +82,7 @@ if(isset($_GET['c'])){
 
 这里过滤了cat，还有其他的东西。自然不用cat就好。
 
-payload：c=echo exec('tac fla*');
+ payload: c=echo(tac%09f*); 
 
 ```
 more:一页一页的显示档案内容
