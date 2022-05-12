@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='一个用于加密/签名的工具'><title>GPG工具介绍</title>
+
+<link rel='canonical' href='https://lunaasuka.github.io/p/gpg%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/'>
+
+<link rel="stylesheet" href="/scss/style.min.5d0ba4b8e005f9d5f3e1dc243f2555eba3c536500cc6b2ab42f43d5a03ac060a.css"><meta property='og:title' content='GPG工具介绍'>
+<meta property='og:description' content='一个用于加密/签名的工具'>
+<meta property='og:url' content='https://lunaasuka.github.io/p/gpg%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/'>
+<meta property='og:site_name' content='Luna_Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='工具' /><meta property='article:published_time' content='2021-09-24T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2021-09-24T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="GPG工具介绍">
+<meta name="twitter:description" content="一个用于加密/签名的工具">
+    <link rel="shortcut icon" href="img/favicon.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/author_hu5662b65b0b35d446edae569f17233a38_392169_300x0_resize_q75_box.jpg" width="300"
+                            height="296" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">😋</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Luna_Blog</a></h1>
+            <h2 class="site-description">天将降大任于斯人也</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/LunaAsuka'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/about' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" >
+                网络安全
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/gpg%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/">GPG工具介绍</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            一个用于加密/签名的工具
+        </h3>
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Sep 24, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 5 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="一什么是gpg">一.什么是GPG</h2>
+<p>​		1991 年，程序员 Phil Zimmermann 为了避开政府监视，开发了加密软件 PGP。这个软件非常好用，迅速流传开来，成了许多程序员的必备工具。但是，它是商业软件，不能自由使用。所以，自由软件基金会决定，开发一个 PGP 的替代品，取名为 GnuPG。这就是 GPG 的由来。</p>
+<h2 id="二使用">二.使用</h2>
+<p>先放一个官方说明。</p>
+<p>（Linux kali 5.2.0-kali2-amd64 #1 SMP Debian 5.2.9-2kali1 (2019-08-22) x86_64 GNU/Linux 这是我使用的kali版本）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">gpg <span class="o">(</span>GnuPG<span class="o">)</span> 2.2.17
+libgcrypt 1.8.4
+Copyright <span class="o">(</span>C<span class="o">)</span> <span class="m">2019</span> Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version <span class="m">3</span> or later &lt;https://gnu.org/licenses/gpl.html&gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Home: /root/.gnupg
+支持的算法：
+公钥： RSA, ELG, DSA, ECDH, ECDSA, EDDSA
+密文： IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
+    CAMELLIA128, CAMELLIA192, CAMELLIA256
+散列： SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
+压缩：  不压缩, ZIP, ZLIB, BZIP2
+
+语法：gpg <span class="o">[</span>options<span class="o">]</span> <span class="o">[</span>files<span class="o">]</span>
+签名、检查、加密或解密
+默认的操作依输入数据而定
+
+命令：
+ 
+ -s, --sign                  生成一份签名
+     --clear-sign            生成一份明文签名
+ -b, --detach-sign           生成一份分离的签名
+ -e, --encrypt               加密数据
+ -c, --symmetric             仅使用对称密文加密
+ -d, --decrypt               解密数据（默认）
+     --verify                验证签名
+ -k, --list-keys             列出密钥
+     --list-signatures       列出密钥和签名
+     --check-signatures      列出并检查密钥签名
+     --fingerprint           列出密钥和指纹
+ -K, --list-secret-keys      列出私钥
+     --generate-key          生成一个新的密钥对
+     --quick-generate-key    快速生成一个新的密钥对
+     --quick-add-uid         快速添加一个新的用户标识
+     --quick-revoke-uid      快速吊销一个用户标识
+     --quick-set-expire      快速设置一个过期日期
+     --full-generate-key     完整功能的密钥对生成
+     --generate-revocation   生成一份吊销证书
+     --delete-keys           从公钥钥匙环里删除密钥
+     --delete-secret-keys    从私钥钥匙环里删除密钥
+     --quick-sign-key        快速签名一个密钥
+     --quick-lsign-key       快速本地签名一个密钥
+     --sign-key              签名一个密钥
+     --lsign-key             本地签名一个密钥
+     --edit-key              签名或编辑一个密钥
+     --change-passphrase     更改密码
+     --export                导出密钥
+     --send-keys             个密钥导出到一个公钥服务器上
+     --receive-keys          从公钥服务器上导入密钥
+     --search-keys           在公钥服务器上搜索密钥
+     --refresh-keys          从公钥服务器更新所有密钥
+     --import                导入/合并密钥
+     --card-status           打印卡片状态
+     --edit-card             更改卡片上的数据
+     --change-pin            更改卡片的 PIN
+     --update-trustdb        更新信任数据库
+     --print-md              打印消息摘要
+     --server                以服务器模式运行
+     --tofu-policy VALUE     设置一个密钥的 TOFU 政策
+
+选项：
+ 
+ -a, --armor                 创建 ASCII 字符封装的输出
+ -r, --recipient USER-ID     为 USER-ID 加密
+ -u, --local-user USER-ID    使用 USER-ID 来签名或者解密
+ -z N                        设置压缩等级为 N （0 为禁用）
+     --textmode              使用规范的文本模式
+ -o, --output FILE           写输出到 FILE
+ -v, --verbose               详细模式
+ -n, --dry-run               不做任何更改
+ -i, --interactive           覆盖前提示
+     --openpgp               使用严格的 OpenPGP 行为
+
+（请参考手册页以获得所有命令和选项的完整列表）
+
+例子：
+
+ -se -r Bob <span class="o">[</span>file<span class="o">]</span>          为用户 Bob 签名和加密
+ --clear-sign <span class="o">[</span>file<span class="o">]</span>        创建一个明文签名
+ --detach-sign <span class="o">[</span>file<span class="o">]</span>       创建一个分离签名
+ --list-keys <span class="o">[</span>names<span class="o">]</span>        列出密钥
+ --fingerprint <span class="o">[</span>names<span class="o">]</span>      显示指纹
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到工具本身支持的功能很多，我们这里就简单介绍加解密的内容。</p>
+<p>可以使用 gpg &ndash;gen-key 来生成密钥。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">gpg --gen-key 
+注意：使用 “gpg --full-generate-key” 以获得一个功能完整的密钥产生对话框。
+</code></pre></td></tr></table>
+</div>
+</div><p>使用该命令即可生成密钥，但是运行该命令部分选项将会默认选择，如想要使用的加密方式（默认RSA）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">请选择您要使用的密钥类型：
+   <span class="o">(</span>1<span class="o">)</span> RSA 和 RSA （默认）
+   <span class="o">(</span>2<span class="o">)</span> DSA 和 Elgamal
+   <span class="o">(</span>3<span class="o">)</span> DSA（仅用于签名）
+   <span class="o">(</span>4<span class="o">)</span> RSA（仅用于签名）
+</code></pre></td></tr></table>
+</div>
+</div><p>想要使用的密钥长度，密钥越长越安全</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">RSA 密钥的长度应在 <span class="m">1024</span> 位与 <span class="m">4096</span> 位之间。
+您想要使用的密钥长度？<span class="o">(</span>3072<span class="o">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>以及密钥的有效期限</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">请设定这个密钥的有效期限。
+         <span class="nv">0</span> <span class="o">=</span> 密钥永不过期
+      &lt;n&gt;  <span class="o">=</span> 密钥在 n 天后过期
+      &lt;n&gt;w <span class="o">=</span> 密钥在 n 周后过期
+      &lt;n&gt;m <span class="o">=</span> 密钥在 n 月后过期
+      &lt;n&gt;y <span class="o">=</span> 密钥在 n 年后过期
+</code></pre></td></tr></table>
+</div>
+</div><p>这些都选择完成之后会要求你提供个人信息。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">真实姓名： ** ******
+电子邮件地址： 2838419909@qq.com
+您选定了此用户标识：
+    “** ****** &lt;2838419909@qq.com&gt;”
+</code></pre></td></tr></table>
+</div>
+</div><p>这些信息是方便其他人辨识你的，填写什么是随意的，当然如果填写一些伪造的信息也没人管（笑</p>
+<p>一切都确认好之后，系统会让你设定一个私钥的密码，这是出于安全考虑，可以更有效的保护你的私钥。</p>
+<p>然后系统就会开始生成密钥，这时可以做一些随机的举动，例如敲打键盘或者移动鼠标之类的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">我们需要生成大量的随机字节。在质数生成期间做些其他操作（敲打键盘、移动鼠标、读写硬盘之类的）将会是一个不错的主意，这会让随机数发生器有更好的机会获得足够的熵。
+</code></pre></td></tr></table>
+</div>
+</div><p>要不了多久密钥就生成好了。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">gpg: 密钥 7E63E27A7D6D5059 被标记为绝对信任
+</code></pre></td></tr></table>
+</div>
+</div><p>这里的 7E63E27A7D6D5059 是 用户ID 的Hash字符串，可以用来替代 用户ID 。</p>
+<h3 id="加密">加密</h3>
+<p>我们可以使用 encrypt 参数来加密文件，假设这里有一个 test.txt 需要被加密。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">gpg --recipient <span class="o">[</span>用户ID<span class="o">]</span> --output en_test.txt --encrypt test.txt<span class="sb">`</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>recipient 参数用来指定接受者的公钥， output 用来指定输出的文件名， encrypt 用来指定需要加密的文件。</p>
+<h3 id="解密">解密</h3>
+<p>对方收到加密文件以后，就可以用自己的私钥解密。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">gpg --decrypt en_test.txt --output de_test.txt
+</code></pre></td></tr></table>
+</div>
+</div><p>decrypt 参数用来指定需要被解密的文件。</p>
+<p>ps：gpg允许省略 decrypt 参数，也就是说你甚至可以简写成</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">gpg en_test.txt 
+</code></pre></td></tr></table>
+</div>
+</div><p>​		现在让我们来明确下加密和解密的流程。设有两人 A 和 B 。A 现在想给 B 发送一个加密的文件。那么首先 A 要拿到 B 的公钥，可以是在公钥服务器上下载或者由 B 直接发给 A ，然后用这个公钥来对文件加密，即加密时的 recipient 参数所指定的接受者的公钥，在这里就是我们已经获取的 B 的公钥。之后将加密过的文件发给 B ，B 拿到后使用自己的私钥对其进行解密，即可还原文件。也就是说，如果想给一个人发送一个对方能解密的文件，那么就需要先拿到对方的公钥才能进行加密。</p>
+<h3 id="签名">签名</h3>
+<p>对文件签名就是为了让别人知道这个文件是由我发出的或者是由我编写的。</p>
+<p>我们可以使用 sign 参数来签名。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">gpg --sign test.txt
+</code></pre></td></tr></table>
+</div>
+</div><p>运行后将会生成 test.txt.gpg 文件，这就是签名后的文件，这个文件默认使用二进制储存，也可以使用 clearsign 参数来生成 ASCII 码的签名文件。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">gpg --clearsign test.txt
+</code></pre></td></tr></table>
+</div>
+</div><p>如果想单独生成一个签名文件，可以使用 detach-sign 参数。需要采用 ASCII 格式的就添加 armor 参数结课。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">gpg --detach-sign test.txt
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="验证签名">验证签名</h3>
+<p>要记住，想要验证签名也需要对方的公钥才行，使用 verify 参数来验证。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">gpg --verify test.txt.gpg test.txt
+</code></pre></td></tr></table>
+</div>
+</div><p>前者是需要验证签名的文件，后者是输出文件。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E5%B7%A5%E5%85%B7/">工具</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-contents--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-contents">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E7%9B%91%E6%8E%A7/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">用户行为监控</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/linux%E6%96%87%E4%BB%B6%E5%AE%89%E5%85%A8%E7%9B%91%E6%B5%8B/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">linux文件安全监测</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/ctfshow-web%E5%85%A5%E9%97%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8Cwp/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CTFShow web入门命令执行wp</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/ctfshow-web%E5%85%A5%E9%97%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86wp/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CTFShow web入门信息收集wp</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CVE-2020-16898漏洞复现</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (DISQUS) {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Luna_Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.11.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#一什么是gpg">一.什么是GPG</a></li>
+    <li><a href="#二使用">二.使用</a>
+      <ol>
+        <li><a href="#加密">加密</a></li>
+        <li><a href="#解密">解密</a></li>
+        <li><a href="#签名">签名</a></li>
+        <li><a href="#验证签名">验证签名</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

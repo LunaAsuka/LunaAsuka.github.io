@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='信息收集入门'><title>CTFShow web入门信息收集wp</title>
+
+<link rel='canonical' href='https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86wp/'>
+
+<link rel="stylesheet" href="/scss/style.min.5d0ba4b8e005f9d5f3e1dc243f2555eba3c536500cc6b2ab42f43d5a03ac060a.css"><meta property='og:title' content='CTFShow web入门信息收集wp'>
+<meta property='og:description' content='信息收集入门'>
+<meta property='og:url' content='https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86wp/'>
+<meta property='og:site_name' content='Luna_Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CTF' /><meta property='article:published_time' content='2021-04-08T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2021-04-08T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="CTFShow web入门信息收集wp">
+<meta name="twitter:description" content="信息收集入门">
+    <link rel="shortcut icon" href="img/favicon.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/author_hu5662b65b0b35d446edae569f17233a38_392169_300x0_resize_q75_box.jpg" width="300"
+                            height="296" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">😋</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Luna_Blog</a></h1>
+            <h2 class="site-description">天将降大任于斯人也</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/LunaAsuka'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/about' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" >
+                网络安全
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/ctfshow-web%E5%85%A5%E9%97%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86wp/">CTFShow web入门信息收集wp</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            信息收集入门
+        </h3>
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Apr 08, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h3 id="简简单单">简简单单</h3>
+<h2 id="web1源码泄露">web1源码泄露</h2>
+<p>直接f12就能看到。</p>
+<h2 id="web2绕过前台js">web2绕过前台JS</h2>
+<p>由于js限制该网页不能直接查看源码，可以考虑禁用js，或者直接Ctrl+U，或者 view-source:http://网站/</p>
+<h2 id="web3协议头信息泄露">web3协议头信息泄露</h2>
+<p>响应头里存了flag，直接burp抓包查看，或者f12用network查看。</p>
+<h2 id="web4后台robots泄露">web4后台robots泄露</h2>
+<p>访问robots.txt，可以找到有一个/flagishere.txt目录，直接访问得到flag。</p>
+<h2 id="web5-phps源码泄露">web5 PHPS源码泄露</h2>
+<p>直接访问 index.phps，得到源码，就能看到flag。</p>
+<h2 id="web6源码压缩包泄露">web6源码压缩包泄露</h2>
+<p>有提示，所以可以直接访问，网站后面加www.zip。没有提示的情况下可以直接用扫描器扫出来。</p>
+<p>解压得到文件，提示flag在fl000g.txt里，直接网页访问即可。</p>
+<h2 id="web7版本控制泄露源码">web7版本控制泄露源码</h2>
+<p>实际上就是git泄露，可以通过扫描得到。之后可以直接访问或者使用githack这样的工具。</p>
+<h2 id="web8版本控制泄露2">web8版本控制泄露2</h2>
+<p>实际上是svn泄露，同理git。也有相关工具可供使用，github自寻。</p>
+<h2 id="web9-vim临时文件泄露">web9 vim临时文件泄露</h2>
+<p>程序员使用vim编辑器编写一个index.php文件时，会有一个.index.php.swp文件，如果文件正常退出，则该文件被删除，如果异常退出，该文件则会保存下来，该文件可以用来恢复异常退出的index.php，同时多次意外退出并不会覆盖旧的.swp文件，而是会生成一个新的，例如.swo文件。</p>
+<p>做法同上，直接访问即可。</p>
+<h2 id="web10-cookie泄露">web10 cookie泄露</h2>
+<p>直接查看cookie即可。</p>
+<h2 id="web11域名记录泄露">web11域名记录泄露</h2>
+<p><a class="link" href="http://www.jsons.cn/nslookup/"  target="_blank" rel="noopener"
+    >http://www.jsons.cn/nslookup/</a>在这个网站里直接查询ctfshow.com即可。</p>
+<p><a class="link" href="https://blog.csdn.net/dai451954706/article/details/37696651"  target="_blank" rel="noopener"
+    >关于域名解析类型</a></p>
+<h2 id="web12敏感信息泄露">web12敏感信息泄露</h2>
+<p>首先扫目录，可以发现有登录口，访问需要账号密码，账号很明显是admin，密码未知，在整个网站内进行搜寻，可以发现页面最下方有一行数字，即为密码，登录拿到flag。<img src="/p/ctfshow-web%E5%85%A5%E9%97%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86wp/1617869991492.png"
+	width="722"
+	height="395"
+	srcset="/p/ctfshow-web%E5%85%A5%E9%97%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86wp/1617869991492_huad86a6262786a65d2679fb79ce81d26b_48902_480x0_resize_box_2.png 480w, /p/ctfshow-web%E5%85%A5%E9%97%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86wp/1617869991492_huad86a6262786a65d2679fb79ce81d26b_48902_1024x0_resize_box_2.png 1024w"
+	loading="lazy"
+	
+		alt="1617869991492"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="182"
+		data-flex-basis="438px"
+	
+></p>
+<h2 id="web13内部技术文档泄露">web13内部技术文档泄露</h2>
+<p>网页最下方有个document可以点进去，该文件翻到最后可以找到后台地址和账号密码，登录即可。</p>
+<h2 id="web14编辑器配置不当">web14编辑器配置不当</h2>
+<p>根据提示，访问editor界面，这里面有上传功能，可以在这里访问目标服务器的内部文件，找到flag即可。</p>
+<h2 id="web15密码逻辑脆弱">web15密码逻辑脆弱</h2>
+<p>扫目录，登录后台，用户名admin，忘记密码，密保答案是西安，至于为啥是西安，你可以找到一个qq群号，这个群显示所在地点是西安。。。然后登录即可。</p>
+<h2 id="web16探针泄露">web16探针泄露</h2>
+<p>说了是探针泄露，那就直接访问tz.php，搜索flag即可。</p>
+<p>php探针是用来探测空间、服务器运行状况和PHP信息用的，探针可以实时查看服务器硬盘资源、内存占用、网卡 流量、系统负载、服务器时间等信息。 url后缀名添加/tz.php 版本是雅黑PHP探针。</p>
+<h2 id="web17cdn穿透">web17CDN穿透</h2>
+<p>通过使用各类解析网站或者ping之类的工具得到目标网站的ip即可。</p>
+<h2 id="web18-js敏感信息泄露">web18 js敏感信息泄露</h2>
+<p>根据题目，找js文件，里面有条判断，是当分数达到100以上时触发的</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="k">if</span><span class="p">(</span><span class="nx">score</span><span class="o">&gt;</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="kd">var</span> <span class="nx">result</span><span class="o">=</span><span class="nb">window</span><span class="p">.</span><span class="nx">confirm</span><span class="p">(</span><span class="s2">&#34;\u4f60\u8d62\u4e86\uff0c\u53bb\u5e7a\u5e7a\u96f6\u70b9\u76ae\u7231\u5403\u76ae\u770b\u770b&#34;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这串Unicode转换成中文就能得到线索。</p>
+<h2 id="web19前段密钥泄露">web19前段密钥泄露</h2>
+<p>查看源码，找到了处理后的密码，抓包改密码即可。</p>
+<h2 id="web20数据库恶意下载">web20数据库恶意下载</h2>
+<p>mdb文件是早期asp+access构架的数据库文件，直接查看url路径添加/db/db.mdb，下载文件通过txt打开或者通过EasyAccess.exe打开搜索flag 。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ctf/">CTF</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-contents--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-contents">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/ctfshow-web%E5%85%A5%E9%97%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8Cwp/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CTFShow web入门命令执行wp</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CTFShow web入门396-402wp</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/ctfshow-web%E5%85%A5%E9%97%A8459wp/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CTFShow web入门459wp</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web1-8/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CTFShow萌新计划web1-8</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CTFShow萌新计划web9-21</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (DISQUS) {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Luna_Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.11.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#简简单单">简简单单</a></li>
+      </ol>
+    </li>
+    <li><a href="#web1源码泄露">web1源码泄露</a></li>
+    <li><a href="#web2绕过前台js">web2绕过前台JS</a></li>
+    <li><a href="#web3协议头信息泄露">web3协议头信息泄露</a></li>
+    <li><a href="#web4后台robots泄露">web4后台robots泄露</a></li>
+    <li><a href="#web5-phps源码泄露">web5 PHPS源码泄露</a></li>
+    <li><a href="#web6源码压缩包泄露">web6源码压缩包泄露</a></li>
+    <li><a href="#web7版本控制泄露源码">web7版本控制泄露源码</a></li>
+    <li><a href="#web8版本控制泄露2">web8版本控制泄露2</a></li>
+    <li><a href="#web9-vim临时文件泄露">web9 vim临时文件泄露</a></li>
+    <li><a href="#web10-cookie泄露">web10 cookie泄露</a></li>
+    <li><a href="#web11域名记录泄露">web11域名记录泄露</a></li>
+    <li><a href="#web12敏感信息泄露">web12敏感信息泄露</a></li>
+    <li><a href="#web13内部技术文档泄露">web13内部技术文档泄露</a></li>
+    <li><a href="#web14编辑器配置不当">web14编辑器配置不当</a></li>
+    <li><a href="#web15密码逻辑脆弱">web15密码逻辑脆弱</a></li>
+    <li><a href="#web16探针泄露">web16探针泄露</a></li>
+    <li><a href="#web17cdn穿透">web17CDN穿透</a></li>
+    <li><a href="#web18-js敏感信息泄露">web18 js敏感信息泄露</a></li>
+    <li><a href="#web19前段密钥泄露">web19前段密钥泄露</a></li>
+    <li><a href="#web20数据库恶意下载">web20数据库恶意下载</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

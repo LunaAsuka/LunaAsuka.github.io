@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>工具 on Luna_Blog</title>
+        <link>https://lunaasuka.github.io/tags/%E5%B7%A5%E5%85%B7/</link>
+        <description>Recent content in 工具 on Luna_Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Tue, 18 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://lunaasuka.github.io/tags/%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Linux下两种链接方式的不同</title>
+        <link>https://lunaasuka.github.io/p/linux%E4%B8%8B%E4%B8%A4%E7%A7%8D%E9%93%BE%E6%8E%A5%E6%96%B9%E5%BC%8F%E7%9A%84%E4%B8%8D%E5%90%8C/</link>
+        <pubDate>Tue, 18 Jan 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/linux%E4%B8%8B%E4%B8%A4%E7%A7%8D%E9%93%BE%E6%8E%A5%E6%96%B9%E5%BC%8F%E7%9A%84%E4%B8%8D%E5%90%8C/</guid>
+        <description>&lt;p&gt;前言：最近在学习从零写一个操作系统，有时间的话我会考虑写个完整的过程发上来。&lt;/p&gt;
+&lt;h2 id=&#34;一&#34;&gt;一&lt;/h2&gt;
+&lt;p&gt;​	众所周知，一个c语言程序从写完到变成可执行文件要经历四个步骤，分别是预编译，编译，汇编和链接。本文的重点是讨论链接时的特性。我们先来看一段c语言代码。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+	&lt;span class=&#34;k&#34;&gt;while&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+	&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这是一段最简单的c语言代码，它十分的简洁，甚至连任何标准库都没有。&lt;/p&gt;
+&lt;h2 id=&#34;二使用gcc编译&#34;&gt;二	使用gcc编译&lt;/h2&gt;
+&lt;p&gt;​	我们尝试使用gcc进行编译这个文件。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;asuka@ubuntu:~/bochs/bin/kernel$ cat main.c
+int main&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;void&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+	&lt;span class=&#34;k&#34;&gt;while&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;1&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+	&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; 0&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+asuka@ubuntu:~/bochs/bin/kernel$ gcc -o test.bin main.c
+asuka@ubuntu:~/bochs/bin/kernel$ ll test.bin 
+-rwxrwxr-x &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; asuka asuka &lt;span class=&#34;m&#34;&gt;7312&lt;/span&gt; Jan &lt;span class=&#34;m&#34;&gt;17&lt;/span&gt; 18:20 test.bin*
+asuka@ubuntu:~/bochs/bin/kernel$ nm test.bin 
+0804a018 B __bss_start
+0804a018 b completed.7209
+0804a010 D __data_start
+0804a010 W data_start
+&lt;span class=&#34;m&#34;&gt;08048320&lt;/span&gt; t deregister_tm_clones
+&lt;span class=&#34;m&#34;&gt;08048390&lt;/span&gt; t __do_global_dtors_aux
+08049f0c t __do_global_dtors_aux_fini_array_entry
+0804a014 D __dso_handle
+08049f14 d _DYNAMIC
+0804a018 D _edata
+0804a01c B _end
+&lt;span class=&#34;m&#34;&gt;08048444&lt;/span&gt; T _fini
+&lt;span class=&#34;m&#34;&gt;08048458&lt;/span&gt; R _fp_hw
+080483b0 t frame_dummy
+08049f08 t __frame_dummy_init_array_entry
+&lt;span class=&#34;m&#34;&gt;08048544&lt;/span&gt; r __FRAME_END__
+0804a000 d _GLOBAL_OFFSET_TABLE_
+         w __gmon_start__
+&lt;span class=&#34;m&#34;&gt;08048460&lt;/span&gt; r __GNU_EH_FRAME_HDR
+0804828c T _init
+08049f0c t __init_array_end
+08049f08 t __init_array_start
+0804845c R _IO_stdin_used
+         w _ITM_deregisterTMCloneTable
+         w _ITM_registerTMCloneTable
+08049f10 d __JCR_END__
+08049f10 d __JCR_LIST__
+         w _Jv_RegisterClasses
+&lt;span class=&#34;m&#34;&gt;08048440&lt;/span&gt; T __libc_csu_fini
+080483e0 T __libc_csu_init
+         U __libc_start_main@@GLIBC_2.0
+080483db T main
+&lt;span class=&#34;m&#34;&gt;08048350&lt;/span&gt; t register_tm_clones
+080482e0 T _start
+0804a018 D __TMC_END__
+&lt;span class=&#34;m&#34;&gt;08048310&lt;/span&gt; T __x86.get_pc_thunk.bx
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	通过上面的命令我们可以看出，我们使用gcc编译之后的文件 test.bin 大小为7312k，同时我们使用 nm 命令可以看到test.bin文件中有相当多的符号。&lt;/p&gt;
+&lt;h2 id=&#34;三使用-ld-命令链接&#34;&gt;三	使用 ld 命令链接&lt;/h2&gt;
+&lt;p&gt;​	Linux 中有个之类叫 ld ，可以用来手动把这些文件链接起来。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;asuka@ubuntu:~/bochs/bin/kernel$ gcc -c -o main.o main.c
+asuka@ubuntu:~/bochs/bin/kernel$ file main.o
+main.o: ELF 32-bit LSB relocatable, Intel 80386, version &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;SYSV&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;, not stripped
+asuka@ubuntu:~/bochs/bin/kernel$ ld main.o -Ttext 0xc0001500 -e main -o kernel.bin
+asuka@ubuntu:~/bochs/bin/kernel$ ll kernel.bin 
+-rwxrwxr-x &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; asuka asuka &lt;span class=&#34;m&#34;&gt;1912&lt;/span&gt; Jan &lt;span class=&#34;m&#34;&gt;17&lt;/span&gt; 18:41 kernel.bin*
+asuka@ubuntu:~/bochs/bin/kernel$ nm kernel.bin 
+c000253c R __bss_start
+c000253c R _edata
+c000253c R _end
+c0001500 T main
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	这次简洁不少，我们首先使用 gcc -c 这个参数把 main.c 编译到汇编那一步，现在只差链接，然后我们可以用 file 看到此时的 main.o 是 relocatable ，是可重定位文件，因为还没有链接，之后我们使用 ld 命令把他链接，-Ttext 命令用于指定起始虚拟地址，这里可以我是为了能在我的操作系统中使用才加的这个参数，可以忽略， -e 是为了指定以 main 为起始点，否则默认是 _start ，链接好后我们可以看到 kernel.bin 的大小只有1912k，其中的符号也只有4条。&lt;/p&gt;
+&lt;h2 id=&#34;四比较&#34;&gt;四	比较&lt;/h2&gt;
+&lt;p&gt;​	其实两者从功能上来说是完全一样的，test.bin 之所以这么大是因为编译器在编译过程中为程序自动引用了别的代码，这是c运行库的功劳，目的是在调用 main 之前做初始化工作，可以看到里面有 _start ，实际上程序是从这里开始的，之后才调用了 main 函数。而我们手动链接既没有链接其他标准库，又指定了从 main 起始，所以小了很多。&lt;/p&gt;
+&lt;h2 id=&#34;五总结&#34;&gt;五	总结&lt;/h2&gt;
+&lt;p&gt;​	实际上来说区别不大，该用 gcc 还是要用 gcc 的，这个例子就是演示了下编译器为我们额外做的工作而已。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>GPG工具介绍</title>
+        <link>https://lunaasuka.github.io/p/gpg%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/</link>
+        <pubDate>Fri, 24 Sep 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/gpg%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/</guid>
+        <description>&lt;h2 id=&#34;一什么是gpg&#34;&gt;一.什么是GPG&lt;/h2&gt;
+&lt;p&gt;​		1991 年，程序员 Phil Zimmermann 为了避开政府监视，开发了加密软件 PGP。这个软件非常好用，迅速流传开来，成了许多程序员的必备工具。但是，它是商业软件，不能自由使用。所以，自由软件基金会决定，开发一个 PGP 的替代品，取名为 GnuPG。这就是 GPG 的由来。&lt;/p&gt;
+&lt;h2 id=&#34;二使用&#34;&gt;二.使用&lt;/h2&gt;
+&lt;p&gt;先放一个官方说明。&lt;/p&gt;
+&lt;p&gt;（Linux kali 5.2.0-kali2-amd64 #1 SMP Debian 5.2.9-2kali1 (2019-08-22) x86_64 GNU/Linux 这是我使用的kali版本）&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;50
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;51
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;52
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;53
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;54
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;55
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;56
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;57
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;58
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;59
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;60
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;61
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;62
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;63
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;64
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;65
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;66
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;67
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;68
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;69
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;70
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;71
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;72
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;73
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;74
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;75
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;76
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;77
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;78
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;79
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;80
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;81
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;82
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;83
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;84
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;GnuPG&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; 2.2.17
+libgcrypt 1.8.4
+Copyright &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;C&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt; Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; or later &amp;lt;https://gnu.org/licenses/gpl.html&amp;gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Home: /root/.gnupg
+支持的算法：
+公钥： RSA, ELG, DSA, ECDH, ECDSA, EDDSA
+密文： IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
+    CAMELLIA128, CAMELLIA192, CAMELLIA256
+散列： SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
+压缩：  不压缩, ZIP, ZLIB, BZIP2
+
+语法：gpg &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;options&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;files&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+签名、检查、加密或解密
+默认的操作依输入数据而定
+
+命令：
+ 
+ -s, --sign                  生成一份签名
+     --clear-sign            生成一份明文签名
+ -b, --detach-sign           生成一份分离的签名
+ -e, --encrypt               加密数据
+ -c, --symmetric             仅使用对称密文加密
+ -d, --decrypt               解密数据（默认）
+     --verify                验证签名
+ -k, --list-keys             列出密钥
+     --list-signatures       列出密钥和签名
+     --check-signatures      列出并检查密钥签名
+     --fingerprint           列出密钥和指纹
+ -K, --list-secret-keys      列出私钥
+     --generate-key          生成一个新的密钥对
+     --quick-generate-key    快速生成一个新的密钥对
+     --quick-add-uid         快速添加一个新的用户标识
+     --quick-revoke-uid      快速吊销一个用户标识
+     --quick-set-expire      快速设置一个过期日期
+     --full-generate-key     完整功能的密钥对生成
+     --generate-revocation   生成一份吊销证书
+     --delete-keys           从公钥钥匙环里删除密钥
+     --delete-secret-keys    从私钥钥匙环里删除密钥
+     --quick-sign-key        快速签名一个密钥
+     --quick-lsign-key       快速本地签名一个密钥
+     --sign-key              签名一个密钥
+     --lsign-key             本地签名一个密钥
+     --edit-key              签名或编辑一个密钥
+     --change-passphrase     更改密码
+     --export                导出密钥
+     --send-keys             个密钥导出到一个公钥服务器上
+     --receive-keys          从公钥服务器上导入密钥
+     --search-keys           在公钥服务器上搜索密钥
+     --refresh-keys          从公钥服务器更新所有密钥
+     --import                导入/合并密钥
+     --card-status           打印卡片状态
+     --edit-card             更改卡片上的数据
+     --change-pin            更改卡片的 PIN
+     --update-trustdb        更新信任数据库
+     --print-md              打印消息摘要
+     --server                以服务器模式运行
+     --tofu-policy VALUE     设置一个密钥的 TOFU 政策
+
+选项：
+ 
+ -a, --armor                 创建 ASCII 字符封装的输出
+ -r, --recipient USER-ID     为 USER-ID 加密
+ -u, --local-user USER-ID    使用 USER-ID 来签名或者解密
+ -z N                        设置压缩等级为 N （0 为禁用）
+     --textmode              使用规范的文本模式
+ -o, --output FILE           写输出到 FILE
+ -v, --verbose               详细模式
+ -n, --dry-run               不做任何更改
+ -i, --interactive           覆盖前提示
+     --openpgp               使用严格的 OpenPGP 行为
+
+（请参考手册页以获得所有命令和选项的完整列表）
+
+例子：
+
+ -se -r Bob &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;file&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;          为用户 Bob 签名和加密
+ --clear-sign &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;file&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;        创建一个明文签名
+ --detach-sign &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;file&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;       创建一个分离签名
+ --list-keys &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;names&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;        列出密钥
+ --fingerprint &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;names&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;      显示指纹
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;可以看到工具本身支持的功能很多，我们这里就简单介绍加解密的内容。&lt;/p&gt;
+&lt;p&gt;可以使用 gpg &amp;ndash;gen-key 来生成密钥。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --gen-key 
+注意：使用 “gpg --full-generate-key” 以获得一个功能完整的密钥产生对话框。
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;使用该命令即可生成密钥，但是运行该命令部分选项将会默认选择，如想要使用的加密方式（默认RSA）&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;请选择您要使用的密钥类型：
+   &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;1&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; RSA 和 RSA （默认）
+   &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;2&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; DSA 和 Elgamal
+   &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;3&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; DSA（仅用于签名）
+   &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;4&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; RSA（仅用于签名）
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;想要使用的密钥长度，密钥越长越安全&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;RSA 密钥的长度应在 &lt;span class=&#34;m&#34;&gt;1024&lt;/span&gt; 位与 &lt;span class=&#34;m&#34;&gt;4096&lt;/span&gt; 位之间。
+您想要使用的密钥长度？&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;3072&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;以及密钥的有效期限&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;请设定这个密钥的有效期限。
+         &lt;span class=&#34;nv&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 密钥永不过期
+      &amp;lt;n&amp;gt;  &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 密钥在 n 天后过期
+      &amp;lt;n&amp;gt;w &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 密钥在 n 周后过期
+      &amp;lt;n&amp;gt;m &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 密钥在 n 月后过期
+      &amp;lt;n&amp;gt;y &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 密钥在 n 年后过期
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这些都选择完成之后会要求你提供个人信息。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;真实姓名： ** ******
+电子邮件地址： 2838419909@qq.com
+您选定了此用户标识：
+    “** ****** &amp;lt;2838419909@qq.com&amp;gt;”
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这些信息是方便其他人辨识你的，填写什么是随意的，当然如果填写一些伪造的信息也没人管（笑&lt;/p&gt;
+&lt;p&gt;一切都确认好之后，系统会让你设定一个私钥的密码，这是出于安全考虑，可以更有效的保护你的私钥。&lt;/p&gt;
+&lt;p&gt;然后系统就会开始生成密钥，这时可以做一些随机的举动，例如敲打键盘或者移动鼠标之类的。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;我们需要生成大量的随机字节。在质数生成期间做些其他操作（敲打键盘、移动鼠标、读写硬盘之类的）将会是一个不错的主意，这会让随机数发生器有更好的机会获得足够的熵。
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;要不了多久密钥就生成好了。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg: 密钥 7E63E27A7D6D5059 被标记为绝对信任
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这里的 7E63E27A7D6D5059 是 用户ID 的Hash字符串，可以用来替代 用户ID 。&lt;/p&gt;
+&lt;h3 id=&#34;加密&#34;&gt;加密&lt;/h3&gt;
+&lt;p&gt;我们可以使用 encrypt 参数来加密文件，假设这里有一个 test.txt 需要被加密。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --recipient &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;用户ID&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; --output en_test.txt --encrypt test.txt&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;recipient 参数用来指定接受者的公钥， output 用来指定输出的文件名， encrypt 用来指定需要加密的文件。&lt;/p&gt;
+&lt;h3 id=&#34;解密&#34;&gt;解密&lt;/h3&gt;
+&lt;p&gt;对方收到加密文件以后，就可以用自己的私钥解密。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --decrypt en_test.txt --output de_test.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;decrypt 参数用来指定需要被解密的文件。&lt;/p&gt;
+&lt;p&gt;ps：gpg允许省略 decrypt 参数，也就是说你甚至可以简写成&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg en_test.txt 
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​		现在让我们来明确下加密和解密的流程。设有两人 A 和 B 。A 现在想给 B 发送一个加密的文件。那么首先 A 要拿到 B 的公钥，可以是在公钥服务器上下载或者由 B 直接发给 A ，然后用这个公钥来对文件加密，即加密时的 recipient 参数所指定的接受者的公钥，在这里就是我们已经获取的 B 的公钥。之后将加密过的文件发给 B ，B 拿到后使用自己的私钥对其进行解密，即可还原文件。也就是说，如果想给一个人发送一个对方能解密的文件，那么就需要先拿到对方的公钥才能进行加密。&lt;/p&gt;
+&lt;h3 id=&#34;签名&#34;&gt;签名&lt;/h3&gt;
+&lt;p&gt;对文件签名就是为了让别人知道这个文件是由我发出的或者是由我编写的。&lt;/p&gt;
+&lt;p&gt;我们可以使用 sign 参数来签名。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --sign test.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;运行后将会生成 test.txt.gpg 文件，这就是签名后的文件，这个文件默认使用二进制储存，也可以使用 clearsign 参数来生成 ASCII 码的签名文件。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --clearsign test.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;如果想单独生成一个签名文件，可以使用 detach-sign 参数。需要采用 ASCII 格式的就添加 armor 参数结课。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --detach-sign test.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;验证签名&#34;&gt;验证签名&lt;/h3&gt;
+&lt;p&gt;要记住，想要验证签名也需要对方的公钥才行，使用 verify 参数来验证。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gpg --verify test.txt.gpg test.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;前者是需要验证签名的文件，后者是输出文件。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>用户行为监控</title>
+        <link>https://lunaasuka.github.io/p/%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E7%9B%91%E6%8E%A7/</link>
+        <pubDate>Tue, 14 Sep 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E7%9B%91%E6%8E%A7/</guid>
+        <description>&lt;p&gt;​	当有人使用你的电脑时，或者有人远程登录到你的机器时，你肯定想尽量详细的记录下别人做的一切。众所周知有个      history命令可以记录下在终端上敲下的命令，但是却无法复现出这些命令输出到终端的信息，这时就可以使用 script 命令，该命令是linux的系统命令，非常简单好用。&lt;/p&gt;
+&lt;h2 id=&#34;如何使用&#34;&gt;如何使用&lt;/h2&gt;
+&lt;p&gt;​	我们可以直接在命令行中输入 script 命令来启动。先来看一下帮助文档。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;Usage:
+ script &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;options&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;file&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+
+Make a typescript of a terminal session.
+
+Options:
+ -a, --append                  append the output
+ -c, --command &amp;lt;command&amp;gt;       run &lt;span class=&#34;nb&#34;&gt;command&lt;/span&gt; rather than interactive shell
+ -e, --return                  &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt; code of the child process
+ -f, --flush                   run flush after each write
+     --force                   use output file even when it is a link
+ -o, --output-limit &amp;lt;size&amp;gt;     terminate &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; output files exceed size
+ -q, --quiet                   be quiet
+ -t&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&amp;lt;file&amp;gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;, --timing&lt;span class=&#34;o&#34;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; output timing data to stderr or to FILE
+ -h, --help                    display this &lt;span class=&#34;nb&#34;&gt;help&lt;/span&gt;
+ -V, --version                 display version
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	script 命令可以指定文件名来记录打印结果，之后目标文件就可以记录下输出在终端上的文本信息。&lt;/p&gt;
+&lt;p&gt;​	使用 Crtl + D 退出，或者输入 exit 。&lt;/p&gt;
+&lt;p&gt;​	和该命令配套的还有一个 scriptreplay ，可以用来重放保存后的文件，但是该命令并不是系统默认命令而是需要安装， 如何安装呢？其实这个脚本是一个pl脚本，在 util-linux 这个包里可以找到它。在安装前一定要安装gcc，如果不安装在编译的时候肯定报错，安装后就可以使用了。（参考&lt;a class=&#34;link&#34; href=&#34;https://www.cnblogs.com/wulaoer/p/5168150.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;文章&lt;/a&gt;）&lt;/p&gt;
+&lt;h2 id=&#34;自动化&#34;&gt;自动化&lt;/h2&gt;
+&lt;p&gt;​	可以使用bash脚本让 script 命令在有人登陆后自动运行，我们可以把它添加进shell环境配置文件中。如果你正在使用bash shell，把这一行加进你的bash环境配置文件中。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;    $ vi ~/.profile
+     
+    &lt;span class=&#34;c1&#34;&gt;# run the script command to record everything&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;# use -q for quite and -a option to append the script&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;#&lt;/span&gt;
+    /usr/bin/script -qa /usr/local/script/log_record_script
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;然后保存。下次他登录进你的系统时，script命令就会自动运行，并把日志记录进 /usr/local/script/logrecordscript 。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>find命令特殊用法</title>
+        <link>https://lunaasuka.github.io/p/find%E5%91%BD%E4%BB%A4%E7%89%B9%E6%AE%8A%E7%94%A8%E6%B3%95/</link>
+        <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/find%E5%91%BD%E4%BB%A4%E7%89%B9%E6%AE%8A%E7%94%A8%E6%B3%95/</guid>
+        <description>&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;find -type f
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;该命令可以列出当前目录下（包括子目录）所有文件。&lt;/p&gt;
+&lt;h2 id=&#34;exec命令说明&#34;&gt;exec命令说明&lt;/h2&gt;
+&lt;p&gt;-exec  参数后面跟的是command命令，它的终止是&lt;strong&gt;以;为结束标志的&lt;/strong&gt;，所以这句命令后面的分号是不可缺少的，&lt;strong&gt;考虑到各个系统中分号会有不同的意义，所以前面加反斜杠&lt;/strong&gt;。&lt;strong&gt;{}   花括号代表前面find查找出来的文件名&lt;/strong&gt;。这里只罗列出与find有关的用法与说明，详细说明请自行查询。&lt;/p&gt;
+&lt;h2 id=&#34;示例&#34;&gt;示例&lt;/h2&gt;
+&lt;p&gt;1.查找目录及子目录下全部文件并对结果执行ls -lah&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;find -type f -exec ls -lah &lt;span class=&#34;o&#34;&gt;{}&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\;&lt;/span&gt;
+
+输出
+root@kali:~/Tools/post-poc# find -type f -exec ls -lah &lt;span class=&#34;o&#34;&gt;{}&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\;&lt;/span&gt;
+-rwxrw-rw- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;826&lt;/span&gt; 12月 &lt;span class=&#34;m&#34;&gt;28&lt;/span&gt;  &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt; ./post—poc.html
+-rwxrw-rw- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;37&lt;/span&gt; 12月 &lt;span class=&#34;m&#34;&gt;27&lt;/span&gt;  &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt; ./command.php
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;2.查找当前目录下一天内更改过的文件&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt; find -type f -mtime -1 -exec ls -lah &lt;span class=&#34;o&#34;&gt;{}&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;3.查找当前目录下文件名以.log结尾且24小时内更改过的文件&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt; find -name &lt;span class=&#34;s2&#34;&gt;&amp;#34;*.log&amp;#34;&lt;/span&gt; -type f  -mtime -1 -exec ls -lah &lt;span class=&#34;o&#34;&gt;{}&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+        </item>
+        <item>
+        <title>linux文件安全监测</title>
+        <link>https://lunaasuka.github.io/p/linux%E6%96%87%E4%BB%B6%E5%AE%89%E5%85%A8%E7%9B%91%E6%B5%8B/</link>
+        <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/linux%E6%96%87%E4%BB%B6%E5%AE%89%E5%85%A8%E7%9B%91%E6%B5%8B/</guid>
+        <description>&lt;h3 id=&#34;知识点记录&#34;&gt;知识点记录&lt;/h3&gt;
+&lt;p&gt;首先介绍一个工具，是一款开源的十分好用的资源监控工具——glances。&lt;img src=&#34;https://lunaasuka.github.io/p/linux%E6%96%87%E4%BB%B6%E5%AE%89%E5%85%A8%E7%9B%91%E6%B5%8B/1631531785923.png&#34;
+	width=&#34;1440&#34;
+	height=&#34;890&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/linux%E6%96%87%E4%BB%B6%E5%AE%89%E5%85%A8%E7%9B%91%E6%B5%8B/1631531785923_hu233d009daeaf463617adc7d876a0d9df_1075469_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/linux%E6%96%87%E4%BB%B6%E5%AE%89%E5%85%A8%E7%9B%91%E6%B5%8B/1631531785923_hu233d009daeaf463617adc7d876a0d9df_1075469_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1631531785923&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;161&#34;
+		data-flex-basis=&#34;388px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;glances是一个基于python语言开发，可以为linux或者UNIX性能提供监视和分析性能数据的功能。glances在用户的终端上显示重要的系统信息，并动态的进行更新，让管理员实时掌握系统资源的使用情况，而动态监控并不会消耗大量的系统资源，比如CPU资源，通常消耗小于2%，glances默认每两秒更新一次数据。同时glances还可以将相同的数据捕获到一个文件，便于以后对报告进行分析和图形绘制，支持的文件格式有.csv电子表格格式和和html格式。&lt;/p&gt;
+&lt;p&gt;glances可以分析系统的：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CPU使用率&lt;/li&gt;
+&lt;li&gt;内存使用率&lt;/li&gt;
+&lt;li&gt;内核统计信息和运行队列信息&lt;/li&gt;
+&lt;li&gt;磁盘I/O速度、传输和读/写比率&lt;/li&gt;
+&lt;li&gt;磁盘适配器&lt;/li&gt;
+&lt;li&gt;网络I/O速度、传输和读/写比率&lt;/li&gt;
+&lt;li&gt;页面监控&lt;/li&gt;
+&lt;li&gt;进程监控-消耗资源最多的进程&lt;/li&gt;
+&lt;li&gt;计算机信息和系统资源&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;安装也比较简单，他们的&lt;a class=&#34;link&#34; href=&#34;https://github.com/nicolargo/glances&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;github界面&lt;/a&gt;提供了多种安装方式，我这边就简单的pip3 install glances安装了。&lt;/p&gt;
+&lt;p&gt;关于该工具的使用方法国内也有不少人写过文章，详细内容请自己去搜寻。&lt;/p&gt;
+&lt;h2 id=&#34;监控linux下文件变化&#34;&gt;监控linux下文件变化&lt;/h2&gt;
+&lt;p&gt;**1）**使用find -ctime (参数) 命令&lt;/p&gt;
+&lt;p&gt;该命令可以查看参数时间内发生过变动的文件。&lt;/p&gt;
+&lt;p&gt;例如find -ctime -5可以找出5天内变化过的文件，之后可以结合exec命令进行其他操作。有关find的一些用法请看我的另一篇文章&lt;a class=&#34;link&#34; href=&#34;https://lunaasuka.github.io/2021/09/13/find%e5%91%bd%e4%bb%a4%e7%89%b9%e6%ae%8a%e7%94%a8%e6%b3%95/&#34; &gt;“find命令特殊用法”&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ps：这里既可以使用ctime也可以使用mtime，两者稍有差异，但是网上对此的解析比较少（但是各类教程使用mtime的倒是很多&amp;hellip;），所以大家斟酌着使用，习惯用哪个就用哪个。&lt;/p&gt;
+&lt;p&gt;**2）**使用Iynis工具&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://cisofy.com/lynis/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;这里&lt;/a&gt;是lynis的官方网站。&lt;/p&gt;
+&lt;p&gt;Lynis 是一款运行在 Unix/Linux 平台上的基于主机的、开源的安全审计软件。Lynis是针对Unix/Linux的安全检查工具，可以发现潜在的安全威胁。这个工具覆盖可疑文件监测、漏洞、恶意程序扫描、配置错误等。 笔者暂时还没有研究该工具，以后可能会单独写一篇文章来介绍该工具。&lt;/p&gt;
+&lt;p&gt;**3）**通过脚本来进行文件md5监控&lt;/p&gt;
+&lt;p&gt;我们可以简单的计算一个文件的md5值然后记录下来，之后如果进行比对的时候这个值发生变化了则该文件已经被更改过了。网上开源的脚本不少，我在这里就不做介绍了，有需求的同学请自寻。&lt;/p&gt;
+&lt;p&gt;2021-9-29日注：发现了一个工具可以用来监测文件特征值，比使用脚本方便的多，叫 aide ,我这边没有安装也尚未进行测试，但是网上有关的教程和实验很多，大家可以去查查看。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

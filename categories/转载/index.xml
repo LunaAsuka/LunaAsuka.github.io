@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>转载 on Luna_Blog</title>
+        <link>https://lunaasuka.github.io/categories/%E8%BD%AC%E8%BD%BD/</link>
+        <description>Recent content in 转载 on Luna_Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Tue, 28 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://lunaasuka.github.io/categories/%E8%BD%AC%E8%BD%BD/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Linux中链接使用概要</title>
+        <link>https://lunaasuka.github.io/p/linux%E4%B8%AD%E9%93%BE%E6%8E%A5%E4%BD%BF%E7%94%A8%E6%A6%82%E8%A6%81/</link>
+        <pubDate>Tue, 28 Sep 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/p/linux%E4%B8%AD%E9%93%BE%E6%8E%A5%E4%BD%BF%E7%94%A8%E6%A6%82%E8%A6%81/</guid>
+        <description>&lt;p&gt;学习如何使用链接，通过从 Linux 文件系统多个位置来访问文件，可以让日常工作变得轻松。&lt;/p&gt;
+&lt;p&gt;​	Linux 文件系统中有两种链接link：硬链接hard link和软链接soft  link。虽然二者差别显著，但都用来解决相似的问题。它们都提供了对单个文件的多个目录项（引用）的访问，但实现却大为不同。链接的强大功能赋予了  Linux 文件系统灵活性，因为一切皆是文件。&lt;/p&gt;
+&lt;p&gt;​	举个例子，我曾发现一些程序要求特定的版本库方可运行。  当用升级后的库替代旧库后，程序会崩溃，提示旧版本库缺失。通常，库名的唯一变化就是版本号。出于直觉，我仅仅给程序添加了一个新的库链接，并以旧库名称命名。我试着再次启动程序，运行良好。程序就是一个游戏，人人都明白，每个玩家都会尽力使游戏进行下去。&lt;/p&gt;
+&lt;p&gt;​	事实上，几乎所有的应用程序链接库都使用通用的命名规则，链接名称中包含了主版本号，链接所指向的文件的文件名中同样包含了小版本号。再比如，程序的一些必需文件为了迎合 Linux  文件系统规范，从一个目录移动到另一个目录中，系统为了向后兼容那些不能获取这些文件新位置的程序在旧的目录中存放了这些文件的链接。如果你对  /lib64 目录做一个长清单列表，你会发现很多这样的例子。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;
+lrwxrwxrwx. &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;36&lt;/span&gt; Dec &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2016&lt;/span&gt; cracklib_dict.hwm -&amp;gt; ../../usr/share/cracklib/pw_dict.hwm
+lrwxrwxrwx. &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;36&lt;/span&gt; Dec &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2016&lt;/span&gt; cracklib_dict.pwd -&amp;gt; ../../usr/share/cracklib/pw_dict.pwd
+lrwxrwxrwx. &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;36&lt;/span&gt; Dec &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2016&lt;/span&gt; cracklib_dict.pwi -&amp;gt; ../../usr/share/cracklib/pw_dict.pwi
+lrwxrwxrwx. &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;27&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;9&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2016&lt;/span&gt; libaccountsservice.so.0 -&amp;gt; libaccountsservice.so.0.0.0
+-rwxr-xr-x. &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;288456&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;9&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2016&lt;/span&gt; libaccountsservice.so.0.0.0
+lrwxrwxrwx &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;15&lt;/span&gt; May &lt;span class=&#34;m&#34;&gt;17&lt;/span&gt; 11:47 libacl.so.1 -&amp;gt; libacl.so.1.1.0
+-rwxr-xr-x &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;36472&lt;/span&gt; May &lt;span class=&#34;m&#34;&gt;17&lt;/span&gt; 11:47 libacl.so.1.1.0
+lrwxrwxrwx. &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;15&lt;/span&gt; Feb &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2016&lt;/span&gt; libaio.so.1 -&amp;gt; libaio.so.1.0.1
+-rwxr-xr-x. &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;6224&lt;/span&gt; Feb &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2016&lt;/span&gt; libaio.so.1.0.0
+-rwxr-xr-x. &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;6224&lt;/span&gt; Feb &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2016&lt;/span&gt; libaio.so.1.0.1
+lrwxrwxrwx. &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;30&lt;/span&gt; Jan &lt;span class=&#34;m&#34;&gt;16&lt;/span&gt; 16:39 libakonadi-calendar.so.4 -&amp;gt; libakonadi-calendar.so.4.14.26
+-rwxr-xr-x. &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;816160&lt;/span&gt; Jan &lt;span class=&#34;m&#34;&gt;16&lt;/span&gt; 16:39 libakonadi-calendar.so.4.14.26
+lrwxrwxrwx. &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;29&lt;/span&gt; Jan &lt;span class=&#34;m&#34;&gt;16&lt;/span&gt; 16:39 libakonadi-contact.so.4 -&amp;gt; libakonadi-contact.so.4.14.26
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;/lib64 目录下的一些链接&lt;/p&gt;
+&lt;p&gt;在上面展示的 /lib64 目录清单列表中，文件模式第一个字母 l （小写字母 l）表示这是一个软链接（又称符号链接）。&lt;/p&gt;
+&lt;h2 id=&#34;硬链接&#34;&gt;硬链接&lt;/h2&gt;
+&lt;p&gt;​	在 Linux 的 EXT4 文件系统的历史、特性以及最佳实践一文中，我曾探讨过这样一个事实，每个文件都有一个包含该文件信息的  inode，包含了该文件的位置信息。上述文章中的图2展示了一个指向 inode 的单一目录项。每个文件都至少有一个目录项指向描述该文件信息的  inode ，目录项是一个硬链接，因此每个文件至少都有一个硬链接。&lt;/p&gt;
+&lt;p&gt;​	如下图 1 所示，多个目录项指向了同一 inode 。这些目录项都是硬链接。我曾在三个目录项中使用波浪线 (~)  的缩写，这是用户目录的惯例表示，因此在该例中波浪线等同于 /home/user  。值得注意的是，第四个目录项是一个完全不同的目录，/home/shared，可能是该计算机上用户的共享文件目录。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://www.linuxprobe.com/wp-content/uploads/2017/12/1-1.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Linux文件链接之使用概要Linux文件链接之使用概要&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;​	硬链接被限制在一个单一的文件系统中。此处的“文件系统” 是指挂载在特定挂载点上的分区或逻辑卷，此例中是  /home。这是因为在每个文件系统中的 inode 号都是唯一的。而在不同的文件系统中，如 /var 或 /opt，会有和 /home 中相同的 inode 号。&lt;/p&gt;
+&lt;p&gt;​	因为所有的硬链接都指向了包含文件元信息的单一 inode ，这些属性都是文件的一部分，像所属关系、权限、到该 inode  的硬链接数目，对每个硬链接来说这些特性没有什么不同的。这是一个文件所具有的一组属性。唯一能区分这些文件的是包含在 inode  信息中的文件名。链接到同一目录中的单一文件/ inode 的硬链接必须拥有不同的文件名，这是基于同一目录下不能存在重复的文件名的事实的。&lt;/p&gt;
+&lt;p&gt;文件的硬链接数目可通过 ls -l 来查看，如果你想查看实际节点号，可使用 ls -li 命令。&lt;/p&gt;
+&lt;h2 id=&#34;软链接&#34;&gt;软链接&lt;/h2&gt;
+&lt;p&gt;​	硬链接和软链接（也称为符号链接symlink）的区别在于，硬链接直接指向属于该文件的 inode  ，而软链接直接指向一个目录项，即指向一个硬链接。因为软链接指向的是一个文件的硬链接而非该文件的 inode ，所以它们并不依赖于 inode  号，这使得它们能跨越不同的文件系统、分区和逻辑卷起作用。&lt;/p&gt;
+&lt;p&gt;​	软链接的缺点是，一旦它所指向的硬链接被删除或重命名后，该软链接就失效了。软链接虽然还在，但所指向的硬链接已不存在。所幸的是，ls 命令能以红底白字的方式在其列表中高亮显示失效的软链接。&lt;/p&gt;
+&lt;h2 id=&#34;链接实验&#34;&gt;链接实验&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;我认为最容易理解链接用法及其差异的方法是动手搭建一个项目。这个项目应以非超级用户的身份在一个空目录下进行。我创建了 ~/temp  目录做这个实验，你也可以这么做。这么做可为项目创建一个安全的环境且提供一个新的空目录让程序运作，如此以来这儿仅存放和程序有关的文件。 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;初始工作&#34;&gt;初始工作&lt;/h2&gt;
+&lt;p&gt;首先，在你要进行实验的目录下为该项目中的任务创建一个临时目录，确保当前工作目录（PWD）是你的主目录，然后键入下列命令。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;mkdir temp
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;使用这个命令将当前工作目录切换到 ~/temp。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; temp
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;实验开始，我们需要创建一个能够链接到的文件，下列命令可完成该工作并向其填充内容。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;du -h &amp;gt; main.file.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;使用 ls -l 长列表命名确认文件正确地创建了。运行结果应类似于我的。注意文件大小只有 7 字节，但你的可能会有 1～2 字节的变动。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ ls -l
+total &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt;
+-rw-rw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; 07:34 main.file.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;在列表中，文件模式串后的数字 1 代表存在于该文件上的硬链接数。现在应该是 1 ，因为我们还没有为这个测试文件建立任何硬链接。&lt;/p&gt;
+&lt;h2 id=&#34;对硬链接进行实验&#34;&gt;对硬链接进行实验&lt;/h2&gt;
+&lt;p&gt;​	硬链接创建一个指向同一 inode 的新目录项，当为文件添加一个硬链接时，你会看到链接数目的增加。确保当前工作目录仍为 ~/temp。创建一个指向 main.file.txt 的硬链接，然后查看该目录下文件列表。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ ln main.file.txt link1.file.txt
+&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ ls -l
+total &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt;
+-rw-rw-r-- &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; 07:34 link1.file.txt
+-rw-rw-r-- &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; 07:34 main.file.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	目录中两个文件都有两个链接且大小相同，时间戳也一样。这就是有一个 inode 和两个硬链接（即该文件的目录项）的一个文件。再建立一个该文件的硬链接，并列出目录清单内容。你可以建立硬链接： link1.file.txt 或 main.file.txt。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ ln link1.file.txt link2.file.txt &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; ls -l
+total &lt;span class=&#34;m&#34;&gt;16&lt;/span&gt;
+-rw-rw-r-- &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; 07:34 link1.file.txt
+-rw-rw-r-- &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; 07:34 link2.file.txt
+-rw-rw-r-- &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; 07:34 main.file.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	注意，该目录下的每个硬链接必须使用不同的名称，因为同一目录下的两个文件不能拥有相同的文件名。试着创建一个和现存链接名称相同的硬链接。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ ln main.file.txt link2.file.txt
+ln: failed to create hard link &lt;span class=&#34;s1&#34;&gt;&amp;#39;link2.file.txt&amp;#39;&lt;/span&gt;: File exists
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	显然不行，因为 link2.file.txt 已经存在。目前为止我们只在同一目录下创建硬链接，接着在临时目录的父目录（你的主目录）中创建一个链接。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ ln main.file.txt ../main.file.txt &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; ls -l ../main*
+-rw-rw-r-- &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; 07:34 main.file.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	上面的 ls 命令显示 main.file.txt 文件确实存在于主目录中，且与该文件在 temp 目录中的名称一致。当然它们不是不同的文件，它们是同一文件的两个链接，指向了同一文件的目录项。为了帮助说明下一点，在 temp 目录中添加一个非链接文件。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ touch unlinked.file &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; ls -l
+total &lt;span class=&#34;m&#34;&gt;12&lt;/span&gt;
+-rw-rw-r-- &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; 07:34 link1.file.txt
+-rw-rw-r-- &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; 07:34 link2.file.txt
+-rw-rw-r-- &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; 07:34 main.file.txt
+-rw-rw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 08:18 unlinked.file
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;使用 ls 命令的 i 选项查看 inode 的硬链接号和新创建文件的硬链接号。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ ls -li
+total &lt;span class=&#34;m&#34;&gt;12&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; 07:34 link1.file.txt
+&lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; 07:34 link2.file.txt
+&lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; 07:34 main.file.txt
+&lt;span class=&#34;m&#34;&gt;657863&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 08:18 unlinked.file
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	注意上面文件模式左边的数字 657024 ，这是三个硬链接文件所指的同一文件的 inode 号，你也可以使用 i  选项查看主目录中所创建的链接的节点号，和该值相同。而那个只有一个链接的 inode 号和其他的不同，在你的系统上看到的 inode  号或许不同于本文中的。&lt;/p&gt;
+&lt;p&gt;接着改变其中一个硬链接文件的大小。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ df -h &amp;gt; link2.file.txt &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; ls -li
+total &lt;span class=&#34;m&#34;&gt;12&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;1157&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 14:14 link1.file.txt
+&lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;1157&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 14:14 link2.file.txt
+&lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;1157&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 14:14 main.file.txt
+&lt;span class=&#34;m&#34;&gt;657863&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 08:18 unlinked.file
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;现在所有的硬链接文件大小都比原来大了，因为多个目录项都链接着同一文件。&lt;/p&gt;
+&lt;p&gt;​	下个实验在我的电脑上会出现这样的结果，是因为我的 /tmp  目录在一个独立的逻辑卷上。如果你有单独的逻辑卷或文件系统在不同的分区上（如果未使用逻辑卷），确定你是否能访问那个分区或逻辑卷，如果不能，你可以在电脑上挂载一个 U 盘，如果上述方式适合你，你可以进行这个实验。&lt;/p&gt;
+&lt;p&gt;试着在 /tmp 目录中建立一个 ~/temp 目录下文件的链接（或你的文件系统所在的位置）。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ ln link2.file.txt /tmp/link3.file.txt
+ln: failed to create hard link &lt;span class=&#34;s1&#34;&gt;&amp;#39;/tmp/link3.file.txt&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;link2.file.txt&amp;#39;&lt;/span&gt;:
+Invalid cross-device link
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	为什么会出现这个错误呢？ 原因是每一个单独的可挂载文件系统都有一套自己的 inode 号。简单的通过 inode 号来跨越整个 Linux 文件系统结构引用一个文件会使系统困惑，因为相同的节点号会存在于每个已挂载的文件系统中。&lt;/p&gt;
+&lt;p&gt;有时你可能会想找到一个 inode 的所有硬链接。你可以使用 ls -li 命令。然后使用 find 命令找到所有硬链接的节点号。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ find . -inum &lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt;
+./main.file.txt
+./link1.file.txt
+./link2.file.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	注意 find 命令不能找到所属该节点的四个硬链接，因为我们在 ~/temp 目录中查找。 find 命令仅在当前工作目录及其子目录中查找文件。要找到所有的硬链接，我们可以使用下列命令，指定你的主目录作为起始查找条件。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ find ~ -samefile main.file.txt
+/home/dboth/temp/main.file.txt
+/home/dboth/temp/link1.file.txt
+/home/dboth/temp/link2.file.txt
+/home/dboth/main.file.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	如果你是非超级用户，没有权限，可能会看到错误信息。这个命令也使用了 -samefile 选项而不是指定文件的节点号。这个效果和使用 inode 号一样且更容易，如果你知道其中一个硬链接名称的话。&lt;/p&gt;
+&lt;h2 id=&#34;对软链接进行实验&#34;&gt;对软链接进行实验&lt;/h2&gt;
+&lt;p&gt;​	如你刚才看到的，不能跨越文件系统边界创建硬链接，即在逻辑卷或文件系统中从一个文件系统到另一个文件系统。软链接给出了这个问题的解决方案。虽然它们可以达到相同的目的，但它们是非常不同的，知道这些差异是很重要的。&lt;/p&gt;
+&lt;p&gt;让我们在 ~/temp 目录中创建一个符号链接来开始我们的探索。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ ln -s link2.file.txt link3.file.txt &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; ls -li
+total &lt;span class=&#34;m&#34;&gt;12&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;1157&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 14:14 link1.file.txt
+&lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;1157&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 14:14 link2.file.txt
+&lt;span class=&#34;m&#34;&gt;658270&lt;/span&gt; lrwxrwxrwx &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 15:21 link3.file.txt -&amp;gt;
+link2.file.txt
+&lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;1157&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 14:14 main.file.txt
+&lt;span class=&#34;m&#34;&gt;657863&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 08:18 unlinked.file
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	拥有节点号 657024 的那些硬链接没有变化，且硬链接的数目也没有变化。新创建的符号链接有不同的 inode 号 658270。 名为  link3.file.txt 的软链接指向了 link2.file.txt 文件。使用 cat 命令查看 link3.file.txt  文件的内容。符号链接的 inode 信息以字母 l （小写字母 l）开头，意味着这个文件实际是个符号链接。&lt;/p&gt;
+&lt;p&gt;​	上例中软链接文件 link3.file.txt 的大小只有 14 字节。这是文本内容 link3.file.txt  的大小，即该目录项的实际内容。目录项 link3.file.txt 并不指向一个 inode  ；它指向了另一个目录项，这在跨越文件系统建立链接时很有帮助。现在试着创建一个软链接，之前在 /tmp 目录中尝试过的。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ ln -s /home/dboth/temp/link2.file.txt
+/tmp/link3.file.txt &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; ls -l /tmp/link*
+lrwxrwxrwx &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;31&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 21:53 /tmp/link3.file.txt -&amp;gt;
+/home/dboth/temp/link2.file.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;删除链接&#34;&gt;删除链接&lt;/h2&gt;
+&lt;p&gt;当你删除硬链接或硬链接所指的文件时，需要考虑一些问题。&lt;/p&gt;
+&lt;p&gt;首先，让我们删除硬链接文件 main.file.txt。注意指向 inode 的每个目录项就是一个硬链接。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ rm main.file.txt &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; ls -li
+total &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;1157&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 14:14 link1.file.txt
+&lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;1157&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 14:14 link2.file.txt
+&lt;span class=&#34;m&#34;&gt;658270&lt;/span&gt; lrwxrwxrwx &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 15:21 link3.file.txt -&amp;gt;
+link2.file.txt
+&lt;span class=&#34;m&#34;&gt;657863&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 08:18 unlinked.file
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	main.file.txt 是该文件被创建时所创建的第一个硬链接。现在删除它，仍然保留着原始文件和硬盘上的数据以及所有剩余的硬链接。要删除原始文件，你必须删除它的所有硬链接。&lt;/p&gt;
+&lt;p&gt;现在删除 link2.file.txt 硬链接文件。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;dboth@david temp&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ rm link2.file.txt &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; ls -li
+total &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;1157&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 14:14 link1.file.txt
+&lt;span class=&#34;m&#34;&gt;658270&lt;/span&gt; lrwxrwxrwx &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 15:21 link3.file.txt -&amp;gt;
+link2.file.txt
+&lt;span class=&#34;m&#34;&gt;657024&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;1157&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 14:14 main.file.txt
+&lt;span class=&#34;m&#34;&gt;657863&lt;/span&gt; -rw-rw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; dboth dboth &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; Jun &lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; 08:18 unlinked.file
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;​	注意软链接的变化。删除软链接所指的硬链接会使该软链接失效。在我的系统中，断开的链接用颜色高亮显示，目标的硬链接会闪烁显示。如果需要修复这个损坏的软链接，你需要在同一目录下建立一个和旧链接相同名字的硬链接，只要不是所有硬链接都已删除就行。您还可以重新创建链接本身，链接保持相同的名称，但指向剩余的硬链接中的一个。当然如果软链接不再需要，可以使用 rm 命令删除它们。&lt;/p&gt;
+&lt;p&gt;​	unlink 命令在删除文件和链接时也有用。它非常简单且没有选项，就像 rm 命令一样。然而，它更准确地反映了删除的基本过程，因为它删除了目录项与被删除文件的链接。&lt;/p&gt;
+&lt;h2 id=&#34;写在最后&#34;&gt;写在最后&lt;/h2&gt;
+&lt;p&gt;我用过这两种类型的链接很长一段时间后，我开始了解它们的能力和特质。我为我所教的 Linux 课程编写了一个实验室项目，以充分理解链接是如何工作的，并且我希望增进你的理解。&lt;/p&gt;
+&lt;p&gt;作者简介：&lt;/p&gt;
+&lt;p&gt;​	戴维.布斯 - 戴维.布斯是 Linux 和开源倡导者，居住在北卡罗莱纳的罗列 。他在 IT 行业工作了四十年，为 IBM 工作了 20  多年的 OS/2。在 IBM 时，他在 1981 年编写了最初的 IBM PC 的第一个培训课程。他为 RedHat 教授过 RHCE 班，并曾在 MCI Worldcom、思科和北卡罗莱纳州工作。他已经用 Linux 和开源软件工作将近 20 年了。&lt;/p&gt;
+&lt;p&gt;via: &lt;a href=&#34;https://opensource.com/article/17/6/linking-linux-filesystem&#34;&gt;https://opensource.com/article/17/6/linking-linux-filesystem&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;作者：&lt;a class=&#34;link&#34; href=&#34;https://opensource.com/users/dboth&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;David Both&lt;/a&gt; 译者：&lt;a class=&#34;link&#34; href=&#34;https://github.com/yongshouzhang&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;yongshouzhang&lt;/a&gt; 校对：&lt;a class=&#34;link&#34; href=&#34;https://github.com/wxy&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;wxy&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;本文由 &lt;a class=&#34;link&#34; href=&#34;https://github.com/LCTT/TranslateProject&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;LCTT&lt;/a&gt; 原创编译，&lt;a class=&#34;link&#34; href=&#34;https://linux.cn/article-9105-1.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Linux中国&lt;/a&gt; 荣誉推出&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;原文来自：https://linux.cn/article-9105-1.html&lt;/p&gt;
+&lt;p&gt;本文地址：https://www.linuxprobe.com/linux-users-guidance.html&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;注本文为转载且已提供原文地址&#34;&gt;&lt;strong&gt;注：本文为转载且已提供原文地址。&lt;/strong&gt;&lt;/h3&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

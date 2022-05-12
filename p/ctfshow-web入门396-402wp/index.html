@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='关于“echo”的那些事'><title>CTFShow web入门396-402wp</title>
+
+<link rel='canonical' href='https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/'>
+
+<link rel="stylesheet" href="/scss/style.min.5d0ba4b8e005f9d5f3e1dc243f2555eba3c536500cc6b2ab42f43d5a03ac060a.css"><meta property='og:title' content='CTFShow web入门396-402wp'>
+<meta property='og:description' content='关于“echo”的那些事'>
+<meta property='og:url' content='https://lunaasuka.github.io/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/'>
+<meta property='og:site_name' content='Luna_Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CTF' /><meta property='article:published_time' content='2021-02-07T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2021-02-07T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="CTFShow web入门396-402wp">
+<meta name="twitter:description" content="关于“echo”的那些事">
+    <link rel="shortcut icon" href="img/favicon.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/author_hu5662b65b0b35d446edae569f17233a38_392169_300x0_resize_q75_box.jpg" width="300"
+                            height="296" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">😋</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Luna_Blog</a></h1>
+            <h2 class="site-description">天将降大任于斯人也</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/LunaAsuka'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/about' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" >
+                网络安全
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/">CTFShow web入门396-402wp</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            关于“echo”的那些事
+        </h3>
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Feb 07, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 4 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>题目描述：特定函数绕过。</p>
+<p><img src="/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/1612683272098.png"
+	width="820"
+	height="695"
+	srcset="/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/1612683272098_huc077a52c9b6bfa0b42ade1efb202348d_65296_480x0_resize_box_2.png 480w, /p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/1612683272098_huc077a52c9b6bfa0b42ade1efb202348d_65296_1024x0_resize_box_2.png 1024w"
+	loading="lazy"
+	
+		alt="1612683272098"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="117"
+		data-flex-basis="283px"
+	
+></p>
+<p>根据描述来看我们需要绕过一些函数，这里有两个重要函数，一个是<a class="link" href="https://www.php.net/parse_url"  target="_blank" rel="noopener"
+    >parse_url</a>，一个是shell_exec。第二个大家应该都很熟悉，这里说一下第一个。</p>
+<p>该函数是用来解析url的，一个完整的url会包括好多部分，以下是示例。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php">
+<span class="o">&lt;?</span><span class="nx">php</span>
+<span class="nv">$url</span> <span class="o">=</span> <span class="s1">&#39;http://username:password@hostname/path?arg=value#anchor&#39;</span><span class="p">;</span>
+
+<span class="nx">print_r</span><span class="p">(</span><span class="nx">parse_url</span><span class="p">(</span><span class="nv">$url</span><span class="p">));</span>
+<span class="cp">?&gt;</span><span class="err">
+</span><span class="err"> 
+</span><span class="err">输出：
+</span><span class="err">    Array
+</span><span class="err">(
+</span><span class="err">    [scheme] =&gt; http
+</span><span class="err">    [host] =&gt; hostname
+</span><span class="err">    [user] =&gt; username
+</span><span class="err">    [pass] =&gt; password
+</span><span class="err">    [path] =&gt; /path
+</span><span class="err">    [query] =&gt; arg=value
+</span><span class="err">    [fragment] =&gt; anchor
+</span><span class="err">)
+</span><span class="err">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>好我们返回来看题，题目代码解析url之后使用了其host和path两部分。我们可以直接修改上面代码中的示例url的对应部分，这里大家可以自己用php实际测试一下。</p>
+<p>以下是我本人的做题思路，想要payload的同学可以直接跳到后面。</p>
+<h2 id="我的思路">我的思路：</h2>
+<p>最开始我的着重点不在于给出的shell_exec这个函数中的格式，也就是“echo”那一串，而是把目光放在了parse_url上，我发现可以在path这个地方进行任意命令执行，大家可以用下面的代码实测一下，我将其命名为test.php</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"> <span class="o">&lt;?</span><span class="nx">php</span>
+<span class="nx">error_reporting</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">])){</span>
+    <span class="nv">$url</span> <span class="o">=</span> <span class="nx">parse_url</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]);</span>
+    <span class="nx">var_dump</span><span class="p">(</span><span class="nv">$url</span><span class="p">)</span>
+    <span class="nv">$a</span><span class="o">=</span><span class="nx">shell_exec</span><span class="p">(</span><span class="s1">&#39;echo &#39;</span><span class="o">.</span><span class="nv">$url</span><span class="p">[</span><span class="s1">&#39;host&#39;</span><span class="p">]</span><span class="o">.</span><span class="s1">&#39;&gt; &#39;</span><span class="o">.</span><span class="nv">$url</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]);</span>
+	<span class="k">echo</span> <span class="nv">$a</span><span class="p">;</span>
+<span class="p">}</span><span class="k">else</span><span class="p">{</span>
+    <span class="nx">highlight_file</span><span class="p">(</span><span class="no">__FILE__</span><span class="p">);</span>
+<span class="p">}</span> 
+</code></pre></td></tr></table>
+</div>
+</div><p>我们可以尝试构造url=http://username:password@hostname//|ls</p>
+<p>大家可以发现我将path替换成了 //|ls ，可以看到我多加了一个斜杠，这里涉及到parse_url函数的绕过，这样做会使函数解析失效，请大家自行百度，不做过多讲解。然后通过管道符拼接我们想要的命令就可以实现任意命令执行。</p>
+<p>但是有个很严重的问题是shell_exec这个函数没有回显，虽然我们自己本地测试可以用变量承载它的输出，但是这道题不行，我当时在这里卡了好久，一直想通过一些文件操作命令写入或者编辑，但是我们权限不够，或者说这个页面的php文件权限不够，大家可以试着将本地的test.php文件提升权限，当权限足够高的时候就可以随意操作文件了。</p>
+<p>这条路终究是走不通的，也可能是我没想到，如果有人有更好的解题办法请联系我！<img src="/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/1612684468478.png"
+	width="795"
+	height="492"
+	srcset="/p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/1612684468478_hu1e4f0f5ea731fac505dda770e09cb886_400974_480x0_resize_box_2.png 480w, /p/ctfshow-web%E5%85%A5%E9%97%A8396-402wp/1612684468478_hu1e4f0f5ea731fac505dda770e09cb886_400974_1024x0_resize_box_2.png 1024w"
+	loading="lazy"
+	
+		alt="1612684468478"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="161"
+		data-flex-basis="387px"
+	
+></p>
+<p>那只能转向shell_exec了，可以看到，它已经给了一串字符了，再一看它是规定好了要使用echo这个命令，后面还有个&gt;符号，百度一查发现是echo的重定向功能，这么一看，这道题的实际意思其实是让我们将url中的【host】部分重定向到【path】中。在linux命令行中使用这个命令，例如 echo flag.php &gt; a.txt ，这样的话如果有a.txt则将&quot;flag.php&quot;这个字符串覆盖到a.txt中，若是没有a.txt的话则新建一个然后覆盖写入。</p>
+<p>本题没说flag在哪个文件里。所以我们要先执行ls。</p>
+<p>那咋即执行命令，又把命令的输出写入文件呢？</p>
+<h2 id="payload">payload：</h2>
+<p>这里我们构造payload：?url=http://username:password@`ls`/var/www/html/a.txt</p>
+<p>答案是反引号，反引号也会执行命令，然后echo将ls的输出写入到a.txt中，之后直接访问a.txt会发现有个fl0g.php的文件</p>
+<p>然后再次构造：?url=http://username:password@`cat fl0g.php`/var/www/html/a.txt</p>
+<p>访问a.txt获得flag。</p>
+<h2 id="web397">web397</h2>
+<p>跟web396差不多，不同的是重定向到了/tmp文件夹，但是没有关系</p>
+<p>直接构造payload：?url=http://username:password@`cat fl0g.php`/../../../var/www/html/a.txt</p>
+<p>ls那个大家自己构造，flag所在文件名没变就直接拿过来用了。</p>
+<h2 id="web398">web398</h2>
+<p>我感觉我做的是非预期解&hellip;&hellip;</p>
+<p>payload同web397。其实这题过滤的是【host】中的分号，不是很懂预期解应该是什么。</p>
+<h2 id="web399">web399</h2>
+<p>同上，之前看群里大佬疯狂秒题之后说用的一个payload，现在算是见识到了。</p>
+<h2 id="web400">web400</h2>
+<p>同上。</p>
+<h2 id="web401">web401</h2>
+<p>同上。</p>
+<h2 id="web402">web402</h2>
+<p>过滤了schema，把http改掉就行，其余同上。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ctf/">CTF</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-contents--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-contents">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/ctfshow-web%E5%85%A5%E9%97%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8Cwp/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CTFShow web入门命令执行wp</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/ctfshow-web%E5%85%A5%E9%97%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86wp/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CTFShow web入门信息收集wp</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/ctfshow-web%E5%85%A5%E9%97%A8459wp/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CTFShow web入门459wp</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web1-8/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CTFShow萌新计划web1-8</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/ctfshow%E8%90%8C%E6%96%B0%E8%AE%A1%E5%88%92web9-21/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CTFShow萌新计划web9-21</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (DISQUS) {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Luna_Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.11.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#我的思路">我的思路：</a></li>
+    <li><a href="#payload">payload：</a></li>
+    <li><a href="#web397">web397</a></li>
+    <li><a href="#web398">web398</a></li>
+    <li><a href="#web399">web399</a></li>
+    <li><a href="#web400">web400</a></li>
+    <li><a href="#web401">web401</a></li>
+    <li><a href="#web402">web402</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
