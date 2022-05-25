@@ -6,7 +6,15 @@
         <description>Recent content in Categories on Luna_Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Wed, 11 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://lunaasuka.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 24 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://lunaasuka.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>简单轮子系列</title>
+        <link>https://lunaasuka.github.io/categories/%E7%AE%80%E5%8D%95%E8%BD%AE%E5%AD%90%E7%B3%BB%E5%88%97/</link>
+        <pubDate>Tue, 24 May 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://lunaasuka.github.io/categories/%E7%AE%80%E5%8D%95%E8%BD%AE%E5%AD%90%E7%B3%BB%E5%88%97/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>从零开发编译器</title>
         <link>https://lunaasuka.github.io/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E7%BC%96%E8%AF%91%E5%99%A8/</link>
         <pubDate>Wed, 11 May 2022 00:00:00 +0000</pubDate>
@@ -53,14 +61,6 @@
         
         <guid>https://lunaasuka.github.io/categories/%E6%9D%82%E8%B0%88/</guid>
         <description></description>
-        </item>
-        <item>
-        <title>Test</title>
-        <link>https://lunaasuka.github.io/categories/test/</link>
-        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-        
-        <guid>https://lunaasuka.github.io/categories/test/</guid>
-        <description>&lt;img src="https://lunaasuka.github.io/categories/test/hutomo-abrianto-l2jk-uxb1BY-unsplash.jpg" alt="Featured image of post Test" /&gt;</description>
         </item>
         
     </channel>
