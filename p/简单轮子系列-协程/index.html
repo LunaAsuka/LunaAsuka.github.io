@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='基于之前的线程进一步封装了协程'><title>简单轮子系列-协程</title>
+
+<link rel='canonical' href='https://lunaasuka.github.io/p/%E7%AE%80%E5%8D%95%E8%BD%AE%E5%AD%90%E7%B3%BB%E5%88%97-%E5%8D%8F%E7%A8%8B/'>
+
+<link rel="stylesheet" href="/scss/style.min.5d0ba4b8e005f9d5f3e1dc243f2555eba3c536500cc6b2ab42f43d5a03ac060a.css"><meta property='og:title' content='简单轮子系列-协程'>
+<meta property='og:description' content='基于之前的线程进一步封装了协程'>
+<meta property='og:url' content='https://lunaasuka.github.io/p/%E7%AE%80%E5%8D%95%E8%BD%AE%E5%AD%90%E7%B3%BB%E5%88%97-%E5%8D%8F%E7%A8%8B/'>
+<meta property='og:site_name' content='Luna_Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='C&#43;&#43;' /><meta property='article:tag' content='造轮子' /><meta property='article:tag' content='协程' /><meta property='article:published_time' content='2022-06-04T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-06-04T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="简单轮子系列-协程">
+<meta name="twitter:description" content="基于之前的线程进一步封装了协程">
+    <link rel="shortcut icon" href="img/favicon.png" />
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/author_hu5662b65b0b35d446edae569f17233a38_392169_300x0_resize_q75_box.jpg" width="300"
+                            height="296" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">😋</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Luna_Blog</a></h1>
+            <h2 class="site-description">待到秋来九月八,我花开后百花杀</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/LunaAsuka'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/about' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E7%AE%80%E5%8D%95%E8%BD%AE%E5%AD%90%E7%B3%BB%E5%88%97/" >
+                简单轮子系列
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E7%AE%80%E5%8D%95%E8%BD%AE%E5%AD%90%E7%B3%BB%E5%88%97-%E5%8D%8F%E7%A8%8B/">简单轮子系列-协程</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            基于之前的线程进一步封装了协程
+        </h3>
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 04, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 7 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="前置知识">前置知识</h2>
+<p>协程，又被称为用户态线程，是完全在用户态实现并由程序员全权控制的一种结构。协程比线程更轻量化，效率更高，本文所讲的协程是基于 Linux 下 ucontext.h 这个库所进行开发的。简单介绍一下该库，ucontext.h 中封装了一个用于保存用户线程的上下文的结构体，并定义了几个函数用于操作上下文。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">typedef</span> <span class="k">struct</span> <span class="nc">ucontext</span>
+  <span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">int</span> <span class="n">uc_flags</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="nc">ucontext</span> <span class="o">*</span><span class="n">uc_link</span><span class="p">;</span><span class="c1">// 当前上下文执行完了，下一个要执行的上下文 
+</span><span class="c1"></span>    <span class="n">stack_t</span> <span class="n">uc_stack</span><span class="p">;</span><span class="c1">// 该上下文中使用的栈
+</span><span class="c1"></span>    <span class="n">mcontext_t</span> <span class="n">uc_mcontext</span><span class="p">;</span><span class="c1">// 保存当前上下文，即各个寄存器的状态
+</span><span class="c1"></span>    <span class="n">__sigset_t</span> <span class="n">uc_sigmask</span><span class="p">;</span><span class="c1">// 保存当前线程的信号屏蔽掩码
+</span><span class="c1"></span>    <span class="k">struct</span> <span class="nc">_libc_fpstate</span> <span class="n">__fpregs_mem</span><span class="p">;</span>
+  <span class="p">}</span> <span class="n">ucontext_t</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>有关该结构体不需要深究，常用的就是 uc_stack 这个属性，我们后面会用到。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="kt">int</span> <span class="nf">getcontext</span><span class="p">(</span><span class="n">ucontext_t</span><span class="o">*</span> <span class="n">ucp</span><span class="p">);</span><span class="c1">// 将当前上下文保存到 ucp 中
+</span><span class="c1"></span><span class="kt">int</span> <span class="nf">setcontext</span><span class="p">(</span><span class="k">const</span> <span class="n">ucontext_t</span><span class="o">*</span> <span class="n">ucp</span><span class="p">);</span><span class="c1">// 将 ucp 中的上下文恢复到 cpu 中
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">makecontext</span><span class="p">(</span><span class="n">ucontext_t</span><span class="o">*</span> <span class="n">ucp</span><span class="p">,</span> <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">func</span><span class="p">)(),</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="p">...);</span><span class="c1">// 修改 ucp 中的上下文，使其为函数 func 的入口，后面可以跟上参数
+</span><span class="c1"></span><span class="kt">int</span> <span class="nf">swapcontext</span><span class="p">(</span><span class="n">ucontext_t</span><span class="o">*</span> <span class="n">oucp</span><span class="p">,</span> <span class="k">const</span> <span class="n">ucontext_t</span><span class="o">*</span> <span class="n">ucp</span><span class="p">);</span><span class="c1">// 切换上下文，将当前上下文保存到 oucp 中，然后恢复 ucp 的上下文到 cpu 中
+</span></code></pre></td></tr></table>
+</div>
+</div><p>这四个函数都是使用汇编实现的，我们不做深究，只要知道怎么使用就行。</p>
+<p><strong>PS：本文给出的是添加了后续调度器的协程，在本文末尾我会给出另外一个无调度器版本的协程。</strong></p>
+<p><strong>PSS：不论是之前的线程，还是接下来的任何轮子，我都写了一些用于显示辅助判断程序运行情况的标准输出，如果你有自己的日志系统可以尝试替换掉这些标准输出，或者用 DEBUG 宏来替代。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="c1">// 有关 DEBUG 宏的示例
+</span><span class="c1"></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="cp">#ifdef DEBUG
+</span><span class="cp"></span>    	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;DEBUGING&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="cp">#endif
+</span><span class="cp"></span>    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Normal print&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// g++ test.cpp -DDEBUG
+</span><span class="c1">// 这个 DEBUG 宏叫什么都行，不过最后只有用 g++ 编译的时候带上 -D(something) 才会被执行。也就是说这个宏是被编译器定义的，编译器不定义它就不会被编译。
+</span></code></pre></td></tr></table>
+</div>
+</div><h2 id="声明">声明</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="cp">#ifndef __COLODA_FIBER_H__
+</span><span class="cp">#define __COLODA_FIBER_H__
+</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;ucontext.h&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="k">namespace</span> <span class="n">coloda</span>
+<span class="p">{</span>
+
+<span class="k">class</span> <span class="nc">Scheduler</span><span class="p">;</span><span class="c1">// 调度器的声明，我们后续会实现
+</span><span class="c1"></span>
+<span class="k">class</span> <span class="nc">Fiber</span> <span class="o">:</span> <span class="k">public</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_shared_from_this</span><span class="o">&lt;</span><span class="n">Fiber</span><span class="o">&gt;</span><span class="c1">// 要用到智能指针进行管理，所以继承自enable_shared_from_this
+</span><span class="c1"></span><span class="p">{</span>
+<span class="k">friend</span> <span class="k">class</span> <span class="nc">Scheduler</span><span class="p">;</span><span class="c1">// 方便起见我们将调度器设置为友元类
+</span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
+    <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Fiber</span><span class="o">&gt;</span> <span class="n">ptr</span><span class="p">;</span>
+    <span class="c1">// 定义协程的状态
+</span><span class="c1"></span>    <span class="k">enum</span> <span class="nc">State</span>
+    <span class="p">{</span>
+        <span class="n">INIT</span><span class="p">,</span><span class="c1">// 初始化
+</span><span class="c1"></span>        <span class="n">HOLD</span><span class="p">,</span><span class="c1">// 暂停
+</span><span class="c1"></span>        <span class="n">EXEC</span><span class="p">,</span><span class="c1">// 执行中
+</span><span class="c1"></span>        <span class="n">TERM</span><span class="p">,</span><span class="c1">// 结束
+</span><span class="c1"></span>        <span class="n">READY</span><span class="p">,</span><span class="c1">// 就绪
+</span><span class="c1"></span>        <span class="n">EXCEPT</span><span class="c1">// 异常
+</span><span class="c1"></span>    <span class="p">};</span>
+
+<span class="k">public</span><span class="o">:</span>
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 无参构造函数
+</span><span class="cm">    */</span>
+    <span class="n">Fiber</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 构造函数
+</span><span class="cm">    * @param[in]: cb，目标函数
+</span><span class="cm">    * @param[in]: stacksize，该协程的栈空间大小，默认为 0，也就是无法正常运行
+</span><span class="cm">    * @param[in]: use_caller，是否在主协程上调度
+</span><span class="cm">    */</span>
+    <span class="n">Fiber</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">()</span><span class="o">&gt;</span> <span class="n">cb</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">stacksize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="kt">bool</span> <span class="n">use_caller</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+    
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 析构函数
+</span><span class="cm">    */</span>
+    <span class="o">~</span><span class="n">Fiber</span><span class="p">();</span>
+
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 重置协程执行函数，并重置协程状态为 INIT
+</span><span class="cm">    */</span>
+    <span class="kt">void</span> <span class="nf">reset</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">()</span><span class="o">&gt;</span> <span class="n">cb</span><span class="p">);</span>
+
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 运行该协程，即把该协程切换到运行状态，需要调度器
+</span><span class="cm">    */</span>
+    <span class="kt">void</span> <span class="nf">swapIn</span><span class="p">();</span>
+
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 把该协程切换到后台，需要调度器
+</span><span class="cm">    */</span>
+    <span class="kt">void</span> <span class="nf">swapOut</span><span class="p">();</span>
+
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 同 swapIn()，但是是从主协程切换到该协程，无需调度器
+</span><span class="cm">    */</span>
+    <span class="kt">void</span> <span class="nf">call</span><span class="p">();</span>
+
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 同swapOut()，但是是从该协程切换到主协程，无需调度器
+</span><span class="cm">    */</span>
+    <span class="kt">void</span> <span class="nf">back</span><span class="p">();</span>
+
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 获取协程 Id
+</span><span class="cm">    */</span>
+    <span class="kt">uint64_t</span> <span class="nf">getId</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">m_id</span><span class="p">;}</span>
+
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 获取协程状态
+</span><span class="cm">    */</span>
+    <span class="n">State</span> <span class="nf">getState</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">m_state</span><span class="p">;}</span>
+
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 设置当前线程的运行协程
+</span><span class="cm">    * @param[in]: f，协程
+</span><span class="cm">    */</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">SetThis</span><span class="p">(</span><span class="n">Fiber</span><span class="o">*</span> <span class="n">f</span><span class="p">);</span>
+   
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 获取当前协程
+</span><span class="cm">    */</span>
+    <span class="k">static</span> <span class="n">Fiber</span><span class="o">::</span><span class="n">ptr</span> <span class="n">GetThis</span><span class="p">();</span>
+
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 获取总协程数量
+</span><span class="cm">    */</span>
+    <span class="k">static</span> <span class="kt">uint64_t</span> <span class="nf">TotalFibers</span><span class="p">();</span>
+
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 协程执行函数，执行完返回到调度协程，需要调度器
+</span><span class="cm">    */</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">MainFunc</span><span class="p">();</span>
+
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 协程执行函数，执行完返回到线程调度协程，无需调度器
+</span><span class="cm">    */</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">CallerMainFunc</span><span class="p">();</span>
+
+   <span class="cm">/*
+</span><span class="cm">    * @brief: 获取当前协程 Id
+</span><span class="cm">    */</span>
+    <span class="k">static</span> <span class="kt">uint64_t</span> <span class="nf">GetFiberId</span><span class="p">();</span>
+ 
+<span class="k">private</span><span class="o">:</span>
+	<span class="c1">// 协程 Id
+</span><span class="c1"></span>    <span class="kt">uint64_t</span> <span class="n">m_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="c1">// 协程状态
+</span><span class="c1"></span>    <span class="n">State</span> <span class="n">m_state</span> <span class="o">=</span> <span class="n">INIT</span><span class="p">;</span>
+	<span class="c1">// 协程栈空间大小
+</span><span class="c1"></span>    <span class="kt">uint32_t</span> <span class="n">m_stacksize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="c1">// 协程上下文
+</span><span class="c1"></span>    <span class="n">ucontext_t</span> <span class="n">m_ctx</span><span class="p">;</span>
+	<span class="c1">// 协程运行栈
+</span><span class="c1"></span>    <span class="kt">void</span><span class="o">*</span> <span class="n">m_stack</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="c1">// 协程运行函数
+</span><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">()</span><span class="o">&gt;</span> <span class="n">m_cb</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span>
+<span class="cp">#endif
+</span></code></pre></td></tr></table>
+</div>
+</div><h2 id="定义">定义</h2>
+<h3 id="含调度器版本">含调度器版本</h3>
+<h4 id="开头">开头</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="cp">#include</span> <span class="cpf">&#34;fiber.h&#34;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;ucontext.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&#34;scheduler.h&#34;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;assert.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;atomic&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="k">namespace</span> <span class="n">coloda</span>
+<span class="p">{</span>
+<span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">uint64_t</span><span class="o">&gt;</span> <span class="n">s_fiber_id</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span><span class="c1">// 原子变量，协程id
+</span><span class="c1"></span><span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">uint64_t</span><span class="o">&gt;</span> <span class="n">s_fiber_count</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span><span class="c1">// 原子变量，协程个数
+</span><span class="c1"></span>
+<span class="k">static</span> <span class="k">thread_local</span> <span class="n">Fiber</span><span class="o">*</span> <span class="n">t_fiber</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span><span class="c1">// 线程内部变量，线程当前的协程
+</span><span class="c1"></span><span class="k">static</span> <span class="k">thread_local</span> <span class="n">Fiber</span><span class="o">::</span><span class="n">ptr</span> <span class="n">t_threadFiber</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span><span class="c1">// 线程内部变量，线程的主协程
+</span><span class="c1"></span>
+<span class="k">static</span> <span class="kt">int</span> <span class="n">configSize</span> <span class="o">=</span> <span class="mi">128</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">;</span><span class="c1">// 默认栈大小，后续会用到，当然这个可以开小一点
+</span><span class="c1"></span>
+<span class="k">class</span> <span class="nc">StackAllocator</span><span class="c1">// 协程栈空间分配器
+</span><span class="c1"></span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/*
+</span><span class="cm">	 * @brief: 调用 malloc 来分配栈空间
+</span><span class="cm">	 */</span>
+      <span class="k">static</span> <span class="kt">void</span><span class="o">*</span> <span class="n">Alloc</span><span class="p">(</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span>
+      <span class="p">{</span>
+          <span class="k">return</span> <span class="nf">malloc</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+      <span class="p">}</span>
+     
+    <span class="cm">/*
+</span><span class="cm">     * @brief: 调用 free 来回收栈空间
+</span><span class="cm">     */</span>
+      <span class="k">static</span> <span class="kt">void</span> <span class="nf">Dealloc</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">src</span><span class="p">)</span>
+      <span class="p">{</span>
+          <span class="k">return</span> <span class="n">free</span><span class="p">(</span><span class="n">src</span><span class="p">);</span>
+      <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="无参构造函数">无参构造函数</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="c1">// 无参构造函数用于创建主协程
+</span><span class="c1"></span><span class="n">Fiber</span><span class="o">::</span><span class="n">Fiber</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">m_state</span> <span class="o">=</span> <span class="n">EXEC</span><span class="p">;</span><span class="c1">// 设置状态为 EXEC
+</span><span class="c1"></span>    <span class="n">SetThis</span><span class="p">(</span><span class="k">this</span><span class="p">);</span><span class="c1">// 将该协程设置为当前线程的运行协程
+</span><span class="c1"></span>    <span class="k">if</span><span class="p">(</span><span class="n">getcontext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_ctx</span><span class="p">))</span><span class="c1">// 尝试获取当前上下文
+</span><span class="c1"></span>        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FILE__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">__func__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">__LINE__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; : getcontext() failed&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="o">++</span><span class="n">s_fiber_count</span><span class="p">;</span><span class="c1">// 协程数增加
+</span><span class="c1"></span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Fiber::Fiber main&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="有参构造函数">有参构造函数</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="c1">// 有参构造函数用于正常创建协程
+</span><span class="c1"></span><span class="n">Fiber</span><span class="o">::</span><span class="n">Fiber</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">()</span><span class="o">&gt;</span> <span class="n">cb</span><span class="p">,</span><span class="n">size_t</span> <span class="n">stacksize</span><span class="p">,</span><span class="kt">bool</span> <span class="n">use_caller</span><span class="p">)</span>
+    <span class="o">:</span><span class="n">m_id</span><span class="p">(</span><span class="o">++</span><span class="n">s_fiber_id</span><span class="p">)</span>
+     <span class="p">,</span><span class="n">m_cb</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">m_stacksize</span> <span class="o">=</span> <span class="n">stacksize</span> <span class="o">?</span> <span class="nl">stacksize</span> <span class="p">:</span> <span class="n">configSize</span><span class="p">;</span><span class="c1">// 栈大小要么是传入的大小，要么是我们自己设置的默认大小
+</span><span class="c1"></span>
+    <span class="o">++</span><span class="n">s_fiber_count</span><span class="p">;</span>
+    <span class="n">m_stack</span> <span class="o">=</span> <span class="n">StackAllocator</span><span class="o">::</span><span class="n">Alloc</span><span class="p">(</span><span class="n">m_stacksize</span><span class="p">);</span><span class="c1">// 给运行栈分配大小
+</span><span class="c1"></span>    <span class="k">if</span><span class="p">(</span><span class="n">getcontext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_ctx</span><span class="p">))</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FILE__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">__func__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">__LINE__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; : getcontext() failed&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="c1">// 设置上下文的一些属性
+</span><span class="c1"></span>    <span class="n">m_ctx</span><span class="p">.</span><span class="n">uc_link</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span><span class="c1">// 无下一个要运行的上下文
+</span><span class="c1"></span>    <span class="n">m_ctx</span><span class="p">.</span><span class="n">uc_stack</span><span class="p">.</span><span class="n">ss_sp</span> <span class="o">=</span> <span class="n">m_stack</span><span class="p">;</span><span class="c1">// 运行栈
+</span><span class="c1"></span>    <span class="n">m_ctx</span><span class="p">.</span><span class="n">uc_stack</span><span class="p">.</span><span class="n">ss_size</span> <span class="o">=</span> <span class="n">m_stacksize</span><span class="p">;</span><span class="c1">// 运行栈大小
+</span><span class="c1"></span>
+
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">use_caller</span><span class="p">)</span>
+        <span class="n">makecontext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_ctx</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Fiber</span><span class="o">::</span><span class="n">MainFunc</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span><span class="c1">// 不在主协程上调度
+</span><span class="c1"></span>    <span class="k">else</span> 
+        <span class="nf">makecontext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_ctx</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Fiber</span><span class="o">::</span><span class="n">CallerMainFunc</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span><span class="c1">// 在主协程上调度
+</span><span class="c1"></span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Fiber::Fiber id = &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">m_id</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="析构函数">析构函数</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">Fiber</span><span class="o">::~</span><span class="n">Fiber</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="o">--</span><span class="n">s_fiber_count</span><span class="p">;</span><span class="c1">// 减少协程总数量
+</span><span class="c1"></span>    <span class="k">if</span><span class="p">(</span><span class="n">m_stack</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span><span class="c1">// 尝试释放运行栈
+</span><span class="c1"></span>    <span class="p">{</span>
+        <span class="c1">// 判断协程状态，当状态在以下情况时可以释放栈空间
+</span><span class="c1"></span>        <span class="k">if</span><span class="p">(</span><span class="n">m_state</span> <span class="o">==</span> <span class="n">INIT</span> <span class="o">||</span> <span class="n">m_state</span> <span class="o">==</span> <span class="n">TERM</span> <span class="o">||</span> <span class="n">m_state</span> <span class="o">==</span> <span class="n">EXCEPT</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">StackAllocator</span><span class="o">::</span><span class="n">Dealloc</span><span class="p">(</span><span class="n">m_stack</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span><span class="c1">// 如果协程状态不正确就直接退出，说明哪里出了问题导致提前析构 
+</span><span class="c1"></span>        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FILE__</span>  <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">__func__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">__LINE__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; : gonna free m_stack unexcpected&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+            <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">else</span><span class="c1">// 如果没有运行栈就简单进行善后，正常不应该运行以下代码
+</span><span class="c1"></span>    <span class="p">{</span>
+        <span class="n">assert</span><span class="p">(</span><span class="o">!</span><span class="n">m_cb</span><span class="p">);</span> 
+        <span class="n">assert</span><span class="p">(</span><span class="n">m_state</span> <span class="o">==</span> <span class="n">EXEC</span><span class="p">);</span>
+
+        <span class="n">Fiber</span><span class="o">*</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">t_fiber</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">cur</span> <span class="o">==</span> <span class="k">this</span><span class="p">)</span>
+            <span class="n">SetThis</span><span class="p">(</span><span class="k">nullptr</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Fiber::~Fiber id = &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">m_id</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;,total = &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">s_fiber_count</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="reset">reset</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="kt">void</span> <span class="n">Fiber</span><span class="o">::</span><span class="n">reset</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">()</span><span class="o">&gt;</span> <span class="n">cb</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">m_stack</span><span class="p">);</span>
+    <span class="c1">// 当协程处于以下状态的时候可以尝试 reset 其执行函数
+</span><span class="c1"></span>    <span class="k">if</span><span class="p">(</span><span class="n">m_state</span> <span class="o">==</span> <span class="n">INIT</span> <span class="o">||</span> <span class="n">m_state</span> <span class="o">==</span> <span class="n">TERM</span> <span class="o">||</span> <span class="n">m_state</span> <span class="o">==</span> <span class="n">EXCEPT</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">m_cb</span> <span class="o">=</span> <span class="n">cb</span><span class="p">;</span><span class="c1">// 更新执行函数
+</span><span class="c1"></span>        <span class="k">if</span><span class="p">(</span><span class="n">getcontext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_ctx</span><span class="p">))</span><span class="c1">// 尝试更新上下文
+</span><span class="c1"></span>            <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FILE__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">__func__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">__LINE__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; : getcontext() failed&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+        <span class="c1">// 设置好上下文
+</span><span class="c1"></span>        <span class="n">m_ctx</span><span class="p">.</span><span class="n">uc_link</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+        <span class="n">m_ctx</span><span class="p">.</span><span class="n">uc_stack</span><span class="p">.</span><span class="n">ss_sp</span> <span class="o">=</span> <span class="n">m_stack</span><span class="p">;</span>
+        <span class="n">m_ctx</span><span class="p">.</span><span class="n">uc_stack</span><span class="p">.</span><span class="n">ss_size</span> <span class="o">=</span> <span class="n">m_stacksize</span><span class="p">;</span>
+
+        <span class="n">makecontext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_ctx</span><span class="p">,</span><span class="o">&amp;</span><span class="n">Fiber</span><span class="o">::</span><span class="n">MainFunc</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span><span class="c1">// 将上下文设置为 MainFunc 函数
+</span><span class="c1"></span>        <span class="n">m_state</span> <span class="o">=</span> <span class="n">INIT</span><span class="p">;</span><span class="c1">// 重置协程状态
+</span><span class="c1"></span>    <span class="p">}</span>
+    <span class="k">else</span><span class="c1">// 正常不应该运行到这些代码
+</span><span class="c1"></span>    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FILE__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">__func__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">__LINE__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; : gonna reset function unexcpected&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="call">call</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="c1">// call() 函数是不需要调度器的切换函数
+</span><span class="c1"></span><span class="kt">void</span> <span class="n">Fiber</span><span class="o">::</span><span class="n">call</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">SetThis</span><span class="p">(</span><span class="k">this</span><span class="p">);</span><span class="c1">// 设置当前运行协程
+</span><span class="c1"></span>    <span class="n">m_state</span> <span class="o">=</span> <span class="n">EXEC</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">t_threadFiber</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span><span class="c1">// 如果当前线程主协程为空就退出
+</span><span class="c1"></span>    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;nullptr&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">swapcontext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">t_threadFiber</span><span class="o">-&gt;</span><span class="n">m_ctx</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m_ctx</span><span class="p">))</span><span class="c1">// 和线程主协程切换
+</span><span class="c1"></span>        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FILE__</span> <span class="o">&lt;&lt;</span> <span class="n">__func__</span> <span class="o">&lt;&lt;</span> <span class="n">__LINE__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; : swapcontext() failed&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="setthis">SetThis</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="kt">void</span> <span class="n">Fiber</span><span class="o">::</span><span class="n">SetThis</span><span class="p">(</span><span class="n">Fiber</span><span class="o">*</span> <span class="n">f</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">t_fiber</span> <span class="o">=</span> <span class="n">f</span><span class="p">;</span><span class="c1">// 设置当前协程
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="back">back</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="c1">// back() 函数是不需要调度器的切换函数
+</span><span class="c1"></span><span class="kt">void</span> <span class="n">Fiber</span><span class="o">::</span><span class="n">back</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">SetThis</span><span class="p">(</span><span class="n">t_threadFiber</span><span class="p">.</span><span class="n">get</span><span class="p">());</span><span class="c1">// 设置主协程为运行协程
+</span><span class="c1"></span>    <span class="k">if</span><span class="p">(</span><span class="n">swapcontext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_ctx</span><span class="p">,</span><span class="o">&amp;</span><span class="n">t_threadFiber</span><span class="o">-&gt;</span><span class="n">m_ctx</span><span class="p">))</span><span class="c1">// 和主协程切换
+</span><span class="c1"></span>        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">__FILE__</span> <span class="o">&lt;&lt;</span> <span class="n">__func__</span> <span class="o">&lt;&lt;</span> <span class="n">__LINE__</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; : swapcontext() failed&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="swapin">swapIn</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="c1">// 需要调度器的切换函数
+</span><span class="c1"></span><span class="kt">void</span> <span class="n">Fiber</span><span class="o">::</span><span class="n">swapIn</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">SetThis</span><span class="p">(</span><span class="k">this</span><span class="p">);</span><span class="c1">// 设置运行协程
+</span><span class="c1"></span>    <span class="n">assert</span><span class="p">(</span><span class="n">m_state</span> <span class="o">!=</span> <span class="n">EXEC</span><span class="p">);</span>
+    <span class="n">m_state</span> <span class="o">=</span> <span class="n">EXEC</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">swapcontext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Scheduler</span><span class="o">::</span><span class="n">GetMainFiber</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">m_ctx</span><span class="p">,</span><span class="o">&amp;</span><span class="n">m_ctx</span><span class="p">))</span><span class="c1">// 和调度器主协程切换
+</span><span class="c1"></span>        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;swapcontext failed&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="swapout">swapOut</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="c1">// 需要调度器的切换函数
+</span><span class="c1"></span><span class="kt">void</span> <span class="n">Fiber</span><span class="o">::</span><span class="n">swapOut</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">SetThis</span><span class="p">(</span><span class="n">Scheduler</span><span class="o">::</span><span class="n">GetMainFiber</span><span class="p">());</span><span class="c1">// 设置调度器主协程为运行协程
+</span><span class="c1"></span>
+    <span class="k">if</span><span class="p">(</span><span class="n">swapcontext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_ctx</span><span class="p">,</span><span class="o">&amp;</span><span class="n">Scheduler</span><span class="o">::</span><span class="n">GetMainFiber</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">m_ctx</span><span class="p">))</span><span class="c1">// 和调度器主协程切换
+</span><span class="c1"></span>        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;swapcontext failed&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="getthis">GetThis</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">Fiber</span><span class="o">::</span><span class="n">ptr</span> <span class="n">Fiber</span><span class="o">::</span><span class="n">GetThis</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">t_fiber</span><span class="p">)</span><span class="c1">// 如果有运行协程，就获取该协程
+</span><span class="c1"></span>        <span class="k">return</span> <span class="n">t_fiber</span><span class="o">-&gt;</span><span class="n">shared_from_this</span><span class="p">();</span>
+    <span class="c1">// 如果没有运行协程，即第一次运行的时候
+</span><span class="c1"></span>    <span class="n">Fiber</span><span class="o">::</span><span class="n">ptr</span> <span class="n">main_fiber</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Fiber</span><span class="o">&gt;</span><span class="p">();</span><span class="c1">// 这里使用无参构造函数创建了一个主协程
+</span><span class="c1"></span>    <span class="n">assert</span><span class="p">(</span><span class="n">t_fiber</span> <span class="o">==</span> <span class="n">main_fiber</span><span class="p">.</span><span class="n">get</span><span class="p">());</span><span class="c1">// 确认成功将主协程设置为运行协程
+</span><span class="c1"></span>    <span class="n">t_threadFiber</span> <span class="o">=</span> <span class="n">main_fiber</span><span class="p">;</span><span class="c1">// 设置该主协程为线程主协程
+</span><span class="c1"></span>    <span class="k">return</span> <span class="n">t_fiber</span><span class="o">-&gt;</span><span class="n">shared_from_this</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="totalfibers">TotalFibers</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="kt">uint64_t</span> <span class="n">Fiber</span><span class="o">::</span><span class="n">TotalFibers</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">s_fiber_count</span><span class="p">;</span><span class="c1">// 返回协程总量
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="mainfunc">MainFunc</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="kt">void</span> <span class="n">Fiber</span><span class="o">::</span><span class="n">MainFunc</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Fiber</span><span class="o">::</span><span class="n">ptr</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">GetThis</span><span class="p">();</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">cur</span><span class="p">);</span>
+    <span class="k">try</span>
+    <span class="p">{</span>
+        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">m_cb</span><span class="p">();</span><span class="c1">// 这里是真正运行协程的函数的地方
+</span><span class="c1"></span>        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">m_cb</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span><span class="c1">// 运行后将其设置为空，如果想多次调用需要在业务逻辑中写，当然如果你想的话也可以稍微改一改，比如在构造函数加个参数用于控制该任务是否循环执行之类的
+</span><span class="c1"></span>        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">m_state</span> <span class="o">=</span> <span class="n">TERM</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">catch</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span><span class="c1">// 如果有异常
+</span><span class="c1"></span>    <span class="p">{</span>
+        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">m_state</span> <span class="o">=</span> <span class="n">EXCEPT</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Fiber Except : &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; Fiber id = &#34;</span> 
+            <span class="o">&lt;&lt;</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">getId</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">catch</span><span class="p">(...)</span><span class="c1">// 如果有异常
+</span><span class="c1"></span>    <span class="p">{</span>
+        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">m_state</span> <span class="o">=</span> <span class="n">EXCEPT</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Fiber Except : &#34;</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Unknown Error &#34;</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; Fiber id = &#34;</span> 
+            <span class="o">&lt;&lt;</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">getId</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">auto</span> <span class="n">raw_ptr</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="c1">// 这里获取运行协程的裸指针，这里这样做是防止引用计数有剩余不归零
+</span><span class="c1"></span>    <span class="n">cur</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span><span class="c1">// 对该智能指针 reset
+</span><span class="c1"></span>    <span class="n">raw_ptr</span><span class="o">-&gt;</span><span class="n">swapOut</span><span class="p">();</span><span class="c1">// 利用裸指针切出去
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="callermainfunc">CallerMainFunc</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="c1">// 同上
+</span><span class="c1"></span><span class="kt">void</span> <span class="n">Fiber</span><span class="o">::</span><span class="n">CallerMainFunc</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Fiber</span><span class="o">::</span><span class="n">ptr</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">GetThis</span><span class="p">();</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">cur</span><span class="p">);</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">m_cb</span><span class="p">();</span>
+        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">m_cb</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">m_state</span> <span class="o">=</span> <span class="n">TERM</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">m_state</span> <span class="o">=</span> <span class="n">EXCEPT</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Fiber Except: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span>
+            <span class="o">&lt;&lt;</span> <span class="s">&#34; fiber_id=&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">getId</span><span class="p">()</span>
+            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">m_state</span> <span class="o">=</span> <span class="n">EXCEPT</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span>  <span class="s">&#34;Fiber Except&#34;</span>
+            <span class="o">&lt;&lt;</span> <span class="s">&#34; fiber_id=&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">getId</span><span class="p">()</span>
+            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">auto</span> <span class="n">raw_ptr</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+    <span class="n">cur</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span>
+    <span class="n">raw_ptr</span><span class="o">-&gt;</span><span class="n">back</span><span class="p">();</span><span class="c1">// 这里换成 back
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="无调度器版本">无调度器版本</h3>
+<p>无调度器版本其实就是将所有涉及到调度器的代码全删除，swapIn()，swapOut()，MainFunc()可以全都删除，用的时候只用 call() 和 back() 就行。</p>
+<h2 id="测试">测试</h2>
+<h3 id="测试用例">测试用例</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c++" data-lang="c++"><span class="cp">#include</span> <span class="cpf">&#34;thread.h&#34;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&#34;fiber.h&#34;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">func1</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;running&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">test</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">coloda</span><span class="o">::</span><span class="n">Fiber</span><span class="o">::</span><span class="n">GetThis</span><span class="p">();</span>
+    <span class="n">coloda</span><span class="o">::</span><span class="n">Fiber</span><span class="o">::</span><span class="n">ptr</span> <span class="n">f</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">coloda</span><span class="o">::</span><span class="n">Fiber</span><span class="o">&gt;</span><span class="p">(</span><span class="n">func1</span><span class="p">,</span><span class="mi">1024</span><span class="p">);</span>
+    <span class="n">f</span><span class="o">-&gt;</span><span class="n">call</span><span class="p">();</span>
+    <span class="n">f</span><span class="o">-&gt;</span><span class="n">reset</span><span class="p">(</span><span class="n">func1</span><span class="p">);</span>
+    <span class="n">f</span><span class="o">-&gt;</span><span class="n">call</span><span class="p">();</span>
+    <span class="n">f</span><span class="o">-&gt;</span><span class="n">reset</span><span class="p">(</span><span class="n">func1</span><span class="p">);</span>
+    <span class="n">f</span><span class="o">-&gt;</span><span class="n">call</span><span class="p">();</span>
+    <span class="n">f</span><span class="o">-&gt;</span><span class="n">reset</span><span class="p">(</span><span class="n">func1</span><span class="p">);</span>
+    <span class="n">f</span><span class="o">-&gt;</span><span class="n">call</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">coloda</span><span class="o">::</span><span class="n">Thread</span><span class="o">::</span><span class="n">getCur_name</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&#34;main&#34;</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">coloda</span><span class="o">::</span><span class="n">Thread</span><span class="o">::</span><span class="n">ptr</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">coloda</span><span class="o">::</span><span class="n">Thread</span><span class="o">::</span><span class="n">ptr</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">coloda</span><span class="o">::</span><span class="n">Thread</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">test</span><span class="p">,</span><span class="s">&#34;test&#34;</span><span class="o">+</span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+        <span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">tmp</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">coloda</span><span class="o">::</span><span class="n">Thread</span><span class="o">::</span><span class="n">setCur_name</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">i</span> <span class="p">:</span> <span class="n">v</span><span class="p">)</span>
+        <span class="n">i</span><span class="o">-&gt;</span><span class="n">join</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// 该测试程序就是创建三个线程，这三个线程都执行 test() 函数，每个线程都创建一个工作协程和一个线程主协程，该协程会运行四次 func1()。
+</span></code></pre></td></tr></table>
+</div>
+</div><h3 id="测试结果">测试结果</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">
+main
+
+Fiber::Fiber main
+Fiber::Fiber <span class="nv">id</span> <span class="o">=</span> <span class="m">1</span>
+running
+running
+running
+running
+test2
+Fiber::~Fiber <span class="nv">id</span> <span class="o">=</span> 1,total <span class="o">=</span> <span class="m">1</span>
+Fiber::~Fiber <span class="nv">id</span> <span class="o">=</span> 0,total <span class="o">=</span> <span class="m">0</span>
+
+Fiber::Fiber main
+Fiber::Fiber <span class="nv">id</span> <span class="o">=</span> <span class="m">2</span>
+running
+running
+running
+running
+test1
+Fiber::~Fiber <span class="nv">id</span> <span class="o">=</span> 2,total <span class="o">=</span> <span class="m">1</span>
+Fiber::~Fiber <span class="nv">id</span> <span class="o">=</span> 0,total <span class="o">=</span> <span class="m">0</span>
+
+Fiber::Fiber main
+Fiber::Fiber <span class="nv">id</span> <span class="o">=</span> <span class="m">3</span>
+running
+running
+running
+running
+test0
+Fiber::~Fiber <span class="nv">id</span> <span class="o">=</span> 3,total <span class="o">=</span> <span class="m">1</span>
+Fiber::~Fiber <span class="nv">id</span> <span class="o">=</span> 0,total <span class="o">=</span> <span class="m">0</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="总结">总结</h2>
+<p>网上的协程轮子有很多，有的很简单，有的很复杂，我觉得这个还算是中规中矩的一个，比较好分析和理解。不过只有协程没有调度器的话使用起来还是很麻烦，后续我会发布调度器的文章。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/c&#43;&#43;/">C&#43;&#43;</a>
+        
+            <a href="/tags/%E9%80%A0%E8%BD%AE%E5%AD%90/">造轮子</a>
+        
+            <a href="/tags/%E5%8D%8F%E7%A8%8B/">协程</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-contents--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-contents">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/%E7%AE%80%E5%8D%95%E8%BD%AE%E5%AD%90%E7%B3%BB%E5%88%97-%E7%BA%BF%E7%A8%8B/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">简单轮子系列-线程</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Luna_Blog
+    </section>
+    
+    <section class="powerby">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+        
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.11.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#前置知识">前置知识</a></li>
+    <li><a href="#声明">声明</a></li>
+    <li><a href="#定义">定义</a>
+      <ol>
+        <li><a href="#含调度器版本">含调度器版本</a>
+          <ol>
+            <li><a href="#开头">开头</a></li>
+            <li><a href="#无参构造函数">无参构造函数</a></li>
+            <li><a href="#有参构造函数">有参构造函数</a></li>
+            <li><a href="#析构函数">析构函数</a></li>
+            <li><a href="#reset">reset</a></li>
+            <li><a href="#call">call</a></li>
+            <li><a href="#setthis">SetThis</a></li>
+            <li><a href="#back">back</a></li>
+            <li><a href="#swapin">swapIn</a></li>
+            <li><a href="#swapout">swapOut</a></li>
+            <li><a href="#getthis">GetThis</a></li>
+            <li><a href="#totalfibers">TotalFibers</a></li>
+            <li><a href="#mainfunc">MainFunc</a></li>
+            <li><a href="#callermainfunc">CallerMainFunc</a></li>
+          </ol>
+        </li>
+        <li><a href="#无调度器版本">无调度器版本</a></li>
+      </ol>
+    </li>
+    <li><a href="#测试">测试</a>
+      <ol>
+        <li><a href="#测试用例">测试用例</a></li>
+        <li><a href="#测试结果">测试结果</a></li>
+      </ol>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        <!-- customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"; -->
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+    </body>
+</html>
