@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Building a C compiler!（虚拟机设计）'><title>从零构建一个c语言编译器(2)</title>
+
+<link rel='canonical' href='https://lunaasuka.github.io/p/%E4%BB%8E%E9%9B%B6%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAc%E8%AF%AD%E8%A8%80%E7%BC%96%E8%AF%91%E5%99%A82/'>
+
+<link rel="stylesheet" href="/scss/style.min.5d0ba4b8e005f9d5f3e1dc243f2555eba3c536500cc6b2ab42f43d5a03ac060a.css"><meta property='og:title' content='从零构建一个c语言编译器(2)'>
+<meta property='og:description' content='Building a C compiler!（虚拟机设计）'>
+<meta property='og:url' content='https://lunaasuka.github.io/p/%E4%BB%8E%E9%9B%B6%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAc%E8%AF%AD%E8%A8%80%E7%BC%96%E8%AF%91%E5%99%A82/'>
+<meta property='og:site_name' content='Luna_Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='编译' /><meta property='article:tag' content='C语言' /><meta property='article:published_time' content='2022-06-24T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-06-24T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="从零构建一个c语言编译器(2)">
+<meta name="twitter:description" content="Building a C compiler!（虚拟机设计）">
+    <link rel="shortcut icon" href="img/favicon.png" />
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/author_hu5662b65b0b35d446edae569f17233a38_392169_300x0_resize_q75_box.jpg" width="300"
+                            height="296" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">😋</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Luna_Blog</a></h1>
+            <h2 class="site-description">待到秋来九月八,我花开后百花杀</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/LunaAsuka'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/about' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E7%BC%96%E8%AF%91%E5%99%A8/" >
+                编译器
+            </a>
+        
+            <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E7%BC%96%E8%AF%91%E5%99%A8/" >
+                从零开发编译器
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E4%BB%8E%E9%9B%B6%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAc%E8%AF%AD%E8%A8%80%E7%BC%96%E8%AF%91%E5%99%A82/">从零构建一个c语言编译器(2)</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Building a C compiler!（虚拟机设计）
+        </h3>
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 24, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 8 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="内存模拟">内存模拟</h2>
+<p>内存是程序运行所必要的资源，我们打算在虚拟机中去模拟运行目标代码，所以内存管理这个重要的工作自然就是交给虚拟机来干。那么我们就要在虚拟机中模拟出程序的内存模型：</p>
+<ol>
+<li>代码段，text segment ，用于存放代码或者指令，在本编译器中用于存放我们自己设计的伪汇编指令。</li>
+<li>数据段，data segment，用于存放初始化了的全局变量和静态变量，在本编译器中用于存放字符串，因为我们不支持变量初始化。</li>
+<li>未初始化数据段，bss segment，用于存放未初始化的全局变量和静态变量，为简单起见，该数据段我们不打算模拟。</li>
+<li>栈，stack，栈用于存放跟函数有关的数据，例如函数返回地址，函数的局部变量，函数的参数等。在本编译器中也是这个功能。</li>
+<li>堆，heap，用于程序的动态分配内存。为简单起见，在本程序中我们让程序直接使用虚拟机的内存，这样我们就不需要自己控制动态内存的分配，因为这部分跟编译无关，所以我们主动将其剔除。</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">//在全局定义下加入以下代码
+</span><span class="c1"></span><span class="kt">int</span><span class="o">*</span> <span class="n">text</span><span class="p">;</span><span class="c1">//模拟代码段
+</span><span class="c1"></span><span class="kt">int</span><span class="o">*</span> <span class="n">stack</span><span class="p">;</span><span class="c1">//模拟栈
+</span><span class="c1"></span><span class="kt">char</span><span class="o">*</span> <span class="n">data</span><span class="p">;</span><span class="c1">//模拟数据段
+</span></code></pre></td></tr></table>
+</div>
+</div><p>这里解释一下这三个变量的类型，text 是 int 型，它里面存放的是我们设计的伪指令和一些内存地址，伪指令我们后面会说到，都是枚举类型，所以实际存储的还是整型。stack 同理，存储的都是内存地址什么的。data 中存放的只有字符串，所以类型是 char。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c">		<span class="p">......</span>
+		<span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+		
+		<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">memorySize</span><span class="p">)))</span>
+		<span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;could not malloc(%d) for text segment</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span><span class="n">memorySize</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">memorySize</span><span class="p">)))</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;could not malloc(%d) for text segment</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span><span class="n">memorySize</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">stack</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">memorySize</span><span class="p">)))</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;could not malloc(%d) for text segment</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span><span class="n">memorySize</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="n">memset</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">memorySize</span><span class="p">);</span>
+    <span class="n">memset</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">memorySize</span><span class="p">);</span>
+    <span class="n">memset</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">memorySize</span><span class="p">);</span>
+
+		<span class="n">parse</span><span class="p">();</span>
+		<span class="p">......</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上面这一段代码是对那三个段进行初始化操作。这里的 malloc 和 memset 函数很复杂，我们不会去实现，所以我们会直接设计一些新的指令，让我们能够直接使用编译器中的函数和内存。这么做确实取巧，直接简化了内存管理这一整个复杂的工作，我知道它很重要，但是让我们先专注于这个简单的 demo 。</p>
+<h2 id="寄存器">寄存器</h2>
+<p>内存与寄存器才是计算机真正要操作和使用的设备。以前我不理解为什么计算机内部只有那么少数的寄存器，现在我理解了，<strong>寄存器真的很强大。</strong></p>
+<p>因为我们这个编译器只需要模拟 4 个寄存器就能工作。只需四个寄存器就能完成这么复杂的工作，再多来几个我都不敢想。不过寄存器确实是很珍贵的元器件，如果你想在本编译器基础上继续扩充的话可以尝试多加几个寄存器。</p>
+<p>回到正题，我们要模拟的寄存器分别如下：</p>
+<ol>
+<li>PC寄存器，program counter register ，程序计数寄存器，它存放的是下一条指令的内存地址。</li>
+<li>SP寄存器，stack pointer register，堆栈指针寄存器，它永远指向当前的栈顶。这里注意栈是向下生长的，也就是从高地址起始并且向低地址生长的，所以在 push 的时候 sp 的值是减小的。</li>
+<li>BP寄存器，base pointer register，基址寄存器，它同样是用来操作栈的，它一般是和 SP 寄存器联合使用的，在调用函数的时候我们会用到它。</li>
+<li>AX通用寄存器，accumulator register，累加寄存器，在该虚拟机中它用于存放一条指令执行之后的结果。</li>
+</ol>
+<p>如果你从未接触过汇编可能不太能理解好这些寄存器的作用，不过没关系，现在你只需要知道它们是拿来存程序运行状态的，具体在这里就是存一些内存地址或者数据什么的。</p>
+<p>在全局定义下加入以下代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="kt">int</span> <span class="o">*</span><span class="n">pc</span><span class="p">,</span><span class="o">*</span><span class="n">sp</span><span class="p">,</span><span class="o">*</span><span class="n">bp</span><span class="p">,</span><span class="n">ax</span><span class="p">,</span><span class="n">cycle</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这里的 cycle 是用来记录生成了多少条指令的。可以先不去管它。</p>
+<p>然后初始化寄存器</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="n">memset</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">memorySize</span><span class="p">);</span>
+<span class="p">......</span>
+
+<span class="n">sp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)((</span><span class="kt">int</span><span class="p">)</span><span class="n">stack</span> <span class="o">+</span> <span class="n">memorySize</span><span class="p">);</span>
+<span class="n">bp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)((</span><span class="kt">int</span><span class="p">)</span><span class="n">stack</span> <span class="o">+</span> <span class="n">memorySize</span><span class="p">);</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="n">parse</span><span class="p">();</span>
+<span class="p">......</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="指令集">指令集</h2>
+<p>我们这里说的指令集和真正意义上能被翻译成二进制数据的命令不太一样，我们这里的指令集是根据虚拟机设计的一套简化的指令集，它可以被虚拟机有效识别并执行。</p>
+<p>我们这里使用枚举类型来构造指令集。全局定义如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="k">enum</span> <span class="n">Instruction</span>
+<span class="p">{</span>   
+    <span class="n">LEA</span><span class="p">,</span> <span class="n">IMM</span><span class="p">,</span> <span class="n">JMP</span><span class="p">,</span> <span class="n">JSR</span><span class="p">,</span> <span class="n">JZ</span><span class="p">,</span> <span class="n">JNZ</span><span class="p">,</span> <span class="n">ENT</span><span class="p">,</span> <span class="n">ADJ</span><span class="p">,</span> 
+    <span class="n">LEV</span><span class="p">,</span> <span class="n">LI</span><span class="p">,</span> <span class="n">LC</span><span class="p">,</span> <span class="n">SI</span><span class="p">,</span> <span class="n">SC</span><span class="p">,</span> <span class="n">PUSH</span><span class="p">,</span>
+    <span class="n">OR</span><span class="p">,</span> <span class="n">XOR</span><span class="p">,</span> <span class="n">AND</span><span class="p">,</span> <span class="n">EQ</span><span class="p">,</span> <span class="n">NE</span><span class="p">,</span> <span class="n">LT</span><span class="p">,</span> <span class="n">GT</span><span class="p">,</span> <span class="n">LE</span><span class="p">,</span> <span class="n">GE</span><span class="p">,</span> <span class="n">SHL</span><span class="p">,</span> <span class="n">SHR</span><span class="p">,</span> <span class="n">ADD</span><span class="p">,</span> <span class="n">SUB</span><span class="p">,</span> <span class="n">MUL</span><span class="p">,</span> <span class="n">DIV</span><span class="p">,</span> <span class="n">MOD</span><span class="p">,</span>
+		<span class="n">OPEN</span><span class="p">,</span> <span class="n">READ</span><span class="p">,</span> <span class="n">CLOS</span><span class="p">,</span> <span class="n">WRIT</span><span class="p">,</span> <span class="n">PRTF</span><span class="p">,</span> <span class="n">MALC</span><span class="p">,</span> <span class="n">FREE</span><span class="p">,</span> <span class="n">MSET</span><span class="p">,</span> <span class="n">MCMP</span><span class="p">,</span> <span class="n">EXIT</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这是我们要支持的全部指令，我们接下来会挨个解析这些指令。</p>
+<h3 id="用于模拟-mov-指令的指令">用于模拟 MOV 指令的指令</h3>
+<p>MOV 指令是最基础的汇编指令之一，为了尽可能的贴近真正的指令集，我们会既要简化指令集，又要使指令集能够模拟真实指令集的功能，所以我们会设计一些简单的指令来尝试模拟真实指令集中复杂的指令，例如 MOV 。MOV 的作用很简单，它用于将数据放进寄存器或内存地址，所以该指令有两个操作数。该指令功能看起来简单但是实现起来很复杂，首先我们的虚拟机只有一个通用寄存器，其次识别操作数的类型（是数据还是地址）也是一个问题，所以我们将 MOV 拆解为 5 个简单指令。注意，我们的指令集中只包含 0 操作数和 1 操作数的指令。</p>
+<ol>
+<li>IMM <!-- raw HTML omitted --> 将 <!-- raw HTML omitted --> 放入通用寄存器 ax 当中。</li>
+<li>LC 将 ax 中存放的地址中的字符型数据放进 ax 中。</li>
+<li>LI 将 ax 中存放的地址中的整形数据放进 ax 中。</li>
+<li>SC 将 ax 中的字符存入到 sp 寄存器中所存放的地址中，也就是说，我们 sp 寄存器中存放的是一个地址，我们将 ax 中的值载入到这个地址中。</li>
+<li>SI 同上，只不过载入的是整形值。</li>
+</ol>
+<p>有了以上五个命令就可以简单模拟 MOV 操作了，例如现在 sp 寄存器中存放了一个变量的地址，那我们就可以先 IMM 一个数到 ax 中，然后 SC/SI 将该值存入到目标变量中。</p>
+<p>不管怎样，我们大大简化了指令编写的复杂度，并且提高了灵活度，因为我们也同样可以拿上述几个指令干 MOV 以外的事。</p>
+<p>具体实现如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">VM</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">op</span><span class="p">,</span> <span class="o">*</span><span class="n">tmp</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">IMM</span><span class="p">)</span>       <span class="p">{</span><span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">pc</span><span class="o">++</span><span class="p">;}</span>                                     <span class="c1">// load immediate value to ax
+</span><span class="c1"></span>        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">LC</span><span class="p">)</span>   <span class="p">{</span><span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">ax</span><span class="p">;}</span>                               <span class="c1">// load character to ax, address in ax
+</span><span class="c1"></span>        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">LI</span><span class="p">)</span>   <span class="p">{</span><span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="n">ax</span><span class="p">;}</span>                                <span class="c1">// load integer to ax, address in ax
+</span><span class="c1"></span>        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">SC</span><span class="p">)</span>   <span class="p">{</span><span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">=</span> <span class="n">ax</span><span class="p">;}</span>                       <span class="c1">// save character to address, value in ax, address on stack
+</span><span class="c1"></span>        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">SI</span><span class="p">)</span>   <span class="p">{</span><span class="o">*</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">=</span> <span class="n">ax</span><span class="p">;}</span>                             <span class="c1">// save integer to address, value in ax, address on stack
+</span><span class="c1"></span>    <span class="p">}</span>
+
+    <span class="p">...</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这里要记得我们所有的操作最后的结果都是存放在 ax 中的，而 ax 同样会有可能存放地址，所以有些操作可能看起来令人费解，关于这部分如果不懂的话可以暂且跳过，等程序完成或者虚拟机写完后你可以自行调试。</p>
+<h3 id="push">PUSH</h3>
+<p>我们的 PUSH 的作用是将 ax 中的值存入 sp 中，也就是压栈。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">PUSH</span><span class="p">)</span> <span class="p">{</span><span class="o">*--</span><span class="n">sp</span> <span class="o">=</span> <span class="n">ax</span><span class="p">;}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="jmp">JMP</h3>
+<p>JMP <!-- raw HTML omitted --> 是跳转指令，可以操作 pc 寄存器来改变下一个要操作的地址。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">JMP</span><span class="p">)</span> <span class="p">{</span><span class="n">pc</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="o">*</span><span class="n">pc</span><span class="p">;}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>pc 寄存器始终指向的是下一条指令的地址，跟真实的 pc 寄存器一样，我们把 addr 载入到 pc 中，那么下一次 pc 就会去运行 addr 中的指令。</p>
+<h3 id="jzjnz">JZ/JNZ</h3>
+<p>JZ 和 JNZ 可以用来实现条件判断，例如 if 和 while 这样的语句。JZ 是当 ax 为 0 的时候跳转，JNZ 是当 ax 不为 0 的时候跳转。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">JZ</span><span class="p">)</span> <span class="p">{</span><span class="n">pc</span> <span class="o">=</span> <span class="n">ax</span> <span class="o">?</span> <span class="n">pc</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">:</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">pc</span><span class="p">;}</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">JNZ</span><span class="p">)</span> <span class="p">{</span><span class="n">pc</span> <span class="o">=</span> <span class="n">ax</span> <span class="o">?</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="o">*</span><span class="nl">pc</span> <span class="p">:</span> <span class="n">pc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="函数调用">函数调用</h3>
+<p>这部分就比较复杂了，我们用五个指令去模拟函数调用，分别是 CALL，ENT ，ADJ，LEV 和 LEA。</p>
+<p>简单介绍一下，CALL <!-- raw HTML omitted --> ，即跳转到 <!-- raw HTML omitted --> 去运行，它与 JMP 的区别是 JMP 只会无条件跳转而 CALL 会存储用于回到当前上下文的地址。ENT <!-- raw HTML omitted --> 用于开辟栈空间，用于存放局部变量。ADJ <!-- raw HTML omitted --> 用于清除栈空间。LEV 后面再说，这里可以简单认为用于函数返回。LEA <!-- raw HTML omitted --> 用于处理函数参数。</p>
+<p>先看下 CALL <!-- raw HTML omitted -->：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">CALL</span><span class="p">)</span> <span class="p">{</span><span class="o">*--</span><span class="n">sp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">pc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+											<span class="n">pc</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="o">*</span><span class="n">pc</span><span class="p">;}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这里突然想起来一件事，我们的所有指令和数据都是顺序存放的，如果有像 CALL <!-- raw HTML omitted --> 这样的有一个操作数的指令的时候，那么在 CALL 指令之后的这个数据就是操作数，只要顺序操作就行。</p>
+<p>OK，然后是负责栈空间的两个指令。我们知道每个函数内的变量都是局部变量，所以它们都是存放在栈上的，除此之外函数还可能会有参数，参数也应该存放在栈上。大概每种编程语言都有自己的关于函数调用的规则，例如参数入栈顺序之类的，不过这些对我们来说都不重要，要模拟它们可能很麻烦，我们就简单的采用顺序入栈就好。</p>
+<p>来看 ENT <!-- raw HTML omitted -->：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">ENT</span><span class="p">)</span> <span class="p">{</span><span class="o">*--</span><span class="n">sp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">bp</span><span class="p">;</span> <span class="n">bp</span> <span class="o">=</span> <span class="n">sp</span><span class="p">;</span>
+											<span class="n">sp</span> <span class="o">=</span> <span class="n">sp</span> <span class="o">-</span> <span class="o">*</span><span class="n">pc</span><span class="o">++</span><span class="p">;}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>ENT 会用 bp 寄存器保存当前栈指针，然后在栈上保留出一定的空间用于存储局部变量。</p>
+<p>ADJ <!-- raw HTML omitted -->：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">ADJ</span><span class="p">)</span> <span class="p">{</span><span class="n">sp</span> <span class="o">=</span> <span class="n">sp</span> <span class="o">+</span> <span class="o">*</span><span class="n">pc</span><span class="o">++</span><span class="p">;}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>ADJ 用于将将函数中的局部变量退栈。</p>
+<p>LEV：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">LEV</span><span class="p">)</span> <span class="p">{</span><span class="n">sp</span> <span class="o">=</span> <span class="n">bp</span><span class="p">;</span> <span class="n">bp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="o">*</span><span class="n">sp</span><span class="o">++</span><span class="p">;</span> <span class="n">pc</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="o">*</span><span class="n">sp</span><span class="o">++</span><span class="p">;}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>用于函数返回。</p>
+<p>最后是 LEA <!-- raw HTML omitted -->：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">LEA</span><span class="p">)</span> <span class="p">{</span><span class="n">ax</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">bp</span> <span class="o">+</span> <span class="o">*</span><span class="n">pc</span><span class="o">++</span><span class="p">);}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>该指令用于获取函数参数，来看一下此时栈的结构图</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="n">sub_function</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">arg3</span><span class="p">);</span>
+
+<span class="o">|</span>    <span class="p">....</span>       <span class="o">|</span> <span class="n">high</span> <span class="n">address</span>
+<span class="o">+---------------+</span>
+<span class="o">|</span> <span class="nl">arg</span><span class="p">:</span> <span class="mi">1</span>        <span class="o">|</span>    <span class="n">new_bp</span> <span class="o">+</span> <span class="mi">4</span>
+<span class="o">+---------------+</span>
+<span class="o">|</span> <span class="nl">arg</span><span class="p">:</span> <span class="mi">2</span>        <span class="o">|</span>    <span class="n">new_bp</span> <span class="o">+</span> <span class="mi">3</span>
+<span class="o">+---------------+</span>
+<span class="o">|</span> <span class="nl">arg</span><span class="p">:</span> <span class="mi">3</span>        <span class="o">|</span>    <span class="n">new_bp</span> <span class="o">+</span> <span class="mi">2</span>
+<span class="o">+---------------+</span>
+<span class="o">|</span><span class="k">return</span> <span class="n">address</span> <span class="o">|</span>    <span class="n">new_bp</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="o">+---------------+</span>
+<span class="o">|</span> <span class="n">old</span> <span class="n">BP</span>        <span class="o">|</span> <span class="o">&lt;-</span> <span class="n">new</span> <span class="n">BP</span>
+<span class="o">+---------------+</span>
+<span class="o">|</span> <span class="n">local</span> <span class="n">var</span> <span class="mi">1</span>   <span class="o">|</span>    <span class="n">new_bp</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="o">+---------------+</span>
+<span class="o">|</span> <span class="n">local</span> <span class="n">var</span> <span class="mi">2</span>   <span class="o">|</span>    <span class="n">new_bp</span> <span class="o">-</span> <span class="mi">2</span>
+<span class="o">+---------------+</span>
+<span class="o">|</span>    <span class="p">....</span>       <span class="o">|</span>  <span class="n">low</span> <span class="n">address</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>所以我们通过偏移量向上查找就能获取到函数参数。</p>
+<h3 id="运算符指令">运算符指令</h3>
+<p>运算符有很多种，我们会支持一些运算符，如下所示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">OR</span><span class="p">)</span>  <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">|</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">XOR</span><span class="p">)</span> <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">^</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">AND</span><span class="p">)</span> <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">&amp;</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">EQ</span><span class="p">)</span>  <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">==</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">NE</span><span class="p">)</span>  <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">!=</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">LT</span><span class="p">)</span>  <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">&lt;</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">LE</span><span class="p">)</span>  <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">&lt;=</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">GT</span><span class="p">)</span>  <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">&gt;</span>  <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">GE</span><span class="p">)</span>  <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">&gt;=</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">SHL</span><span class="p">)</span> <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">&lt;&lt;</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">SHR</span><span class="p">)</span> <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">&gt;&gt;</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">ADD</span><span class="p">)</span> <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">+</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">SUB</span><span class="p">)</span> <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">-</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">MUL</span><span class="p">)</span> <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">*</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">DIV</span><span class="p">)</span> <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">/</span> <span class="n">ax</span><span class="p">;</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">MOD</span><span class="p">)</span> <span class="n">ax</span> <span class="o">=</span> <span class="o">*</span><span class="n">sp</span><span class="o">++</span> <span class="o">%</span> <span class="n">ax</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这里要注意的一点是这些运算符是二元的，也就是说需要操作两个值，我们把第一个参数放在栈顶，第二个放在 ax 中，然后把运算结果保存在 ax 中。</p>
+<h3 id="内置函数">内置函数</h3>
+<p>部分函数我们没法用这个简陋的编译器处理，例如 printf()，malloc()之类的，所以我们用内置函数的方式去处理，也就是直接把这些函数编译进这个编译器，用到的时候直接拿编译器内的函数去用就行。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">EXIT</span><span class="p">)</span> <span class="p">{</span> <span class="n">printf</span><span class="p">(</span><span class="s">&#34;exit(%d)&#34;</span><span class="p">,</span> <span class="o">*</span><span class="n">sp</span><span class="p">);</span> <span class="k">return</span> <span class="o">*</span><span class="n">sp</span><span class="p">;}</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">OPEN</span><span class="p">)</span> <span class="p">{</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">open</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">sp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sp</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="p">}</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">CLOS</span><span class="p">)</span> <span class="p">{</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">close</span><span class="p">(</span><span class="o">*</span><span class="n">sp</span><span class="p">);}</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">READ</span><span class="p">)</span> <span class="p">{</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">sp</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">sp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">*</span><span class="n">sp</span><span class="p">);</span> <span class="p">}</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">PRTF</span><span class="p">)</span> <span class="p">{</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">sp</span> <span class="o">+</span> <span class="n">pc</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">printf</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">tmp</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]);</span> <span class="p">}</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">MALC</span><span class="p">)</span> <span class="p">{</span> <span class="n">ax</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="o">*</span><span class="n">sp</span><span class="p">);}</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">MSET</span><span class="p">)</span> <span class="p">{</span> <span class="n">ax</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">memset</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">sp</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">sp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">*</span><span class="n">sp</span><span class="p">);}</span>
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">op</span> <span class="o">==</span> <span class="n">MCMP</span><span class="p">)</span> <span class="p">{</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">memcmp</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">sp</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">sp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">*</span><span class="n">sp</span><span class="p">);}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这部分不重要，只要知道我们是从虚拟机的角度去实现这些函数即可。</p>
+<p>最后加个处理未知指令的判断即可</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="k">else</span> <span class="p">{</span> <span class="n">printf</span><span class="p">(</span><span class="s">&#34;unkown instruction = %d! cycle = %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">cycle</span><span class="p">);</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>PS：当你在编写上述代码的时候可能会看到编译器会对某些地方标红，例如在强制转换的时候，这可能是因为你在64位的机器上编写这部分代码，因为在64位机器上指针的大小也是64位，所以将一个32位int和64位的指针来回转换看起来并不是很妥当，所以我推荐你在程序开头添加一个宏</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="cp">#define int int64_t
+</span></code></pre></td></tr></table>
+</div>
+</div><h2 id="小结">小结</h2>
+<p>本节我们设计了编译器内置的虚拟机和对应的指令集，通过这些指令集我们可以简单的模拟程序运行，在现代计算机中添加指令是很麻烦的事情，不同的指令会对应不同的电路，每添加或修改一次指令就会消耗大量的成本，但是对于虚拟机来说，添加新的指令很简单，几乎不会浪费多少资源和时间，如果你想，你可以在这个指令集的基础上添加更多的指令来完成更加复杂的功能。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E7%BC%96%E8%AF%91/">编译</a>
+        
+            <a href="/tags/c%E8%AF%AD%E8%A8%80/">C语言</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-contents--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-contents">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/%E4%BB%8E%E9%9B%B6%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAc%E8%AF%AD%E8%A8%80%E7%BC%96%E8%AF%91%E5%99%A81/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">从零构建一个c语言编译器(1)</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/%E4%BB%8E%E9%9B%B6%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAc%E8%AF%AD%E8%A8%80%E7%BC%96%E8%AF%91%E5%99%A80/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">从零构建一个c语言编译器(0)</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/p/linux%E4%B8%8B%E4%B8%A4%E7%A7%8D%E9%93%BE%E6%8E%A5%E6%96%B9%E5%BC%8F%E7%9A%84%E4%B8%8D%E5%90%8C/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Linux下两种链接方式的不同</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Luna_Blog
+    </section>
+    
+    <section class="powerby">
+        
+
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+        <br />
+        
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.11.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#内存模拟">内存模拟</a></li>
+    <li><a href="#寄存器">寄存器</a></li>
+    <li><a href="#指令集">指令集</a>
+      <ol>
+        <li><a href="#用于模拟-mov-指令的指令">用于模拟 MOV 指令的指令</a></li>
+        <li><a href="#push">PUSH</a></li>
+        <li><a href="#jmp">JMP</a></li>
+        <li><a href="#jzjnz">JZ/JNZ</a></li>
+        <li><a href="#函数调用">函数调用</a></li>
+        <li><a href="#运算符指令">运算符指令</a></li>
+        <li><a href="#内置函数">内置函数</a></li>
+      </ol>
+    </li>
+    <li><a href="#小结">小结</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        <!-- customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"; -->
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+    </body>
+</html>
