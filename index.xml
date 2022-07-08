@@ -287,7 +287,9 @@
 &lt;span class=&#34;p&#34;&gt;};&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description>
+&lt;/div&gt;&lt;p&gt;后续更新（2022-07-08）：&lt;/p&gt;
+&lt;p&gt;后来又发现了一些东西，找到了两个最简单的可以解决这个问题的方法。一是给结构体添加默认构造函数，二是用 unordered_map 存储结构体的指针。这两个方法哪个都能解决，而最简单的必然是加一个默认构造函数，实在不行的话才需要考虑文中的这种方法。&lt;/p&gt;
+</description>
         </item>
         <item>
         <title>从零构建一个c语言编译器(2)</title>
