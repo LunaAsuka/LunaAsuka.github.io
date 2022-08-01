@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='简单翻译一下这篇文章'><title>LC-3虚拟机</title>
+
+<link rel='canonical' href='https://lunaasuka.github.io/p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/'>
+
+<link rel="stylesheet" href="/scss/style.min.5d0ba4b8e005f9d5f3e1dc243f2555eba3c536500cc6b2ab42f43d5a03ac060a.css"><meta property='og:title' content='LC-3虚拟机'>
+<meta property='og:description' content='简单翻译一下这篇文章'>
+<meta property='og:url' content='https://lunaasuka.github.io/p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/'>
+<meta property='og:site_name' content='Luna_Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='虚拟划' /><meta property='article:tag' content='虚拟机' /><meta property='article:tag' content='LC-3' /><meta property='article:published_time' content='2022-07-31T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-07-31T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="LC-3虚拟机">
+<meta name="twitter:description" content="简单翻译一下这篇文章">
+    <link rel="shortcut icon" href="img/favicon.png" />
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/author_hu5662b65b0b35d446edae569f17233a38_392169_300x0_resize_q75_box.jpg" width="300"
+                            height="296" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">😋</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Luna_Blog</a></h1>
+            <h2 class="site-description">待到秋来九月八,我花开后百花杀</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/LunaAsuka'
+                        target="_blank"
+                        title="GitHub"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/about' >
+                
+                
+                    
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/" >
+                虚拟化
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/">LC-3虚拟机</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            简单翻译一下这篇文章
+        </h3>
+        
+    </div>
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jul 31, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 13 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>个人翻译。原文地址：<a class="link" href="https://www.jmeiners.com/lc3-vm/"  target="_blank" rel="noopener"
+    >https://www.jmeiners.com/lc3-vm/</a></p>
+<h2 id="前言">前言</h2>
+<p>我简单花了几个小时看完了这片文章，于是便决定尝试写个翻译版本的，但是我的英语水平实际上挺一般的，对于本文的翻译很难做到完美契合原作者的本意，各位可以先简单浏览下我的翻译版本，然后我还是建议去通读一遍英文原文，相信您会有更大的收获。对于本文各种词不达意的情况，在这里先行道歉。</p>
+<p>在本教程中，我将教您如何编写您自己的虚拟机，它可以运行汇编语言程序，例如我朋友的 <a class="link" href="https://github.com/rpendleton/lc3-2048"  target="_blank" rel="noopener"
+    >2048</a> 或者我的 <a class="link" href="https://github.com/justinmeiners/lc3-rogue"  target="_blank" rel="noopener"
+    >Roguelike</a>。如果您知道如何编程，但是想更深入地了解计算机内部所发生的事情，并且想更深入地了解编程语言的工作原理，那么这个项目就是为你准备的。编写一个自己的虚拟机听起来可能有点吓人，但我保证您会发现它出人意料的简单。</p>
+<p>整个项目的最终代码量约为250行 C。您只要能够阅读基本的 C 或 C++ 语句并且会进行<a class="link" href="https://www.swarthmore.edu/NatSci/echeeve1/Ref/BinaryMath/BinaryMath.html"  target="_blank" rel="noopener"
+    >位运算</a>即可。</p>
+<p>1.什么是虚拟机</p>
+<p>2.LC-3 架构</p>
+<p>3.汇编示例</p>
+<p>4.执行程序</p>
+<p>5.指令实现</p>
+<p>6.指令表</p>
+<p>7.门例程</p>
+<p>8.门例程表</p>
+<p>9.加载程序</p>
+<p>10.内存映射寄存器</p>
+<p>11.平台细节</p>
+<p>12.运行虚拟机</p>
+<p>13.用C++技术替换</p>
+<p>14.贡献</p>
+<p>Note：本教程是一个<a class="link" href="https://en.wikipedia.org/wiki/Literate_programming"  target="_blank" rel="noopener"
+    >开源程序</a>，您现在可以直接阅读源代码。关于这个虚拟机程序中的每一段代码都会被展现出来并解释，所以不用担心会有被遗漏的部分。最终代码会由各种代码块组合而成。</p>
+<h2 id="1什么是虚拟机">1.什么是虚拟机</h2>
+<p>虚拟机是一个类似于计算机一样的程序。它模拟 CPU 和其他的一些硬件，允许它执行算术，读写内存，并与 IO 设备交互，就像一台物理计算机一样。最重要的是它可以理解一种机器语言，你可以用这种语言去编程。</p>
+<p>虚拟机尝试模拟的硬件数量取决于它的目的，也就是说取决于它预期能干什么。有些虚拟机旨在重现一些特定计算机的行为，例如游戏模拟器。大多数人手边都没有 NES，但是我们仍然可以使用模拟 NES 的软件去玩 NES 上的游戏。这些模拟器必须<a class="link" href="http://wiki.nesdev.com/w/index.php/Tricky-to-emulate_games"  target="_blank" rel="noopener"
+    >忠实地模拟</a>原始设备的所有<a class="link" href="http://wiki.nesdev.com/w/index.php/Emulator_tests"  target="_blank" rel="noopener"
+    >细节</a>和主要硬件。</p>
+<p>一些其他的虚拟机的行为并不像一个物理计算机一样，它完全是虚构的。这主要是为了使得软件开发更简单。想象一下，你想创建一个可以运行在多种架构上的程序，那么虚拟机可以提供一个标准平台给所有程序提供可移植性。相比于为每种 CPU 架构使用不同的汇编语言去重写程序，当然是只需要写几个适配各种架构的小虚拟机并在这些虚拟机上用一种汇编去开发你的程序更好。这样每个程序只需要编写一次就能在所有架构上的虚拟机上运行。</p>
+<p><img src="/p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/no_vm.gif"
+	width="503"
+	height="282"
+	srcset="/p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/no_vm_huc058e2f25755935853577678f860db27_8203_480x0_resize_box.gif 480w, /p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/no_vm_huc058e2f25755935853577678f860db27_8203_1024x0_resize_box.gif 1024w"
+	loading="lazy"
+	
+		alt="Untitled"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="178"
+		data-flex-basis="428px"
+	
+></p>
+<p><img src="/p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/vm.gif"
+	width="459"
+	height="354"
+	srcset="/p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/vm_hu5672f61a488dd496ede35e35f4cbcc9c_8997_480x0_resize_box.gif 480w, /p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/vm_hu5672f61a488dd496ede35e35f4cbcc9c_8997_1024x0_resize_box.gif 1024w"
+	loading="lazy"
+	
+		alt="Untitled"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="129"
+		data-flex-basis="311px"
+	
+></p>
+<p>Note：编译器通过将高级语言编译到多个 CPU 架构来解决类似的问题。虚拟机创建了一个标准的，可以在各种硬件设备上进行模拟的 CPU 架构。编译器的一个优点是它没有运行时开销，而虚拟机有，因为程序实际上是在虚拟机内被模拟执行的。尽管编译器做的很好，但是编写针对多个平台的编译器是非常困难的，所以虚拟机还是很有用武之地的。实际上，虚拟机和编译器经常在不同级别上的混合在一起。</p>
+<p>Java 虚拟机( <a class="link" href="https://en.wikipedia.org/wiki/Java_virtual_machine"  target="_blank" rel="noopener"
+    >JVM</a> )是一个非常成功的例子。JVM 本身是一个中等大小的虚拟机，同时也足够小可以让一个程序员理解。这使得可以为包括手机在内的数千种设备编写程序。一旦 JVM 被部署到一个新的设备上，任何以 Java，Kotlin 或者 Clojure 编写的程序都可以直接在这上面运行而无需修改。唯一的开销上虚拟机本身和进一步从机器上<a class="link" href="https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/"  target="_blank" rel="noopener"
+    >抽象</a>出来。大多数时候，这都是一个很不错的权衡。</p>
+<p>一个虚拟机不需要有多大或者无处不在才能提供类似的好处。老式<a class="link" href="https://fabiensanglard.net/anotherWorld_code_review/"  target="_blank" rel="noopener"
+    >电子游戏</a>经常使用小虚拟机来提供简单的<a class="link" href="https://sf2platinum.wordpress.com/page/1/"  target="_blank" rel="noopener"
+    >脚本系统</a>。</p>
+<p>虚拟机也能过提供一种安全的或者隔离性的方式去执行一些代码。其中一个应用就是垃圾回收。<a class="link" href="https://www.lua.org/pil/24.2.html"  target="_blank" rel="noopener"
+    >没什么简单有效的方式</a>可以为 C 或 C++ 提供自动垃圾回收，因为程序没法看到它自己的堆栈或变量。不过虚拟机运行在程序之外，它可以观察堆栈上的所有<a class="link" href="https://en.wikipedia.org/wiki/Tracing_garbage_collection"  target="_blank" rel="noopener"
+    >内存使用情况</a>。</p>
+<p>另外一个例子就是<a class="link" href="https://solidity.readthedocs.io/en/v0.4.24/introduction-to-smart-contracts.html"  target="_blank" rel="noopener"
+    >以太坊智能合约</a>。该智能合约是一些由区块链网络中的每个验证节点执行的小程序。这要求节点在他们自己的机器上在没有任何提前检查的情况下运行一些由完全陌生的人所编写的程序。为了防止做坏事，它们会在无法访问文件系统，网络，磁盘等设备等虚拟机中运行。以太坊就是一个使用虚拟机所产生的良好可移植性的代表性程序。由于以太坊节点可以在多种计算机和操作系统上运行，因此可以使用虚拟机来编写程序而不需要考虑它们所运行的平台。</p>
+<h2 id="2lc-3-架构">2.LC-3 架构</h2>
+<p>我们的虚拟机将模拟一台名为 <a class="link" href="https://en.wikipedia.org/wiki/Little_Computer_3"  target="_blank" rel="noopener"
+    >LC-3</a> 的虚拟计算机。LC-3 在教大学生如何使用汇编语言时很受欢迎。与 <a class="link" href="http://ref.x86asm.net/coder64.html"  target="_blank" rel="noopener"
+    >x86</a> 相比，它有一个包含现代 CPU 所需要的主要指令的但更简单的指令集。</p>
+<p>首先，我们要模拟计算机的基本硬件。尝试去理解每个硬件都是什么，不过如果你现在不确定它（代码片段）如何适应更大的程序部分也不需要担心。首先创建一个 C 文件，每个代码片段都应放在本文件的全局范围内。</p>
+<h3 id="内存">内存</h3>
+<p>LC-3 有 65536 个内存位置（可通过 16 位无符号整数寻址的最大值），每个内存位置存储一个 16 位值。这意味着它总共能存储 128KB，这比你习惯的小的多。在我们的程序中，内存将被简单的存储到一个数组中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// Memory Storage
+</span><span class="c1"></span>
+<span class="cp">#define MEMORY_MAX (1 &lt;&lt; 16)
+</span><span class="cp"></span><span class="n">uint16_t</span> <span class="n">memory</span><span class="p">[</span><span class="n">MEMORY_MAX</span><span class="p">];</span>  <span class="cm">/* 65536 locations */</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="寄存器">寄存器</h3>
+<p>寄存器是用于在 CPU 上存储单个值的设备。寄存器就像 CPU 的工作台。为了让 CPU 处理一条数据，它必须位于一个寄存器中。但是，因为只有几个寄存器，所以不论在什么时候最多也就只能加载这点数据。程序通过将内存中的值加载到寄存器中来解决这个问题，将值计算到某个寄存器中，然后将结果存储回内存中。</p>
+<p>LC-3 总共有 10 个寄存器，每个寄存器占 16 位。这里面大多数都是通用寄存器，但是有几个是有特殊作用的。这里有 8 个通用寄存器（R0 - R7），1 个程序计数器（PC），1 个状态标志寄存器（COND）。</p>
+<p>通用寄存器可用于任何程序计算。程序计数器存储无符号整数，它是内存中要执行的下一条指令的地址。状态标志寄存器可以告诉我们有关之前计算的信息。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// Registers
+</span><span class="c1"></span>
+<span class="k">enum</span>
+<span class="p">{</span>
+    <span class="n">R_R0</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">R_R1</span><span class="p">,</span>
+    <span class="n">R_R2</span><span class="p">,</span>
+    <span class="n">R_R3</span><span class="p">,</span>
+    <span class="n">R_R4</span><span class="p">,</span>
+    <span class="n">R_R5</span><span class="p">,</span>
+    <span class="n">R_R6</span><span class="p">,</span>
+    <span class="n">R_R7</span><span class="p">,</span>
+    <span class="n">R_PC</span><span class="p">,</span> <span class="cm">/* program counter */</span>
+    <span class="n">R_COND</span><span class="p">,</span>
+    <span class="n">R_COUNT</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>就像内存一样，我们用数组来存储寄存器。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// Register Storage
+</span><span class="c1"></span>
+<span class="n">uint16_t</span> <span class="n">reg</span><span class="p">[</span><span class="n">R_COUNT</span><span class="p">];</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="指令集">指令集</h3>
+<p>指令是一条命令，它告诉 CPU 执行一些任务，例如将两个数字相加。指令既有一个指示要执行的任务类型的操作码，也有一组参数，这些参数为正在执行的任务提供输入。</p>
+<p>每个操作码代表 CPU 知道如何执行一项任务。LC-3 中只有 16 个操作码。计算机可以计算的一切都是由这些指令组成的序列。每条指令长 16 位，其中 4 位用于存储操作码，其余用于存储参数。</p>
+<p>稍后我们将详细讨论每条指令的作用。现在先定义以下操作码，确保它们保持此顺序，以便为它们分配正确的枚举值。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// Opcodes
+</span><span class="c1"></span>
+<span class="k">enum</span>
+<span class="p">{</span>
+    <span class="n">OP_BR</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="cm">/* branch */</span>
+    <span class="n">OP_ADD</span><span class="p">,</span>    <span class="cm">/* add  */</span>
+    <span class="n">OP_LD</span><span class="p">,</span>     <span class="cm">/* load */</span>
+    <span class="n">OP_ST</span><span class="p">,</span>     <span class="cm">/* store */</span>
+    <span class="n">OP_JSR</span><span class="p">,</span>    <span class="cm">/* jump register */</span>
+    <span class="n">OP_AND</span><span class="p">,</span>    <span class="cm">/* bitwise and */</span>
+    <span class="n">OP_LDR</span><span class="p">,</span>    <span class="cm">/* load register */</span>
+    <span class="n">OP_STR</span><span class="p">,</span>    <span class="cm">/* store register */</span>
+    <span class="n">OP_RTI</span><span class="p">,</span>    <span class="cm">/* unused */</span>
+    <span class="n">OP_NOT</span><span class="p">,</span>    <span class="cm">/* bitwise not */</span>
+    <span class="n">OP_LDI</span><span class="p">,</span>    <span class="cm">/* load indirect */</span>
+    <span class="n">OP_STI</span><span class="p">,</span>    <span class="cm">/* store indirect */</span>
+    <span class="n">OP_JMP</span><span class="p">,</span>    <span class="cm">/* jump */</span>
+    <span class="n">OP_RES</span><span class="p">,</span>    <span class="cm">/* reserved (unused) */</span>
+    <span class="n">OP_LEA</span><span class="p">,</span>    <span class="cm">/* load effective address */</span>
+    <span class="n">OP_TRAP</span>    <span class="cm">/* execute trap */</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Note：Intel x86 架构有数百条指令，而 ARM 和 LC-3 等其他架构的指令就很少。小型指令集称为 <a class="link" href="https://en.wikipedia.org/wiki/Reduced_instruction_set_computer"  target="_blank" rel="noopener"
+    >RISCs</a>，较大的指令集称为 <a class="link" href="https://en.wikipedia.org/wiki/Complex_instruction_set_computer"  target="_blank" rel="noopener"
+    >CISCs</a>。较大的指令集通常不会提供任何根本上的新的可能性，但是它们通常会使编写汇编程序<a class="link" href="https://cs.stanford.edu/people/eroberts/courses/soco/projects/risc/risccisc/"  target="_blank" rel="noopener"
+    >更加方便</a>。CISC 中的一条指令可能会代替 RISC 中的几条指令。然而，对于工程师来说，这样的设计和制造往往更复杂也更昂贵。这种权衡和其他权衡会导致设计<a class="link" href="https://cs.stackexchange.com/questions/269/why-would-anyone-want-cisc"  target="_blank" rel="noopener"
+    >反反复复进进出出</a>。</p>
+<h3 id="状态标志">状态标志</h3>
+<p>R_COND 寄存器存储状态标志，这些标志会提供有关最近执行的计算的信息。这允许程序检查逻辑条件，例如 if (x &gt;0) { . . . }</p>
+<p>每个 CPU 都有各种标志来指示各种情况。LC-3 仅适用 3 个状态标志来记录先前的计算。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// Condition Flags
+</span><span class="c1"></span>
+<span class="k">enum</span>
+<span class="p">{</span>
+    <span class="n">FL_POS</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="cm">/* P */</span>
+    <span class="n">FL_ZRO</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">,</span> <span class="cm">/* Z */</span>
+    <span class="n">FL_NEG</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* N */</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Note：&laquo; 是左移运算符，(n &laquo; k) 是将 n 向左移动 k 位。因此 1 &laquo; 2 等于 4。如果您不熟悉，请阅读该<a class="link" href="https://msdn.microsoft.com/en-us/library/336xbhcz.aspx"  target="_blank" rel="noopener"
+    >链接</a>，这很重要。</p>
+<p>我们已经完成了硬件组件的设置。添加标准 #include 之后（详见参考），你的文件应如下所示。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// lc3.c
+</span><span class="c1"></span>
+<span class="err">@</span><span class="p">{</span><span class="n">Includes</span><span class="p">}</span>
+
+<span class="err">@</span><span class="p">{</span><span class="n">Registers</span><span class="p">}</span>
+<span class="err">@</span><span class="p">{</span><span class="n">Opcodes</span><span class="p">}</span>
+<span class="err">@</span><span class="p">{</span><span class="n">Condition</span> <span class="n">Flags</span><span class="p">}</span>
+<span class="c1">// 原文章这些代码块之间可以直接点击跳转，本文暂不支持，不过问题不大，直接看源代码来的更实在些
+</span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3汇编示例">3.汇编示例</h2>
+<p>现在我们来看一下 LC-3 汇编程序以了解虚拟机实际怎样运行的。你不需要知道怎么写汇编或者理解正在发生的一切，只需要尝试了解一些正在发生的事就行。下面是一个简单的“ Hello world ”程序。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// Hello World Assembly
+</span><span class="c1"></span>
+<span class="n">Assembly</span>
+<span class="p">.</span><span class="n">ORIG</span> <span class="n">x3000</span>                        <span class="p">;</span> <span class="err">这是程序要被加载到的地址</span>
+<span class="n">LEA</span> <span class="n">R0</span><span class="p">,</span> <span class="n">HELLO_STR</span>                  <span class="p">;</span> <span class="err">将</span> <span class="n">HELLO_STR</span> <span class="err">字符串的地址加载到</span> <span class="n">R0</span>
+<span class="n">PUTs</span>                               <span class="p">;</span> <span class="err">将</span> <span class="n">R0</span> <span class="err">指向的字符输出到控制台</span>
+<span class="n">HALT</span>                               <span class="p">;</span> <span class="err">停止程序</span>
+<span class="n">HELLO_STR</span> <span class="p">.</span><span class="n">STRINGZ</span> <span class="s">&#34;Hello World!&#34;</span>  <span class="p">;</span> <span class="err">将此字符串存储在程序中</span>
+<span class="p">.</span><span class="n">END</span>                               <span class="p">;</span> <span class="err">标志着该文件的结束</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>就像 C 一样，程序从顶部开始，一次运行一条语句。然而与 C 不同的是，汇编没有嵌套作用域 {} 或是控制结构例如 if 或 while，汇编就是一个平铺直叙的语句列表。这使得执行起来容易得多。</p>
+<p>注意一些语句的名称与我们之前定义的操作码相匹配。之前我们了解到每条语句都是 16 位，但是看起来没行都是不同数量的字符。怎么会这样呢？</p>
+<p>这是因为我们正在阅读的代码是以汇编形式编写的，这是一种人类可读可写的形式，用纯文本编码。一个叫做汇编器的工具将用于将每行文本转换成虚拟机可以理解的 16 位二进制指令。这种二进制形式本质上是一个由 16 位二进制指令组成的叫做机器码的东西，这才是虚拟机实际运行的。</p>
+<p><img src="/p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/assembler.gif"
+	width="341"
+	height="419"
+	srcset="/p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/assembler_hu7b107b25a5b9814ab8aca1785408860b_6592_480x0_resize_box.gif 480w, /p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/assembler_hu7b107b25a5b9814ab8aca1785408860b_6592_1024x0_resize_box.gif 1024w"
+	loading="lazy"
+	
+		alt="Untitled"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="81"
+		data-flex-basis="195px"
+	
+></p>
+<p>Note：虽然编译器和汇编器在开发过程中扮演着相似的角色，但它们并不相同。汇编器只需将程序员在文本中写入的内容编码为二进制文件，用二进制表示形式替换其符号，并将其打包成指令即可。</p>
+<p>语句 .ORIG 和 .STRINGZ 看起来像是指令，但它们不是。它们是生成一段代码或数据（类似宏）的汇编器行为。例如，.STRINGZ 在写入为止的二进制程序文件中插入一串字符。</p>
+<p>循环和条件是用类似 goto 的指令完成的。下面是一个累加到 10 的例子。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// Loop Assembly
+</span><span class="c1"></span>
+<span class="n">AND</span> <span class="n">R0</span><span class="p">,</span> <span class="n">R0</span><span class="p">,</span> <span class="mi">0</span>       <span class="p">;</span> <span class="err">给</span> <span class="n">R0</span> <span class="err">清零</span>
+<span class="n">LOOP</span>                <span class="p">;</span> <span class="err">循环的标签</span>
+<span class="n">ADD</span> <span class="n">R0</span><span class="p">,</span> <span class="n">R0</span><span class="p">,</span> <span class="mi">1</span>       <span class="p">;</span> <span class="err">给</span> <span class="n">R0</span> <span class="o">+</span><span class="mi">1</span> <span class="err">，将结果存储到</span> <span class="n">R0</span> <span class="err">中</span>
+<span class="n">ADD</span> <span class="n">R1</span><span class="p">,</span> <span class="n">R0</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span>     <span class="p">;</span> <span class="err">从</span> <span class="n">R0</span> <span class="err">中</span> <span class="o">-</span><span class="mi">10</span><span class="err">，存储回</span> <span class="n">R1</span> <span class="err">中</span>
+<span class="n">BRn</span> <span class="n">LOOP</span>            <span class="p">;</span> <span class="err">如果结果为否，返回到</span> <span class="n">LOOP</span>
+<span class="p">...</span>	  					    <span class="p">;</span> <span class="n">R0</span> <span class="err">现在是</span> <span class="mi">10</span><span class="o">!</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Note：对于本教程来说没必要学习编写汇编。不过如果你对这方面感兴趣的话，可以使用 <a class="link" href="http://highered.mheducation.com/sites/0072467509/student_view0/lc-3_simulator.html"  target="_blank" rel="noopener"
+    >LC-3工具</a> 编写你自己的 LC-3 程序。</p>
+<h2 id="4执行程序">4.执行程序</h2>
+<p>前面的例子只是为了让你了解虚拟机要干什么。你不需要精通汇编。只要你遵循阅读和执行指令的正确程序，无论多复杂的 LC-3 程序都能正确运行。理论上，它甚至可以运行浏览器或者 Linux 这样的操作系统。</p>
+<p>如果你深入思考这种功能，这是哲学上的非凡的想法。程序本身可以做各种我们从未预料到且可能无法理解的智能事情，但是与此同时，它们能做的一切都仅限于我们编写的代码。我们同时了解程序的一切又同时完全不了解程序怎么工作的。图灵曾发表这样的言论：</p>
+<p>“The view that machines cannot give rise to surprises is due, I believe, to a fallacy to which philosophers and mathematicians are particularly subject. This is the assumption that as soon as a fact is presented to a mind all consequences of that fact spring into the mind simultaneously with it. It is a very useful assumption under many circumstances, but one too easily forgets that it is false.” — <a class="link" href="https://academic.oup.com/mind/article-pdf/LIX/236/433/9866119/433.pdf"  target="_blank" rel="noopener"
+    >Alan M. Turing</a></p>
+<h3 id="程序">程序</h3>
+<p>以下是我们要编写的程序的运行流程：</p>
+<p>1.从 PC 寄存器中加载一条指令的地址。</p>
+<p>2.自增 PC 寄存器。</p>
+<p>3.查看操作码以确定它应该执行哪个指令。</p>
+<p>4.使用语句中的参数执行指令。</p>
+<p>5.返回第一步</p>
+<p>你可能想知道，“如果循环不断增加 PC，而我们没有 if 或者 while ，那不是很快就用跑完全部语句吗？”。其实不是，正如我们之前提到的，一些类似 goto 的指令通过跳转 PC 来改变执行流程。</p>
+<p>我们在主循环中概述这个过程：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// Main Loop
+</span><span class="c1"></span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="err">@</span><span class="p">{</span><span class="n">Load</span> <span class="n">Arguments</span><span class="p">}</span>
+    <span class="err">@</span><span class="p">{</span><span class="n">Setup</span><span class="p">}</span>
+
+    <span class="cm">/* since exactly one condition flag should be set at any given time, set the Z flag */</span>
+    <span class="n">reg</span><span class="p">[</span><span class="n">R_COND</span><span class="p">]</span> <span class="o">=</span> <span class="n">FL_ZRO</span><span class="p">;</span>
+
+    <span class="cm">/* set the PC to starting position */</span>
+    <span class="cm">/* 0x3000 is the default */</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">PC_START</span> <span class="o">=</span> <span class="mh">0x3000</span> <span class="p">};</span>
+    <span class="n">reg</span><span class="p">[</span><span class="n">R_PC</span><span class="p">]</span> <span class="o">=</span> <span class="n">PC_START</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">running</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">running</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="cm">/* FETCH */</span>
+        <span class="n">uint16_t</span> <span class="n">instr</span> <span class="o">=</span> <span class="n">mem_read</span><span class="p">(</span><span class="n">reg</span><span class="p">[</span><span class="n">R_PC</span><span class="p">]</span><span class="o">++</span><span class="p">);</span>
+        <span class="n">uint16_t</span> <span class="n">op</span> <span class="o">=</span> <span class="n">instr</span> <span class="o">&gt;&gt;</span> <span class="mi">12</span><span class="p">;</span>
+
+        <span class="k">switch</span> <span class="p">(</span><span class="n">op</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">case</span> <span class="nl">OP_ADD</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">ADD</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_AND</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">AND</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_NOT</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">NOT</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_BR</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">BR</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_JMP</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">JMP</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_JSR</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">JSR</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_LD</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">LD</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_LDI</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">LDI</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_LDR</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">LDR</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_LEA</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">LEA</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_ST</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">ST</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_STI</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">STI</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_STR</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">STR</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_TRAP</span><span class="p">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">TRAP</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nl">OP_RES</span><span class="p">:</span>
+            <span class="k">case</span> <span class="nl">OP_RTI</span><span class="p">:</span>
+            <span class="k">default</span><span class="o">:</span>
+                <span class="err">@</span><span class="p">{</span><span class="n">BAD</span> <span class="n">OPCODE</span><span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="err">@</span><span class="p">{</span><span class="n">Shutdown</span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当我们处在主循环中，我们处理命令行的输入来让程序可用。我们希望给虚拟机一个或多个路径，如果没给的话提示没有输入。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// Load Arguments
+</span><span class="c1"></span>
+<span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="cm">/* show usage string */</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;lc3 [image-file1] ...</span><span class="se">\\</span><span class="s">n&#34;</span><span class="p">);</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">argc</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">read_image</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;failed to load image: %s</span><span class="se">\\</span><span class="s">n&#34;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="5指令实现">5.指令实现</h2>
+<p>现在的任务是实现每个操作码的功能。这比听起来要容易些。<a class="link" href="https://www.jmeiners.com/lc3-vm/supplies/lc3-isa.pdf"  target="_blank" rel="noopener"
+    >项目文档</a>中包含每个指令的详细说明。每个规范都很容易翻译成几行代码。我将在这里演示如何实现其中两个指令。其余部分的代码在下一节。</p>
+<h3 id="add">ADD</h3>
+<p>ADD 指令接受两个数字并将它们加到一起，然后将结果存储在寄存器中。它的规范见第 526 页。ADD 指令如下所示：</p>
+<p><img src="/p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/add_layout.gif"
+	width="607"
+	height="241"
+	srcset="/p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/add_layout_hu4a148c383d64ed74d946dc03eb5a51f9_15572_480x0_resize_box.gif 480w, /p/lc-3%E8%99%9A%E6%8B%9F%E6%9C%BA/add_layout_hu4a148c383d64ed74d946dc03eb5a51f9_15572_1024x0_resize_box.gif 1024w"
+	loading="lazy"
+	
+		alt="Untitled"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="251"
+		data-flex-basis="604px"
+	
+></p>
+<p>显示两行是因为改指令有两种不同的模式。在解释它们的不同之前先来看看相同之处。这两行中我们可以看到都是以 4 位 0001 开头的。这是 OP_ADD 的操作码值。接下来的 3 位被标记为 DR，这代表目的寄存器。目标寄存器是存储计算结果的地方。接下来的 3 位是 SR1，这是包含第一个要计算的数字的寄存器。</p>
+<p>所以我们知道想要将结果存储在哪，我们知道要加的第一个数字在哪。我们需要的最后一点信息是第二个数字。这会儿可以看到这两行开始不一样了。可以看到，在上行，第 5 位为 0，在下行则为 1。这位表示它是立即数模式还是寄存器模式。在寄存器模式下，第二个数字被存储在某个寄存器中，该寄存器被标记为 SR2，被存储在 2-0 位，第 3 位和第 4 位不使用。在汇编中写作：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// Add Register Assembly
+</span><span class="c1"></span>
+<span class="n">ADD</span> <span class="n">R2</span> <span class="n">R0</span> <span class="n">R1</span> <span class="p">;</span> <span class="err">将</span> <span class="n">R0</span> <span class="err">和</span> <span class="n">R1</span> <span class="err">中的数字相加并存储到</span> <span class="n">R2</span> <span class="err">中</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>立即数模式是可以方便地缩短程序长度的模式。第二个值不是存储在寄存器中的值，而是嵌入到指令本身中 ，在图中被标记为 imm5。这样就不需要编写指令从内存中加载数值了。唯一的问题是这样写的话只能容纳很小的数字，准确的说，最高只能到 2^5 = 32（无符号），这使得立即数模式主要用于递增和递减。在汇编中，写作：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// Add Immediate Assembly
+</span><span class="c1"></span>
+<span class="n">ADD</span> <span class="n">R0</span> <span class="n">R0</span> <span class="mi">1</span> <span class="p">;</span> <span class="err">向</span> <span class="n">R0</span> <span class="err">中加</span> <span class="mi">1</span> <span class="err">并存储到</span> <span class="n">R0</span> <span class="err">中，即自增</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>以下有一段规范的摘要：</p>
+<p>如果位[5]为 0，则从 SR2 获得第二个源操作数。如果位[5]是 1，则将 imm5 字段扩展到 16 位来获得第二个源操作数。在两种情况下，第二个源操作数都要加到 SR1 的数中，将结果存储在 DR 中。（Pg. 526）</p>
+<p>这听起来就像是我们讨论过的行为，但是什么是“标志扩展”（sign-extending）？立即数模式的值只有 5 位，但它需要被加到 16 位的数值中。要执行这个操作，这个 5 位的数就需要被扩展到 16 位以匹配另一个数。对于正数，我们简单的扩充 0 即可。对于负数，这样做会导致一个问题。例如，5 位中的 -1 是 1111。如果我们只是把它扩充 0，就变成了 0000 0000 0001 1111，等于 31。符号扩展通过为正数扩充 0，为负数扩充 1 来解决这个问题，这样就可以保留原始值。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// Sign Extend
+</span><span class="c1"></span>
+<span class="n">uint16_t</span> <span class="nf">sign_extend</span><span class="p">(</span><span class="n">uint16_t</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">bit_count</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">bit_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">x</span> <span class="o">|=</span> <span class="p">(</span><span class="mh">0xFFFF</span> <span class="o">&lt;&lt;</span> <span class="n">bit_count</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Note：如果你对负数如何用二进制表示感兴趣，可以阅读 <a class="link" href="https://en.wikipedia.org/wiki/Two%27s_complement"  target="_blank" rel="noopener"
+    >Two‘s Complement</a>。不过这并不重要。你只需要复制上面的代码，并在需要扩充的时候使用它即可。</p>
+<p>规范中最后一句：</p>
+<p>根据结果是负数、零还是正数来设置条件代码。（Pg. 526）</p>
+<p>早些时候，我们定义了一个状态标志，现在是时候使用了。每当将值写入寄存器时，我们需要更新标志以指示其符号。我们将编写一个函数，以便可以重用：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// Update Flags
+</span><span class="c1"></span>
+<span class="kt">void</span> <span class="nf">update_flags</span><span class="p">(</span><span class="n">uint16_t</span> <span class="n">r</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">reg</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">reg</span><span class="p">[</span><span class="n">R_COND</span><span class="p">]</span> <span class="o">=</span> <span class="n">FL_ZRO</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">reg</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="mi">15</span><span class="p">)</span> <span class="cm">/* a 1 in the left-most bit indicates negative */</span>
+    <span class="p">{</span>
+        <span class="n">reg</span><span class="p">[</span><span class="n">R_COND</span><span class="p">]</span> <span class="o">=</span> <span class="n">FL_NEG</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">reg</span><span class="p">[</span><span class="n">R_COND</span><span class="p">]</span> <span class="o">=</span> <span class="n">FL_POS</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>现在我们可以来编写 ADD 的代码了：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// ADD
+</span><span class="c1"></span>
+<span class="p">{</span>
+    <span class="cm">/* destination register (DR) */</span>
+    <span class="n">uint16_t</span> <span class="n">r0</span> <span class="o">=</span> <span class="p">(</span><span class="n">instr</span> <span class="o">&gt;&gt;</span> <span class="mi">9</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x7</span><span class="p">;</span>
+    <span class="cm">/* first operand (SR1) */</span>
+    <span class="n">uint16_t</span> <span class="n">r1</span> <span class="o">=</span> <span class="p">(</span><span class="n">instr</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x7</span><span class="p">;</span>
+    <span class="cm">/* whether we are in immediate mode */</span>
+    <span class="n">uint16_t</span> <span class="n">imm_flag</span> <span class="o">=</span> <span class="p">(</span><span class="n">instr</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x1</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">imm_flag</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">uint16_t</span> <span class="n">imm5</span> <span class="o">=</span> <span class="n">sign_extend</span><span class="p">(</span><span class="n">instr</span> <span class="o">&amp;</span> <span class="mh">0x1F</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+        <span class="n">reg</span><span class="p">[</span><span class="n">r0</span><span class="p">]</span> <span class="o">=</span> <span class="n">reg</span><span class="p">[</span><span class="n">r1</span><span class="p">]</span> <span class="o">+</span> <span class="n">imm5</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">uint16_t</span> <span class="n">r2</span> <span class="o">=</span> <span class="n">instr</span> <span class="o">&amp;</span> <span class="mh">0x7</span><span class="p">;</span>
+        <span class="n">reg</span><span class="p">[</span><span class="n">r0</span><span class="p">]</span> <span class="o">=</span> <span class="n">reg</span><span class="p">[</span><span class="n">r1</span><span class="p">]</span> <span class="o">+</span> <span class="n">reg</span><span class="p">[</span><span class="n">r2</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="n">update_flags</span><span class="p">(</span><span class="n">r0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>本节包含大量信息，让我们总结一下。ADD 接受两个参数并将计算结果存储在寄存器中。在寄存器模式下，要计算的第二个值存储在寄存器中。在立即数模式下，第二个被内嵌到指令的最右边 5 位中。短于 16 位的值需要扩展。每当指令修改寄存器时，状态标志都需要更新。</p>
+<p>你可能会对再写 15 条指令感到不知所措。但是，你在这里学到的所有知识都可以重复使用。大多数指令都会用到扩展，不同模式和更新状态标志的不同组合。</p>
+<h3 id="ldi">LDI</h3>
+<p>(未完待续. . .)</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%99%9A%E6%8B%9F%E5%88%92/">虚拟划</a>
+        
+            <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/">虚拟机</a>
+        
+            <a href="/tags/lc-3/">LC-3</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 Luna_Blog
+    </section>
+    
+    <section class="powerby">
+        
+
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+        <br />
+        
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.11.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#1什么是虚拟机">1.什么是虚拟机</a></li>
+    <li><a href="#2lc-3-架构">2.LC-3 架构</a>
+      <ol>
+        <li><a href="#内存">内存</a></li>
+        <li><a href="#寄存器">寄存器</a></li>
+        <li><a href="#指令集">指令集</a></li>
+        <li><a href="#状态标志">状态标志</a></li>
+      </ol>
+    </li>
+    <li><a href="#3汇编示例">3.汇编示例</a></li>
+    <li><a href="#4执行程序">4.执行程序</a>
+      <ol>
+        <li><a href="#程序">程序</a></li>
+      </ol>
+    </li>
+    <li><a href="#5指令实现">5.指令实现</a>
+      <ol>
+        <li><a href="#add">ADD</a></li>
+        <li><a href="#ldi">LDI</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        <!-- customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"; -->
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+    </body>
+</html>
